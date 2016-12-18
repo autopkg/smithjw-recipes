@@ -3,19 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>Identifier</key>
-	<string>com.github.smithjw.autoupdate.jss.1Password</string>
+	<string>com.github.smithjw.jss.Bartender-selfservice</string>
 	<key>Input</key>
 	<dict>
+		<key>CATEGORY</key>
+		<string>Productivity</string>
 		<key>GROUP_NAME</key>
-		<string>%NAME%-autoupdate</string>
+		<string></string>
 		<key>GROUP_TEMPLATE</key>
-		<string>SmartGroupTemplate-autoupdate.xml</string>
+		<string></string>
 		<key>POLICY_CATEGORY</key>
-		<string>Auto Update</string>
+		<string>Productivity</string>
 		<key>POLICY_TEMPLATE</key>
-		<string>PolicyTemplate-autoupdate.xml</string>
+		<string>PolicyTemplate-selfservice.xml</string>
 	</dict>
 	<key>ParentRecipe</key>
-	<string>com.github.jss-recipes.jss.1Password</string>
+	<string>com.github.jss-recipes.jss.Bartender</string>
 </dict>
 </plist>
