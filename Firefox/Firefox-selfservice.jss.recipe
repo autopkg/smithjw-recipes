@@ -18,6 +18,6 @@
 		<string>PolicyTemplate-selfservice.xml</string>
 	</dict>
 	<key>ParentRecipe</key>
-	<string>com.github.jss-recipes.jss.Firefox</string>
+	<string>com.github.jss-recipes.jss.Firefox_EN</string>
 </dict>
 </plist>
