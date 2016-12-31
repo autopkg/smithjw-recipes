@@ -1,7 +1,7 @@
 # smithjw-recipes
 [smithjw's](https://twitter.com/smithjw) AutoPkg recipes
 
-In order for any of the `-selfservice` recipes to work properly, you will need to download [@homebysix's](https://twitter.com/homebysix) PolicyTemplate-selfservice.xml file from his [Auto-Update-Magic repo](https://github.com/homebysix/auto-update-magic/). 
+In order for any of the `-selfservice` recipes to work properly, you will need to download [@homebysix's](https://twitter.com/homebysix) `PolicyTemplate-selfservice.xml` file from his [Auto-Update-Magic repo](https://github.com/homebysix/auto-update-magic/). 
 
 [PolicyTemplate-selfservice.xml can be found here](https://github.com/homebysix/auto-update-magic/blob/master/Exercise6c/PolicyTemplate-selfservice.xml).
 
