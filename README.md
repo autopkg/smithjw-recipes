@@ -9,7 +9,7 @@ The reason I haven't included this file in my repo is to ensure that anyone who 
 
 I would also recommend reading [@homebysix's original exersice](https://github.com/homebysix/auto-update-magic#exercise-6c-sending-software-directly-to-self-service-policies) that documents this process. Actually, set aside a couple hours, grab yourself a 🍺/🍷 , and read the [whole thing](https://github.com/homebysix/auto-update-magic#overview). A lot of thought and effort has gone into Auto-Update-Magic and I believe it makes life significantly easier for Mac Admins everywhere.
 
-## Enabling `-selfservice` Recipes
+## Enabling -selfservice Recipes
 
 Now for the fun stuff. In order to make these recipes work, you'll need to do the following:
 
