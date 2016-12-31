@@ -15,7 +15,7 @@
 		<key>POLICY_CATEGORY</key>
 		<string>Productivity</string>
 		<key>POLICY_TEMPLATE</key>
-		<string>~/Library/AutoPkg/PolicyTemplate-selfservice.xml</string>
+		<string>PolicyTemplate-selfservice.xml</string>
 	</dict>
 	<key>ParentRecipe</key>
 	<string>com.github.jss-recipes.jss.Firefox_EN</string>
