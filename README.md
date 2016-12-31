@@ -5,9 +5,11 @@ In order for any of the `-selfservice` recipes to work properly, you will need t
 
 [PolicyTemplate-selfservice.xml can be found here](https://github.com/homebysix/auto-update-magic/blob/master/Exercise6c/PolicyTemplate-selfservice.xml).
 
-The reason I haven't included this file in my repo is to ensure that anyone who wan't to enable these recipes understands the risks associated with pushing software update via AutoPkg directly into Self Service bypassing any testing. This is a dangerous action and I would caution you from enabling this unless you are aware of the risks involved.
+The reason I haven't included this file in my repo is to ensure that anyone who wan't to enable these recipes understands the risks associated with pushing software update via AutoPkg directly into Self Service bypassing any testing. 
 
-I would also recommend reading [@homebysix's original exersice](https://github.com/homebysix/auto-update-magic#exercise-6c-sending-software-directly-to-self-service-policies) that documents this process. 
+⚠️⚠️**This is a dangerous action and I would caution you from enabling this unless you are aware of the risks involved.**⚠️⚠️
+
+I would also recommend reading [@homebysix's original exersice](https://github.com/homebysix/auto-update-magic#exercise-6c-sending-software-directly-to-self-service-policies) that documents this process. Actually, set aside a couple hours, grab yourself a 🍺/🍷 , and read the [whole thing](https://github.com/homebysix/auto-update-magic#overview). A lot of thought and effort has gone into Auto-Update-Magic and I believe it makes life significantly easier for Mac Admins everywhere.
 
 ---
 
