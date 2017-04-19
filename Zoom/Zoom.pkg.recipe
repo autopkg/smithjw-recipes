@@ -6,17 +6,10 @@
 	<string>Downloads the current release version of Zoom and builds a package.</string>
 	<key>Identifier</key>
 	<string>com.github.smithjw-recipes.pkg.Zoom</string>
-	<key>Input</key>
-	<dict>
-		<key>BUNDLE_ID</key>
-		<string>us.zoom.xos</string>
-		<key>NAME</key>
-		<string>Zoom</string>
-	</dict>
 	<key>MinimumVersion</key>
 	<string>1.0.1</string>
 	<key>ParentRecipe</key>
-	<string>com.github.smithjw-recipes.download.zoom</string>
+	<string>com.github.smithjw-recipes.download.Zoom</string>
 	<key>Process</key>
     <array>
         <dict>
@@ -24,23 +17,48 @@
             <string>FlatPkgUnpacker</string>
             <key>Arguments</key>
             <dict>
-                <key>destination_path</key>
-                <string>%RECIPE_CACHE_DIR%/expanded</string>
                 <key>flat_pkg_path</key>
                 <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/expand</string>
             </dict>
         </dict>
-        
+        <dict>
+            <key>Processor</key>
+            <string>PkgPayloadUnpacker</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkg_payload_path</key>
+                <string>%RECIPE_CACHE_DIR%/expand/zoomus.pkg/Payload</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/unpack</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>Versioner</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_plist_path</key>
+                <string>%RECIPE_CACHE_DIR%/unpack/Contents/Info.plist</string>
+                <key>plist_version_key</key>
+                <string>CFBundleShortVersionString</string>
+            </dict>
+        </dict>
         <dict>
             <key>Processor</key>
             <string>PkgCopier</string>
             <key>Arguments</key>
             <dict>
                 <key>source_pkg</key>
-                <string>%pathname%/Zoom.pkg</string>
+                <string>%pathname%</string>
                 <key>pkg_path</key>
-                <string>%RECIPE_CACHE_DIR%/%NAME%.pkg</string>
+                <string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
             </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
         </dict>
     </array>
 </dict>
