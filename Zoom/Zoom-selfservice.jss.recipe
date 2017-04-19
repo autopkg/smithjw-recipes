@@ -18,6 +18,6 @@
 		<string>PolicyTemplate-selfservice.xml</string>
 	</dict>
 	<key>ParentRecipe</key>
-	<string>com.github.jss-recipes.jss.Zoom</string>
+	<string>com.github.smithjw-recipes.jss.Zoom</string>
 </dict>
 </plist>
