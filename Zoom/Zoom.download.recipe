@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads the latest version of Zoom.</string>
     <key>Identifier</key>
-    <string>com.github.smithjw-recipes.download.Zoom</string>
+    <string>com.github.smithjw-recipes.test.Zoom</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -21,19 +21,6 @@
     <array>
         <dict>
             <key>Processor</key>
-            <string>URLTextSearcher</string>
-            <key>Arguments</key>
-            <dict>
-                <key>re_pattern</key>
-                <string>([\d\.]+)</string>
-                <key>result_output_var_name</key>
-                <string>version</string>
-                <key>url</key>
-                <string>https://zoom.us/client/latest/ZoomInstallerIT.pkg</string>
-            </dict>
-        </dict>
-        <dict>
-            <key>Processor</key>
             <string>URLDownloader</string>
             <key>Arguments</key>
             <dict>
@@ -41,16 +28,12 @@
                 <string>%DOWNLOAD_URL%</string>
                 <key>request_headers</key>
                 <dict>
-                        <key>user-agent</key>
-                        <string>%USER_AGENT%</string>
+                    <key>user-agent</key>
+                    <string>%USER_AGENT%</string>
                 </dict>
                 <key>filename</key>
-                <string>%NAME%-%version%.pkg</string>
+                <string>%NAME%.pkg</string>
             </dict>
-        </dict>
-        <dict>
-            <key>Processor</key>
-            <string>EndOfCheckPhase</string>
         </dict>
     </array>
 </dict>
