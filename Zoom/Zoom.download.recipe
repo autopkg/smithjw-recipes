@@ -21,6 +21,19 @@
     <array>
         <dict>
             <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>re_pattern</key>
+                <string>([\d\.]+)</string>
+                <key>result_output_var_name</key>
+                <string>version</string>
+                <key>url</key>
+                <string>https://zoom.us/client/latest/ZoomInstallerIT.pkg</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
             <string>URLDownloader</string>
             <key>Arguments</key>
             <dict>
@@ -32,7 +45,7 @@
                         <string>%USER_AGENT%</string>
                 </dict>
                 <key>filename</key>
-                <string>%NAME%.pkg</string>
+                <string>%NAME%-%version%.pkg</string>
             </dict>
         </dict>
         <dict>
