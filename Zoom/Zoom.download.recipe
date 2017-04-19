@@ -32,7 +32,7 @@
                         <string>%USER_AGENT%</string>
                 </dict>
                 <key>filename</key>
-                <string>%NAME%.pkg</string>
+                <string>%NAME%-4.pkg</string>
             </dict>
         </dict>
         <dict>
