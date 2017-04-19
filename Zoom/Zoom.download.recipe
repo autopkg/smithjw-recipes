@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads the latest version of Zoom.</string>
     <key>Identifier</key>
-    <string>com.github.smithjw-recipes.download.zoom</string>
+    <string>com.github.smithjw-recipes.download.Zoom</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
