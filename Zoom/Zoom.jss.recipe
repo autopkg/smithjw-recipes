@@ -28,7 +28,7 @@
 	<key>MinimumVersion</key>
 	<string>0.2.0</string>
 	<key>ParentRecipe</key>
-	<string>com.github.smithjw-recipes.pkg.Zoom</string>
+	<string>com.github.smithjw-recipes.download.Zoom</string>
 	<key>Process</key>
 	<array>
 		<dict>
