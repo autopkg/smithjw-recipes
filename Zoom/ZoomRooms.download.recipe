@@ -3,15 +3,15 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Downloads the latest version of the Zoom client for IT Administrators.</string>
+    <string>Downloads the latest version of Zoom.</string>
     <key>Identifier</key>
-    <string>com.github.smithjw-recipes.download.ZoomIT</string>
+    <string>com.github.smithjw-recipes.download.ZoomRooms</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
-        <string>Zoom Client for IT</string>
+        <string>Zoom Rooms</string>
         <key>DOWNLOAD_URL</key>
-        <string>https://zoom.us/client/latest/ZoomInstallerIT.pkg</string>
+        <string>https://zoom.us/client/latest/ZoomRooms.pkg</string>
         <key>USER_AGENT</key>
         <string>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.28.10 (KHTML, like Gecko) Version/6.0.3 Safari/536.28.10</string>
     </dict>
@@ -56,7 +56,7 @@
             <key>Arguments</key>
             <dict>
                 <key>pkg_payload_path</key>
-                <string>%RECIPE_CACHE_DIR%/expand/zoomus.pkg/Payload</string>
+                <string>%RECIPE_CACHE_DIR%/expand/zp.pkg/Payload</string>
                 <key>destination_path</key>
                 <string>%RECIPE_CACHE_DIR%/unpack</string>
             </dict>

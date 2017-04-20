@@ -72,6 +72,21 @@
                 <string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
             </dict>
         </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>expected_authority_names</key>
+                <array>
+                    <string>Developer ID Installer: Zoom Video Communications, Inc.</string>
+                    <string>Developer ID Certification Authority</string>
+                    <string>Apple Root CA</string>
+                </array>
+                <key>input_path</key>
+                <string>%pathname%</string>
+            </dict>
+            <key>Processor</key>
+            <string>CodeSignatureVerifier</string>
+        </dict>
     </array>
 </dict>
 </plist>
