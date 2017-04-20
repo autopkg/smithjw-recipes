@@ -2,16 +2,43 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Description</key>
-	<string>Downloads the current release version of Zoom and builds a package.</string>
-	<key>Identifier</key>
-	<string>com.github.smithjw-recipes.pkg.Zoom</string>
-	<key>MinimumVersion</key>
-	<string>1.0.1</string>
-	<key>ParentRecipe</key>
-	<string>com.github.smithjw-recipes.download.Zoom</string>
-	<key>Process</key>
+    <key>Description</key>
+    <string>Downloads the latest version of Zoom.</string>
+    <key>Identifier</key>
+    <string>com.github.smithjw-recipes.download.ZoomIT</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>Zoom Client for IT</string>
+        <key>DOWNLOAD_URL</key>
+        <string>https://zoom.us/client/latest/ZoomInstallerIT.pkg</string>
+        <key>USER_AGENT</key>
+        <string>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.28.10 (KHTML, like Gecko) Version/6.0.3 Safari/536.28.10</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>0.2.0</string>
+    <key>Process</key>
     <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%DOWNLOAD_URL%</string>
+                <key>request_headers</key>
+                <dict>
+                    <key>user-agent</key>
+                    <string>%USER_AGENT%</string>
+                </dict>
+                <key>filename</key>
+                <string>%NAME%.pkg</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
         <dict>
             <key>Processor</key>
             <string>FlatPkgUnpacker</string>
@@ -55,10 +82,6 @@
                 <key>pkg_path</key>
                 <string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
             </dict>
-        </dict>
-        <dict>
-            <key>Processor</key>
-            <string>EndOfCheckPhase</string>
         </dict>
     </array>
 </dict>

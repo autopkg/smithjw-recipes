@@ -3,15 +3,15 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Downloads the latest version of Zoom.</string>
+    <string>Downloads the latest version of the standard Zoom Client.</string>
     <key>Identifier</key>
-    <string>com.github.smithjw-recipes.download.Zoom</string>
+    <string>com.github.smithjw-recipes.download.ZoomClientSharing</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
-        <string>Zoom</string>
+        <string>Zoom Client for Meetings</string>
         <key>DOWNLOAD_URL</key>
-        <string>https://zoom.us/client/latest/ZoomInstallerIT.pkg</string>
+        <string>https://zoom.us/client/latest/zoomusInstallerFull.pkg</string>
         <key>USER_AGENT</key>
         <string>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.28.10 (KHTML, like Gecko) Version/6.0.3 Safari/536.28.10</string>
     </dict>
@@ -52,22 +52,11 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>PkgPayloadUnpacker</string>
-            <key>Arguments</key>
-            <dict>
-                <key>pkg_payload_path</key>
-                <string>%RECIPE_CACHE_DIR%/expand/zoomus.pkg/Payload</string>
-                <key>destination_path</key>
-                <string>%RECIPE_CACHE_DIR%/unpack</string>
-            </dict>
-        </dict>
-        <dict>
-            <key>Processor</key>
             <string>Versioner</string>
             <key>Arguments</key>
             <dict>
                 <key>input_plist_path</key>
-                <string>%RECIPE_CACHE_DIR%/unpack/Contents/Info.plist</string>
+                <string>%RECIPE_CACHE_DIR%/expand/Scripts/ZoomUsPlugIn.plugin/Contents/Info.plist</string>
                 <key>plist_version_key</key>
                 <string>CFBundleShortVersionString</string>
             </dict>
