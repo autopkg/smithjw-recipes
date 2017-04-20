@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Downloads the current release version of Zoom and builds a package. Then, uploads to the JSS.</string>
+	<string>Downloads the current release version of the Zoom client for IT, builds a package, then uploads to the JSS.</string>
 	<key>Identifier</key>
-	<string>com.github.smithjw-recipes.jss.Zoom</string>
+	<string>com.github.smithjw-recipes.jss.ZoomIT</string>
 	<key>Input</key>
 	<dict>
 		<key>CATEGORY</key>
