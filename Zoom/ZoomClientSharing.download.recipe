@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Downloads the latest version of the standard Zoom Client.</string>
+    <string>Downloads the latest version of the Zoom Client including the plug-in for sharing your iOS device into the meeting.</string>
     <key>Identifier</key>
     <string>com.github.smithjw-recipes.download.ZoomClientSharing</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
-        <string>Zoom Client for Meetings</string>
+        <string>Zoom Client for Sharing iOS</string>
         <key>DOWNLOAD_URL</key>
         <string>https://zoom.us/client/latest/zoomusInstallerFull.pkg</string>
         <key>USER_AGENT</key>
