@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Downloads the latest version of Zoom.</string>
+    <string>Downloads the latest version of Zoom Rooms.</string>
     <key>Identifier</key>
     <string>com.github.smithjw-recipes.download.ZoomRooms</string>
     <key>Input</key>
