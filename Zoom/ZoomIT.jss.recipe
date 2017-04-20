@@ -9,7 +9,7 @@
 	<key>Input</key>
 	<dict>
 		<key>CATEGORY</key>
-		<string>Applications</string>
+		<string>Application</string>
 		<key>GROUP_NAME</key>
 		<string>%NAME%-update-smart</string>
 		<key>GROUP_TEMPLATE</key>
