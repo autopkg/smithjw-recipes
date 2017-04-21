@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Identifier</key>
-	<string>com.github.smithjw.jss.SublimeText3-selfservice</string>
+	<string>com.github.smithjw-recipes.jss.SublimeText3-selfservice</string>
 	<key>Input</key>
 	<dict>
 		<key>CATEGORY</key>

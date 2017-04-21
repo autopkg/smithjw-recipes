@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Identifier</key>
-	<string>com.github.smithjw.jss.MicrosoftExcel-selfservice</string>
+	<string>com.github.smithjw-recipes.jss.MicrosoftExcel-selfservice</string>
 	<key>Input</key>
 	<dict>
 		<key>CATEGORY</key>

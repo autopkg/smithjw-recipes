@@ -5,7 +5,7 @@
 	<key>Description</key>
 	<string>Checks for Quip update, packages, and adds to the JSS</string>
 	<key>Identifier</key>
-	<string>com.github.smithjw.jss.Quip</string>
+	<string>com.github.smithjw-recipes.jss.Quip</string>
 	<key>Input</key>
 	<dict>
 		<key>CATEGORY</key>

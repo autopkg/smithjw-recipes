@@ -5,7 +5,7 @@
 	<key>Description</key>
 	<string>Downloads the current release version of Viscosity and creates a package.</string>
 	<key>Identifier</key>
-	<string>com.github.smithjw.pkg.Viscosity</string>
+	<string>com.github.smithjw-recipes.pkg.Viscosity</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
