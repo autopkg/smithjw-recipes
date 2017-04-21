@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads the latest version of the Zoom Client including the plug-in for sharing your iOS device into the meeting.</string>
     <key>Identifier</key>
-    <string>com.github.smithjw-recipes.download.ZoomClientSharing</string>
+    <string>com.github.smithjw.download.ZoomClientSharing</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>

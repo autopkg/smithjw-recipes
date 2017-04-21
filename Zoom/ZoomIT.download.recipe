@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads the latest version of the Zoom client for IT Administrators.</string>
     <key>Identifier</key>
-    <string>com.github.smithjw-recipes.download.ZoomIT</string>
+    <string>com.github.smithjw.download.ZoomIT</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>

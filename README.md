@@ -1,4 +1,4 @@
-# smithjw-recipes
+# smithjw
 
 [smithjw's](https://twitter.com/smithjw) AutoPkg recipes
 

@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads the latest version of the standard Zoom Client.</string>
     <key>Identifier</key>
-    <string>com.github.smithjw-recipes.download.ZoomMeetings</string>
+    <string>com.github.smithjw.download.ZoomMeetings</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
