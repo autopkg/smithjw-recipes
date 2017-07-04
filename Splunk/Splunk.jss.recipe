@@ -15,7 +15,7 @@
 		<key>GROUP_TEMPLATE</key>
 		<string>SmartGroupTemplate.xml</string>
 		<key>NAME</key>
-		<string>Splunk</string>
+		<string>Splunk Forwarder</string>
 		<key>POLICY_CATEGORY</key>
 		<string>Applications</string>
 		<key>POLICY_TEMPLATE</key>
