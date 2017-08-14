@@ -18,6 +18,6 @@
 		<string>PolicyTemplate-selfservice.xml</string>
 	</dict>
 	<key>ParentRecipe</key>
-	<string>com.github.smithjw.pkg.Viscosity</string>
+	<string>com.github.smithjw.jss.Viscosity</string>
 </dict>
 </plist>
