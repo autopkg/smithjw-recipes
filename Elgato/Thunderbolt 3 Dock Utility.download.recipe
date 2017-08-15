@@ -49,17 +49,6 @@
     </dict>
     <dict>
         <key>Processor</key>
-        <string>PkgPayloadUnpacker</string>
-        <key>Arguments</key>
-        <dict>
-            <key>pkg_payload_path</key>
-            <string>%RECIPE_CACHE_DIR%/expand/Thunderbolt 3 Dock Utility.pkg/Payload</string>
-            <key>destination_path</key>
-            <string>%RECIPE_CACHE_DIR%/unpack</string>
-        </dict>
-    </dict>
-    <dict>
-        <key>Processor</key>
         <string>Versioner</string>
         <key>Arguments</key>
         <dict>
