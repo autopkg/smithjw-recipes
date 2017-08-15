@@ -23,7 +23,7 @@
 		<key>SELF_SERVICE_DESCRIPTION</key>
 		<string>Viscosity VPN</string>
 		<key>SELF_SERVICE_ICON</key>
-		<string>Zoom.png</string>
+		<string>Viscosity.png</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.2.0</string>
