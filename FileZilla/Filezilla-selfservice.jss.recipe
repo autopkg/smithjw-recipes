@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Identifier</key>
-	<string>com.github.smithjw.jss.FinalCutPro-selfservice</string>
+	<string>com.github.smithjw.jss.FileZilla-selfservice</string>
 	<key>Input</key>
 	<dict>
 		<key>CATEGORY</key>
@@ -18,6 +18,6 @@
 		<string>PolicyTemplate-selfservice.xml</string>
 	</dict>
 	<key>ParentRecipe</key>
-	<string>com.github.jss-recipes.jss.FinalCutPro</string>
+	<string>com.github.scriptingosx.jss.FileZilla</string>
 </dict>
 </plist>

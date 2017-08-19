@@ -7,17 +7,17 @@
 	<key>Input</key>
 	<dict>
 		<key>CATEGORY</key>
-		<string>Productivity</string>
+		<string>Applications</string>
 		<key>GROUP_NAME</key>
 		<string></string>
 		<key>GROUP_TEMPLATE</key>
 		<string></string>
 		<key>POLICY_CATEGORY</key>
-		<string>Productivity</string>
+		<string>Applications</string>
 		<key>POLICY_TEMPLATE</key>
 		<string>PolicyTemplate-selfservice.xml</string>
 	</dict>
 	<key>ParentRecipe</key>
-	<string>com.github.homebysix.pkg.Quip</string>
+	<string>com.github.smithjw.jss.Quip</string>
 </dict>
 </plist>

@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>Identifier</key>
-	<string>com.github.smithjw.jss.Pages-selfservice</string>
+	<string>com.github.smithjw.jss.RubyMine-selfservice</string>
 	<key>Input</key>
 	<dict>
 		<key>CATEGORY</key>
-		<string>Productivity</string>
+		<string>Applications</string>
 		<key>GROUP_NAME</key>
 		<string></string>
 		<key>GROUP_TEMPLATE</key>
 		<string></string>
 		<key>POLICY_CATEGORY</key>
-		<string>Productivity</string>
+		<string>Applications</string>
 		<key>POLICY_TEMPLATE</key>
 		<string>PolicyTemplate-selfservice.xml</string>
 	</dict>
 	<key>ParentRecipe</key>
-	<string>com.github.jss-recipes.jss.Pages</string>
+	<string>com.github.smithjw.jss.RubyMine</string>
 </dict>
 </plist>

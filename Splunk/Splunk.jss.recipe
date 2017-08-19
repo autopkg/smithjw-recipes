@@ -3,32 +3,32 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Downloads the current release version of Zoom and builds a package. Then, uploads to the JSS.</string>
+	<string>Downloads the current release version of the Splunk forwarder, builds a package, then uploads to the JSS.</string>
 	<key>Identifier</key>
-	<string>com.github.smithjw-recipes.jss.Zoom</string>
+	<string>com.github.smithjw.jss.Splunk</string>
 	<key>Input</key>
 	<dict>
 		<key>CATEGORY</key>
-		<string>Productivity</string>
+		<string>Application</string>
 		<key>GROUP_NAME</key>
 		<string>%NAME%-update-smart</string>
 		<key>GROUP_TEMPLATE</key>
 		<string>SmartGroupTemplate.xml</string>
 		<key>NAME</key>
-		<string>Zoom</string>
+		<string>Splunk Forwarder</string>
 		<key>POLICY_CATEGORY</key>
-		<string>Testing</string>
+		<string>Applications</string>
 		<key>POLICY_TEMPLATE</key>
 		<string>PolicyTemplate.xml</string>
 		<key>SELF_SERVICE_DESCRIPTION</key>
-		<string>The Zoom app provides cloud-hosted video conferencing, plus online meetings and group messaging.</string>
+		<string>macOS Splunk Forwader</string>
 		<key>SELF_SERVICE_ICON</key>
-		<string>Zoom.png</string>
+		<string>Splunk.png</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.2.0</string>
 	<key>ParentRecipe</key>
-	<string>com.github.smithjw-recipes.download.Zoom</string>
+	<string>com.github.gerardkok.pkg.SplunkForwarder</string>
 	<key>Process</key>
 	<array>
 		<dict>
