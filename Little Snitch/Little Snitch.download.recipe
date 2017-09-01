@@ -39,42 +39,9 @@
         <key>Arguments</key>
         <dict>
           <key>filename</key>
-          <string>%NAME%.dmg</string>
+          <string>%match%</string>
           <key>url</key>
           <string>https://www.obdev.at/downloads/littlesnitch/%match%</string>
-        </dict>
-      </dict>
-      <dict>
-        <key>Processor</key>
-        <string>AppDmgVersioner</string>
-        <key>Arguments</key>
-        <dict>
-          <key>dmg_path</key>
-          <string>%pathname%</string>
-        </dict>
-      </dict>
-      <dict>
-        <key>Processor</key>
-        <string>Copier</string>
-        <key>Arguments</key>
-        <dict>
-          <key>overwrite</key>
-          <string>true</string>
-          <key>source_path</key>
-          <string>%RECIPE_CACHE_DIR%/downloads/%NAME%.dmg</string>
-          <key>destination_path</key>
-          <string>%RECIPE_CACHE_DIR%/downloads/%NAME%-%version%.dmg</string>
-        </dict>
-      </dict>
-      <dict>
-        <key>Processor</key>
-        <string>PathDeleter</string>
-        <key>Arguments</key>
-        <dict>
-          <key>path_list</key>
-          <array>
-            <string>%RECIPE_CACHE_DIR%/downloads/%NAME%.dmg</string>
-          </array>
         </dict>
       </dict>
     </array>
