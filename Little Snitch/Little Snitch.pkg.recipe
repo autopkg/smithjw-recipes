@@ -220,7 +220,7 @@
                     <key>pkgtype</key>
                     <string>flat</string>
                     <key>template_path</key>
-                    <string>%RECIPE_DIR%/PackageInfoTemplate</string>
+                    <string>PackageInfoTemplate</string>
                 </dict>
             </dict>
             <dict>
