@@ -3,7 +3,7 @@
 <plist version="1.0">
     <dict>
         <key>Description</key>
-        <string>Downloads the latest version of Little Snitch and creates a pkg.</string>
+        <string>Downloads the latest version of Little Snitch and builds a pkg.</string>
         <key>Identifier</key>
         <string>com.github.smithjw.pkg.LittleSnitch</string>
         <key>Input</key>
