@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>Description</key>
-	<string>Downloads the current release version of Zoom and builds a package.</string>
-	<key>Identifier</key>
-	<string>com.github.smithjw-recipes.pkg.Zoom</string>
-	<key>Input</key>
 	<dict>
-		<key>BUNDLE_ID</key>
-		<string>us.zoom.xos</string>
-		<key>NAME</key>
-		<string>Zoom</string>
+		<key>Description</key>
+		<string>Downloads the current release version of Zoom and builds a package.</string>
+		<key>Identifier</key>
+		<string>com.github.smithjw-recipes.pkg.Zoom</string>
+		<key>Input</key>
+		<dict>
+			<key>BUNDLE_ID</key>
+			<string>us.zoom.xos</string>
+			<key>NAME</key>
+			<string>Zoom</string>
+		</dict>
+		<key>MinimumVersion</key>
+		<string>1.0.1</string>
+		<key>ParentRecipe</key>
+		<string>com.github.smithjw-recipes.download.Zoom</string>
+		<key>Process</key>
+		<array>
+			<dict>
+				<key>Processor</key>
+				<string>URLTextSearcher</string>
+				<key>Arguments</key>
+				<dict>
+					<key>re_pattern</key>
+					<string>(\d[.]\d[.]\d{1,5}[.]\d{1,4})</string>
+					<key>result_output_var_name</key>
+					<string>version</string>
+					<key>url</key>
+					<string>https://zoom.us/download</string>
+				</dict>
+			</dict>
+			<dict>
+				<key>Processor</key>
+				<string>PkgCopier</string>
+				<key>Arguments</key>
+				<dict>
+					<key>source_pkg</key>
+					<string>%pathname%/Zoom.pkg</string>
+					<key>pkg_path</key>
+					<string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
+				</dict>
+			</dict>
+		</array>
 	</dict>
-	<key>MinimumVersion</key>
-	<string>1.0.1</string>
-	<key>ParentRecipe</key>
-	<string>com.github.smithjw-recipes.download.Zoom</string>
-	<key>Process</key>
-    <array>
-        <dict>
-            <key>Processor</key>
-            <string>URLTextSearcher</string>
-            <key>Arguments</key>
-            <dict>
-                <key>re_pattern</key>
-                <string>(\d[.]\d[.]\d{1,5}[.]\d{1,4})</string>
-                <key>result_output_var_name</key>
-                <string>version</string>
-                <key>url</key>
-                <string>https://zoom.us/download</string>
-            </dict>
-        </dict>
-        <dict>
-            <key>Processor</key>
-            <string>PkgCopier</string>
-            <key>Arguments</key>
-            <dict>
-                <key>source_pkg</key>
-                <string>%pathname%/Zoom.pkg</string>
-                <key>pkg_path</key>
-                <string>%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg</string>
-            </dict>
-        </dict>
-    </array>
-</dict>
 </plist>
