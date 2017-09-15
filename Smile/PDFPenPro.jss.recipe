@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/pertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
 		<key>Description</key>
-		<string>Downloads the current release version of PDFPen, builds a package, then uploads to the JSS.</string>
+		<string>Downloads the current release version of PDFPenPro, builds a package, then uploads to the JSS.</string>
 		<key>Identifier</key>
-		<string>com.github.smithjw.jss.PDFPen</string>
+		<string>com.github.smithjw.jss.PDFPenPro</string>
 		<key>Input</key>
 		<dict>
 			<key>CATEGORY</key>
@@ -21,15 +21,15 @@
 			<key>POLICY_TEMPLATE</key>
 			<string>PolicyTemplate.xml</string>
 			<key>SELF_SERVICE_DESCRIPTION</key>
-			<string>PDFpen is a powerful Mac PDF editor: add text, images, and signatures to PDFs, make corrections, fill out PDF forms, OCR scanned pages.</string>
+			<string>With PDFpenPro, you can add text and signatures, make corrections, OCR scanned docs and more, just like PDFpen. But PDFpenPro goes beyond, with more powerful features.</string>
 			<key>SELF_SERVICE_ICON</key>
-			<string>PDFPen.png</string>
+			<string>PDFPenPro.png</string>
 		</dict>
 		<key>MinimumVersion</key>
 		<string>0.2.0</string>
 		<key>ParentRecipe</key>
-		<string>com.github.jessepeterson.PDFpen.download</string>
-		<key>cess</key>
+		<string>com.github.smithjw.pkg.PDFPenPro</string>
+		<key>Process</key>
 		<array>
 			<dict>
 				<key>Arguments</key>
@@ -53,14 +53,14 @@
 					<string>%POLICY_CATEGORY%</string>
 					<key>policy_template</key>
 					<string>%POLICY_TEMPLATE%</string>
-					<key>d_name</key>
+					<key>prod_name</key>
 					<string>%NAME%</string>
 					<key>self_service_description</key>
 					<string>%SELF_SERVICE_DESCRIPTION%</string>
 					<key>self_service_icon</key>
 					<string>%SELF_SERVICE_ICON%</string>
 				</dict>
-				<key>cessor</key>
+				<key>Processor</key>
 				<string>JSSImporter</string>
 			</dict>
 		</array>
