@@ -17,7 +17,7 @@
 			<key>NAME</key>
 			<string>Zoom</string>
 			<key>POLICY_CATEGORY</key>
-			<string>Applications</string>
+			<string>Testing</string>
 			<key>POLICY_TEMPLATE</key>
 			<string>PolicyTemplate.xml</string>
 			<key>SELF_SERVICE_DESCRIPTION</key>
