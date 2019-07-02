@@ -30,7 +30,7 @@
                         <string>Safari 8.0.2</string>
                     </dict>
                     <key>re_pattern</key>
-                    <string>(LittleSnitch-*\d.\d.\d.dmg)</string>
+                    <string>(LittleSnitch-[\d\.]+\.dmg)</string>
                 </dict>
             </dict>
             <dict>
