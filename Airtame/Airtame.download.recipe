@@ -11,7 +11,7 @@
 			<key>NAME</key>
 			<string>Airtame</string>
 			<key>DOWNLOAD_URL</key>
-			<string>https://airtame.com/download/mac</string>
+			<string>https://downloads-cdn.airtame.com/get.php?platform=osx_x64</string>
 		</dict>
 		<key>MinimumVersion</key>
 		<string>0.2.0</string>
