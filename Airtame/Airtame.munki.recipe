@@ -10,6 +10,8 @@
 	<string>com.github.smithjw.Airtame.munki</string>
 	<key>Input</key>
 	<dict>
+		<key>MUNKI_CATEGORY</key>
+		<string>Software</string>
 		<key>MUNKI_REPO_SUBDIR</key>
 		<string>apps/%NAME%</string>
 		<key>NAME</key>
@@ -20,10 +22,12 @@
 			<array>
 				<string>testing</string>
 			</array>
+			<key>category</key>
+			<string>%MUNKI_CATEGORY%</string>
 			<key>description</key>
 			<string>Present wirelessly from any device, introduce digital signage and revolutionize your work environment with Airtame.</string>
 			<key>developer</key>
-			<string>AIRTAME APS</string>
+			<string>Airtame Inc.</string>
 			<key>display_name</key>
 			<string>Airtame</string>
 			<key>name</key>
@@ -35,7 +39,7 @@
 	<key>MinimumVersion</key>
 	<string>1.0.0</string>
 	<key>ParentRecipe</key>
-	<string>com.github.smithjw.Airtame.download</string>
+	<string>tecnico1931.download.Airtame</string>
 	<key>Process</key>
 	<array>
 		<dict>

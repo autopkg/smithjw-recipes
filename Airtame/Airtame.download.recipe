@@ -18,6 +18,15 @@
 		<key>Process</key>
 		<array>
 			<dict>
+				<key>Arguments</key>
+				<dict>
+					<key>warning_message</key>
+					<string>This recipe is deprecated. Please use the Airtame.download.recipe from the https://github.com/autopkg/Tecnico1931-recipes repo instead.</string>
+				</dict>
+				<key>Processor</key>
+				<string>DeprecationWarning</string>
+			</dict>
+			<dict>
 				<key>Processor</key>
 				<string>URLDownloader</string>
 				<key>Arguments</key>
