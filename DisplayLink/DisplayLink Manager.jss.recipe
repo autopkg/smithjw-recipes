@@ -21,12 +21,12 @@
 			<key>POLICY_TEMPLATE</key>
 			<string>PolicyTemplate.xml</string>
 			<key>SELF_SERVICE_DESCRIPTION</key>
-			<string>TDisplayLink Manager is a new way to enable your DisplayLink dock, adapter or monitor on macOS platforms. It's an application that combines our latest driver with features that streamline the setup of mutliple displays up to 4K.</string>
+			<string>DisplayLink Manager is a new way to enable your DisplayLink dock, adapter or monitor on macOS platforms. It's an application that combines our latest driver with features that streamline the setup of mutliple displays up to 4K.</string>
 			<key>SELF_SERVICE_ICON</key>
 			<string>%NAME%.png</string>
 		</dict>
 		<key>MinimumVersion</key>
-		<string>0.2.0</string>
+		<string>1.0.0</string>
 		<key>ParentRecipe</key>
 		<string>com.github.smithjw.pkg.DisplayLink_Manager</string>
 		<key>Process</key>
