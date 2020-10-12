@@ -42,12 +42,12 @@
 			</dict>
 			<dict>
 				<key>Processor</key>
-				<string>FileMover</string>
+				<string>Copier</string>
 				<key>Arguments</key>
 				<dict>
-					<key>source</key>
+					<key>source_path</key>
 					<string>%pathname%/RubyMine.app</string>
-					<key>target</key>
+					<key>destination_path</key>
 					<string>%pkgroot%/Applications/RubyMine.app</string>
 				</dict>
 			</dict>
