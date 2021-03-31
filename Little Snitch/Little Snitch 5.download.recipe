@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>Description</key>
+        <string>Downloads the latest version of Little Snitch 5.
+        Please Note: In order to minimise user requests on first launch you'll need to 
+        deploy a System Extension Profile and Content Filter profile with this title
+        Minimum OS is macOS 11.x</string>
+        <key>Identifier</key>
+        <string>com.github.smithjw.download.LittleSnitch5</string>
+        <key>Input</key>
+        <dict>
+            <key>NAME</key>
+            <string>Little Snitch 5</string>
+            <key>USER_AGENT</key>
+            <string>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.28.10 (KHTML, like Gecko) Version/6.0.3 Safari/536.28.10</string>
+        </dict>
+        <key>MinimumVersion</key>
+        <string>0.2.0</string>
+        <key>Process</key>
+        <array>
+            <dict>
+                <key>Processor</key>
+                <string>URLTextSearcher</string>
+                <key>Arguments</key>
+                <dict>
+                    <key>url</key>
+                    <string>https://www.obdev.at/products/littlesnitch/download.html</string>
+                    <key>request_headers</key>
+                    <dict>
+                        <key>User-Agent</key>
+                        <string>Safari 8.0.2</string>
+                    </dict>
+                    <key>re_pattern</key>
+                    <string>(LittleSnitch-5[\d\.]+\.dmg)</string>
+                </dict>
+            </dict>
+            <dict>
+                <key>Processor</key>
+                <string>URLDownloader</string>
+                <key>Arguments</key>
+                <dict>
+                    <key>filename</key>
+                    <string>%match%</string>
+                    <key>url</key>
+                    <string>https://www.obdev.at/downloads/littlesnitch/%match%</string>
+                </dict>
+            </dict>
+            <dict>
+                <key>Processor</key>
+                <string>EndOfCheckPhase</string>
+            </dict>
+        </array>
+    </dict>
+</plist>

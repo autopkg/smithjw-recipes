@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>Description</key>
+        <string>Downloads latest version of Little Snitch 5, creates a package and installs it.
+        Please Note: In order to minimise user requests on first launch you'll need to 
+        deploy a System Extension Profile and Content Filter profile with this title
+        Minimum OS is macOS 11.x</string>
+        <key>Identifier</key>
+        <string>com.github.smithjw.install.LittleSnitch5</string>
+        <key>Input</key>
+        <dict>
+            <key>NAME</key>
+            <string>Little Snitch 5</string>
+        </dict>
+        <key>MinimumVersion</key>
+        <string>0.4.1</string>
+        <key>ParentRecipe</key>
+        <string>com.github.smithjw.pkg.LittleSnitch5</string>
+        <key>Process</key>
+        <array>
+            <dict>
+                <key>Processor</key>
+                <string>Installer</string>
+            </dict>
+        </array>
+    </dict>
+</plist>
