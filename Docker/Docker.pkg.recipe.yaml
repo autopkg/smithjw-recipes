@@ -1,82 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-  <dict>
-    <key>Comment</key>
-    <string>Use the ARCHITECTURE key to determine whether the Intel (amd64) or Apple Silicon (arm64) version
-    of Docker for Mac is downloaded. Defaults to Intel if not overridden.
-    eg --key ARCHITECTURE=arm64</string>
-    <key>Description</key>
-    <string>Downloads the latest version of Docker and creates a package.</string>
-    <key>Identifier</key>
-    <string>com.github.smithjw.pkg.Docker</string>
-    <key>Input</key>
-    <dict>
-      <key>BUNDLE_ID</key>
-      <string>com.docker.docker</string>
-      <key>NAME</key>
-      <string>Docker</string>
-    </dict>
-    <key>MinimumVersion</key>
-    <string>2.0.0</string>
-    <key>ParentRecipe</key>
-    <string>com.github.smithjw.download.Docker</string>
-    <key>Process</key>
-    <array>
-      <dict>
-        <key>Arguments</key>
-        <dict>
-          <key>pkgdirs</key>
-          <dict>
-            <key>Applications</key>
-            <string>0775</string>
-          </dict>
-          <key>pkgroot</key>
-          <string>%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%</string>
-        </dict>
-        <key>Processor</key>
-        <string>PkgRootCreator</string>
-      </dict>
-      <dict>
-        <key>Arguments</key>
-        <dict>
-          <key>destination_path</key>
-          <string>%pkgroot%/Applications/Docker.app</string>
-          <key>source_path</key>
-          <string>%pathname%/Docker.app</string>
-        </dict>
-        <key>Processor</key>
-        <string>Copier</string>
-      </dict>
-      <dict>
-        <key>Arguments</key>
-        <dict>
-          <key>pkg_request</key>
-          <dict>
-            <key>chown</key>
-            <array>
-              <dict>
-                <key>group</key>
-                <string>admin</string>
-                <key>path</key>
-                <string>Applications</string>
-                <key>user</key>
-                <string>root</string>
-              </dict>
-            </array>
-            <key>id</key>
-            <string>%BUNDLE_ID%.%ARCHITECTURE%</string>
-            <key>options</key>
-            <string>purge_ds_store</string>
-            <key>pkgname</key>
-            <string>%NAME%-%ARCHITECTURE%-%version%</string>
-            <key>scripts</key>
-            <string>scripts</string>
-          </dict>
-        </dict>
-        <key>Processor</key>
-        <string>PkgCreator</string>
-      </dict>
-    </array>
-  </dict>
-</plist>
+Comment: |
+  Use the ARCHITECTURE key to determine whether the Intel (amd64) or Apple Silicon (arm64) version
+  of Docker for Mac is downloaded. Defaults to Intel if not overridden.
+  eg "--key ARCHITECTURE=arm64"
+Description: Downloads the latest version of Docker and creates a package.
+Identifier: com.github.smithjw.pkg.Docker
+ParentRecipe: com.github.smithjw.download.Docker
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Docker
+  BUNDLE_ID: com.docker.docker
+
+Process:
+- Processor: PkgRootCreator
+  Arguments:
+    pkgdirs:
+      Applications: '0775'
+    pkgroot: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%'
+
+- Processor: Copier
+  Arguments:
+    destination_path: '%pkgroot%/Applications/Docker.app'
+    source_path: '%pathname%/Docker.app'
+
+- Processor: PkgCreator
+  Arguments:
+    pkg_request:
+      chown:
+      - group: admin
+        path: Applications
+        user: root
+      id: '%BUNDLE_ID%.%ARCHITECTURE%'
+      options: purge_ds_store
+      pkgname: '%NAME%-%ARCHITECTURE%-%version%'
+      scripts: scripts
