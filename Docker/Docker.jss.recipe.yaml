@@ -1,0 +1,28 @@
+Description: Downloads the latest version of Docker, packages it, then imports it into your Jamf instance.
+Identifier: com.github.smithjw.jss.Docker
+ParentRecipe: com.github.smithjw.pkg.Docker
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Docker
+  CATEGORY: Productivity
+  GROUP_NAME: App Update - %NAME%
+  GROUP_TEMPLATE: SmartGroupTemplate.xml
+  POLICY_CATEGORY: Testing - App QA
+  POLICY_TEMPLATE: PolicyTemplate.xml
+  SELF_SERVICE_DESCRIPTION: 'Docker containers wrap a piece of software in a complete filesystem that contains everything needed to run: code, runtime, system tools, system libraries - anything that can be installed on a server. This guarantees that the software will always run the same, regardless of its environment.'
+  SELF_SERVICE_ICON: '%NAME%.png'
+
+Process:
+- Processor: JSSImporter
+  Arguments:
+    category: '%CATEGORY%'
+    groups:
+    - name: '%GROUP_NAME%'
+      smart: true
+      template_path: '%GROUP_TEMPLATE%'
+    policy_category: '%POLICY_CATEGORY%'
+    policy_template: '%POLICY_TEMPLATE%'
+    prod_name: '%NAME%'
+    self_service_description: '%SELF_SERVICE_DESCRIPTION%'
+    self_service_icon: '%SELF_SERVICE_ICON%'
