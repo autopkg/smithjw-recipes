@@ -16,15 +16,6 @@ Process:
     filename: '%NAME%-%ARCHITECTURE%.dmg'
     url: https://desktop.docker.com/mac/stable/%ARCHITECTURE%/Docker.dmg
 
-- Processor: EndOfCheckPhase
-
-- Processor: CodeSignatureVerifier
-  Arguments:
-    input_path: '%pathname%/Docker.app'
-    requirement: anchor apple generic and identifier "com.docker.docker" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "9BNSXJN65R")
-    deep_verification: True
-    strict_verification: True
-
 - Processor: Versioner
   Arguments:
     input_plist_path: '%pathname%/Docker.app/Contents/Info.plist'
