@@ -1,0 +1,25 @@
+Description: Downloads latest Google Chrome enterprise package.
+Identifier: com.github.smithjw.download.Google_Chrome
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Google Chrome
+  DOWNLOAD_URL: https://dl.google.com/dl/chrome/mac/universal/stable/gcem/GoogleChrome.pkg
+  SOFTWARETITLE: Google_Chrome
+  PKGPAYLOADNAME: GoogleChrome
+
+Process:
+- Processor: URLDownloader
+  Arguments:
+    filename: '%SOFTWARETITLE%.pkg'
+    url: '%DOWNLOAD_URL%'
+
+- Processor: EndOfCheckPhase
+
+- Processor: CodeSignatureVerifier
+  Arguments:
+    expected_authority_names:
+    - 'Developer ID Installer: Google LLC (EQHXZ8M8AV)'
+    - Developer ID Certification Authority
+    - Apple Root CA
+    input_path: '%pathname%'
