@@ -1,72 +1,31 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-  <dict>
-    <key>Description</key>
-    <string>Downloads the latest version of the DisplayLink Manager App.</string>
-    <key>Identifier</key>
-    <string>com.github.smithjw.pkg.DisplayLink_Manager</string>
-    <key>Input</key>
-    <dict>
-      <key>NAME</key>
-      <string>DisplayLink Manager</string>
-      <key>DOWNLOAD_URL</key>
-      <string>https://www.displaylink.com/downloads</string>
-    </dict>
-    <key>MinimumVersion</key>
-    <string>1.0.0</string>
-    <key>ParentRecipe</key>
-    <string>com.github.smithjw.download.DisplayLink_Manager</string>
-    <key>Process</key>
-    <array>
-      <dict>
-        <key>Processor</key>
-        <string>FlatPkgUnpacker</string>
-        <key>Arguments</key>
-        <dict>
-          <key>flat_pkg_path</key>
-          <string>%pathname%</string>
-          <key>destination_path</key>
-          <string>%RECIPE_CACHE_DIR%/unpack</string>
-          <key>skip_payload</key>
-          <true/>
-        </dict>
-      </dict>
-      <dict>
-        <key>Processor</key>
-        <string>com.facebook.autopkg.shared/PackageInfoVersioner</string>
-        <key>Arguments</key>
-        <dict>
-          <key>package_info_path</key>
-          <string>%RECIPE_CACHE_DIR%/unpack/DisplayLinkManagerApp.pkg/PackageInfo</string>
-        </dict>
-      </dict>
-      <dict>
-        <key>Processor</key>
-        <string>com.github.homebysix.VersionSplitter/VersionSplitter</string>
-      </dict>
-      <dict>
-        <key>Processor</key>
-        <string>PkgCopier</string>
-        <key>Arguments</key>
-        <dict>
-          <key>source_pkg</key>
-          <string>%pathname%</string>
-          <key>pkg_path</key>
-          <string>%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg</string>
-        </dict>
-      </dict>
-      <dict>
-        <key>Processor</key>
-        <string>PathDeleter</string>
-        <key>Arguments</key>
-        <dict>
-          <key>path_list</key>
-          <array>
-            <string>%RECIPE_CACHE_DIR%/unpack</string>
-          </array>
-        </dict>
-      </dict>
-    </array>
-  </dict>
-</plist>
+Description: Downloads the latest version of the DisplayLink Manager App.
+Identifier: com.github.smithjw.pkg.DisplayLink_Manager
+ParentRecipe: com.github.smithjw.download.DisplayLink_Manager
+MinimumVersion: '2.3'
+
+Input:
+  NAME: DisplayLink Manager
+  DOWNLOAD_URL: https://www.displaylink.com/downloads
+
+Process:
+- Processor: FlatPkgUnpacker
+  Arguments:
+    destination_path: '%RECIPE_CACHE_DIR%/unpack'
+    flat_pkg_path: '%pathname%'
+    skip_payload: true
+
+- Processor: com.facebook.autopkg.shared/PackageInfoVersioner
+  Arguments:
+    package_info_path: '%RECIPE_CACHE_DIR%/unpack/DisplayLinkManagerApp.pkg/PackageInfo'
+
+- Processor: com.github.homebysix.VersionSplitter/VersionSplitter
+
+- Processor: PkgCopier
+  Arguments:
+    pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+    source_pkg: '%pathname%'
+
+- Processor: PathDeleter
+  Arguments:
+    path_list:
+    - '%RECIPE_CACHE_DIR%/unpack'
