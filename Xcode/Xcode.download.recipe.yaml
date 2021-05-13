@@ -5,22 +5,33 @@ MinimumVersion: '2.3'
 
 Input:
   NAME: Xcode
-  XIP_PATH: 'Xcode_*.xip'
+  HOME: '~'
+  XIP_PATH: '/Users/*/Downloads'
+  XIP_NAME: 'Xcode_*.xip'
 
 Process:
-- Processor: FileFinder
+- Processor: FileFinderMod
   Arguments:
-    pattern: '/Users/smithj39/Downloads/%XIP_PATH%'
+    pattern: '%XIP_PATH%/%XIP_NAME%'
 
-# This is a very hacky hack to get the xip into the Cache Dir
+- Processor: StopProcessingIf
+  Arguments:
+    predicate: '"%found_filename%" == "File Not Found"'
+
+# This is a very hacky hack to get the Version
 - Processor: com.github.homebysix.VersionSplitter/VersionSplitter
   Arguments:
     version: '%found_filename%'
     split_on: _
     index: 1
 
-- Processor: Copier
+- Processor: com.github.homebysix.VersionSplitter/VersionSplitter
   Arguments:
-    source_path: '%found_filename%'
-    destination_path: '%RECIPE_CACHE_DIR%/%NAME%-%version%'
-    overwrite: False
+    version: '%version%'
+    split_on: .xip
+    index: 0
+
+- Processor: FileMover
+  Arguments:
+    source: '%found_filename%'
+    target: '%RECIPE_CACHE_DIR%/%NAME%-%version%.xip'
