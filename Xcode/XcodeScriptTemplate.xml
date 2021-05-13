@@ -1,0 +1,10 @@
+<script>
+    <name>XcodePostinstall.sh</name>
+    <category>Developer</category>
+    <filename>XcodePostinstall.sh</filename>
+    <info />
+    <notes />
+    <priority>After</priority>
+    <parameters />
+    <os_requirements />
+</script>

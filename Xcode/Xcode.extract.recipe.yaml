@@ -1,0 +1,35 @@
+Description: Extract Xcode from a XIP. Requires passing in a XIP containing Xcode.
+Identifier: com.github.smithjw.extract.Xcode
+ParentRecipe: com.github.smithjw.download.Xcode
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Xcode
+
+Process:
+- Processor: XcodeXIPUnpacker
+  Arguments:
+    PKG: '%RECIPE_CACHE_DIR%/%NAME%-%version%'
+    output_path: '%RECIPE_CACHE_DIR%/extract'
+
+- Processor: FileFinder
+  Arguments:
+    pattern: '%RECIPE_CACHE_DIR%/extract/*.app'
+
+- Processor: CodeSignatureVerifier
+  Arguments:
+    input_path: '%found_filename%'
+    requirement: identifier "com.apple.dt.Xcode" and anchor apple
+
+- Processor: PlistReader
+  Arguments:
+    info_path: '%found_filename%/Contents/version.plist'
+    plist_keys:
+      CFBundleShortVersionString: version
+      CFBundleVersion: bundle_version
+      ProductBuildVersion: build_version
+
+- Processor: XcodeVersioner
+  Arguments:
+    app_path: '%found_filename%'
+    version: '%version%'
