@@ -1,0 +1,14 @@
+Description: Downloads latest Nessus Agent DMG, pulls out the enclosed pkg, and renames it.
+Identifier: com.github.smithjw.pkg.Nessus_Agent
+ParentRecipe: com.github.neilmartin83-recipes.download.Nessus Agent
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Nessus Agent
+  SOFTWARE_TITLE: Nessus_Agent
+
+Process:
+- Processor: PkgCopier
+  Arguments:
+    source_pkg: '%pathname%/*.pkg'
+    pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
