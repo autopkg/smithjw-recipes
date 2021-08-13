@@ -1,0 +1,16 @@
+Description: Downloads the latest version of NSLogger from GitHub.
+Identifier: com.github.smithjw.download.NSLogger
+MinimumVersion: '2.3'
+
+Input:
+  NAME: NSLogger
+
+Process:
+
+- Processor: GitHubReleasesInfoProvider
+  Arguments:
+    github_repo: fpillet/NSLogger
+
+- Processor: URLDownloader
+
+- Processor: EndOfCheckPhase

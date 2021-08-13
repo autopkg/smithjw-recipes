@@ -1,0 +1,32 @@
+Description: Downloads the latest version of NSLogger and creates a package.
+Identifier: com.github.smithjw.pkg.NSLogger
+ParentRecipe: com.github.smithjw.download.NSLogger
+MinimumVersion: '2.3'
+
+Input:
+  NAME: NSLogger
+
+Process:
+
+- Processor: Unarchiver
+  Arguments:
+    destination_path: '%RECIPE_CACHE_DIR%/downloads'
+
+- Processor: CodeSignatureVerifier
+  Arguments:
+    input_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%.app'
+    requirement: anchor apple generic and identifier "com.florentpillet.NSLogger" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = K42G4S78CE)
+    deep_verification: True
+    strict_verification: True
+
+- Processor: EndOfCheckPhase
+
+- Processor: AppPkgCreator
+  Arguments:
+    app_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%.app'
+
+- Processor: PathDeleter
+  Arguments:
+    path_list:
+    - '%RECIPE_CACHE_DIR%/downloads/%NAME%.app'
+    - '%RECIPE_CACHE_DIR%/payload'

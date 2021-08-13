@@ -1,0 +1,19 @@
+Description: Downloads the latest version of NSLogger and creates a package.
+Identifier: com.github.smithjw.sign.NSLogger
+ParentRecipe: com.github.smithjw.pkg.NSLogger
+MinimumVersion: '2.3'
+
+Input:
+  SIGNING_CERTIFICATE: Override_This_Value
+
+Process:
+
+- Processor: com.github.rtrouton.SharedProcessors/PkgSigner
+  Arguments:
+    pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg'
+    signing_cert: '%SIGNING_CERTIFICATE%'
+
+- Processor: PathDeleter
+  Arguments:
+    path_list:
+    - '%RECIPE_CACHE_DIR%/%NAME%-%version%-unsigned.pkg'

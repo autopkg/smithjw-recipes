@@ -1,0 +1,10 @@
+Description: Downloads the latest version of NSLogger, packages it, signs it, then installs.
+Identifier: com.github.smithjw.install.NSLogger
+ParentRecipe: com.github.smithjw.sign.NSLogger
+MinimumVersion: '2.3'
+
+Input:
+  NAME: NSLogger
+
+Process:
+- Processor: Installer
