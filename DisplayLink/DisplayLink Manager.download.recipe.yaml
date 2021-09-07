@@ -5,30 +5,26 @@ MinimumVersion: '2.3'
 Input:
   NAME: DisplayLink Manager
   SOFTWARE_TITLE: DisplayLink_Manager
-  DOWNLOAD_URL: https://www.displaylink.com/downloads
+  BASE_URL: https://www.synaptics.com
+  SEARCH_URL: products/displaylink-graphics/downloads/macos
 
 Process:
 - Processor: URLTextSearcher
   Arguments:
-    re_pattern: DisplayLink Manager Graphics Connectivity\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*a href=\"\/downloads\/file\?id=(\d+)\" title=\"Download File\" onclick=\"\" class=\"download-link\"><button>Download<\/button><\/a>
-    url: '%DOWNLOAD_URL%/macos'
+    re_pattern: DisplayLink Manager Graphics Connectivity(?! BETA).*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*a href=\"(?P<match>\/node\/\d{4}\?filetype=exe)\" class=\"download-link\">Download<\/a>
+    url: '%BASE_URL%/%SEARCH_URL%'
+
+- Processor: URLTextSearcher
+  Arguments:
+    re_pattern: <a.*href="(?P<download_url>.*[.]pkg)" download>Accept<\/a>
+    url: '%BASE_URL%%match%'
 
 - Processor: URLDownloader
   Arguments:
-    curl_opts:
-    - -F
-    - fileId=%match%
-    - -F
-    - accept_submit=Accept
-    - --location
     filename: '%SOFTWARE_TITLE%.pkg'
-    url: '%DOWNLOAD_URL%/file?id=%match%'
+    url: '%BASE_URL%%download_url%'
 
 - Processor: EndOfCheckPhase
-
-- Processor: FileFinder
-  Arguments:
-    pattern: '%RECIPE_CACHE_DIR%/downloads/*.pkg'
 
 - Processor: CodeSignatureVerifier
   Arguments:
@@ -36,4 +32,4 @@ Process:
     - 'Developer ID Installer: DisplayLink Corp (73YQY62QM3)'
     - Developer ID Certification Authority
     - Apple Root CA
-    input_path: '%found_filename%'
+    input_path: '%pathname%'
