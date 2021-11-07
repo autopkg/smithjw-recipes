@@ -1,0 +1,13 @@
+Description: Downloads the latest version of Xray Exploratory App and creates a package.
+Identifier: com.github.smithjw.pkg.xray_exploratory_app
+ParentRecipe: com.github.smithjw.download.xray_exploratory_app
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Xray Exploratory App
+  SOFTWARE_TITLE: Xray_Exploratory_App
+
+Process:
+- Processor: AppPkgCreator
+  Arguments:
+    pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

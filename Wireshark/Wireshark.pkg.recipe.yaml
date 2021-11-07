@@ -1,0 +1,12 @@
+Description: Downloads latest version of Wireshark as a DMG and creates a Package.
+Identifier: com.github.smithjw.pkg.Wireshark
+ParentRecipe: com.github.homebysix.download.Wireshark
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Wireshark
+
+Process:
+- Processor: AppPkgCreator
+  # Arguments:
+  #   app_path: '%pathname%/Wireshark*.app'

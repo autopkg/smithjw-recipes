@@ -25,8 +25,8 @@ Process:
   Arguments:
     app_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%.app'
 
-- Processor: PathDeleter
-  Arguments:
-    path_list:
-    - '%RECIPE_CACHE_DIR%/downloads/%NAME%.app'
-    - '%RECIPE_CACHE_DIR%/payload'
+# - Processor: PathDeleter
+#   Arguments:
+#     path_list:
+#     - '%RECIPE_CACHE_DIR%/downloads/%NAME%.app'
+#     - '%RECIPE_CACHE_DIR%/payload'

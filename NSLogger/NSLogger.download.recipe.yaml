@@ -9,8 +9,8 @@ Process:
 
 - Processor: GitHubReleasesInfoProvider
   Arguments:
-    github_repo: fpillet/NSLogger
-
+    github_repo: 'fpillet/%NAME%'
+    
 - Processor: URLDownloader
 
 - Processor: EndOfCheckPhase

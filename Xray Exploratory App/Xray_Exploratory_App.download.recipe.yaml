@@ -1,0 +1,30 @@
+Comment: Uses a very hacky method to find the current version of the Xray App
+Description: Downloads the latest version of Xray Exploratory App
+Identifier: com.github.smithjw.download.xray_exploratory_app
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Xray Exploratory App
+
+Process:
+- Processor: URLTextSearcher
+  Arguments:
+    re_pattern: '[^\/]\.\d\.\d(?=\+)'
+    url: https://docs.getxray.app/display/XEA/Release+Notes
+    result_output_var_name: version
+- Processor: URLDownloader
+  Arguments:
+    filename: 'xea.dmg'
+    url: https://xeamacos-bucket-autoupdater.s3.amazonaws.com/xray-exploratory-app-%version%.dmg
+
+- Processor: EndOfCheckPhase
+
+- Processor: CodeSignatureVerifier
+  Arguments:
+    input_path: '%pathname%/Xray Exploratory App.app'
+    requirement: identifier "com.xpand-it.xeta" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "93TTVSKJQ2"
+
+- Processor: Versioner
+  Arguments:
+    input_plist_path: '%pathname%/Xray Exploratory App.app/Contents/Info.plist'
+    plist_version_key: CFBundleShortVersionString
