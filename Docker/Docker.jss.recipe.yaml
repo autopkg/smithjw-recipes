@@ -1,12 +1,12 @@
-Description: Downloads the latest version of Docker, packages it, then imports it into your Jamf instance.
+Description: Downloads the latest version of Docker, packages it, then imports it into your Jamf instance using JSS-Importer.
 Identifier: com.github.smithjw.jss.Docker
-ParentRecipe: com.github.smithjw.pkg.Docker
+ParentRecipe: com.github.smithjw.sign.Docker
 MinimumVersion: '2.3'
 
 Input:
   NAME: Docker
   CATEGORY: Productivity
-  GROUP_NAME: App Update - %NAME%
+  GROUP_NAME: 'App Update - %NAME% (%ARCHITECTURE%)'
   GROUP_TEMPLATE: SmartGroupTemplate.xml
   POLICY_CATEGORY: Testing - App QA
   POLICY_TEMPLATE: PolicyTemplate.xml

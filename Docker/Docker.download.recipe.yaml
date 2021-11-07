@@ -14,7 +14,7 @@ Process:
 - Processor: URLDownloader
   Arguments:
     filename: '%NAME%-%ARCHITECTURE%.dmg'
-    url: https://desktop.docker.com/mac/stable/%ARCHITECTURE%/Docker.dmg
+    url: https://desktop.docker.com/mac/main/%ARCHITECTURE%/Docker.dmg
 
 - Processor: Versioner
   Arguments:
