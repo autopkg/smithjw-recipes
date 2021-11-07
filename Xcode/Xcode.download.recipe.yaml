@@ -1,0 +1,37 @@
+Description: Looks in ~/Downloads for an Xcode xip from the Dev portal.
+Comment: This recipe requires you to first download Xcode from Apple and will move it from the Downloads folder to your Cache Dir before proceeding.
+Identifier: com.github.smithjw.download.Xcode
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Xcode
+  HOME: '~'
+  XIP_PATH: '/Users/*/Downloads'
+  XIP_NAME: 'Xcode*.xip'
+
+Process:
+- Processor: FileFinderMod
+  Arguments:
+    pattern: '%XIP_PATH%/%XIP_NAME%'
+
+- Processor: StopProcessingIf
+  Arguments:
+    predicate: '"%found_filename%" == "File Not Found"'
+
+# This is a very hacky hack to get the Version
+- Processor: com.github.homebysix.VersionSplitter/VersionSplitter
+  Arguments:
+    version: '%found_filename%'
+    split_on: '-'
+    index: 1
+
+- Processor: com.github.homebysix.VersionSplitter/VersionSplitter
+  Arguments:
+    version: '%version%'
+    split_on: .xip
+    index: 0
+
+- Processor: FileMover
+  Arguments:
+    source: '%found_filename%'
+    target: '%RECIPE_CACHE_DIR%/%NAME%-%version%.xip'

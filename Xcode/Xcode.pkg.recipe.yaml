@@ -1,0 +1,22 @@
+Description: Download, extract, and package Xcode into a DMG
+Identifier: com.github.smithjw.pkg.Xcode
+ParentRecipe: com.github.smithjw.extract.Xcode
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Xcode
+
+Process:
+- Processor: FileMover
+  Arguments:
+    source: '%found_filename%'
+    target: '%RECIPE_CACHE_DIR%/%NAME%/Applications/%NAME%-%app_version%.app'
+
+- Processor: DmgCreator
+  Arguments:
+    dmg_path: '%RECIPE_CACHE_DIR%/%NAME%-%app_version%.dmg'
+    dmg_root: '%RECIPE_CACHE_DIR%/%NAME%'
+
+- Processor: EndOfCheckPhase
+  Arguments:
+    pkg_path: '%dmg_path%'
