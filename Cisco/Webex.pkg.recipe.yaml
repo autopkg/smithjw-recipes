@@ -1,0 +1,21 @@
+Comment: |
+  Modify the ARCHITECTURE key and DOWNLOAD_TYPE to determine whether the Intel (amd64) or Apple Silicon (arm64) version
+  of Webex is downloaded. Defaults to Intel if not overridden.
+  eg "--key ARCHITECTURE=arm64"
+  Intel: WebexTeamsDesktop-MACOS-Gold
+  Apple Silicon: WebexDesktop-MACOS-Apple-Silicon-Gold
+  https://binaries.webex.com/WebexDesktop-MACOS-Apple-Silicon-Gold/Webex.dmg
+  https://binaries.webex.com/WebexTeamsDesktop-MACOS-Gold/Webex.dmg
+Description: Downloads the latest version of Webex and creates a package.
+Identifier: com.github.smithjw.pkg.webex
+ParentRecipe: com.github.smithjw.download.webex
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Webex
+
+Process:
+- Processor: AppPkgCreator
+  Arguments:
+    app_path: '%pathname%/Webex.app'
+    pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%.pkg'

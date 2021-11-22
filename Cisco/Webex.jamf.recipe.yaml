@@ -1,11 +1,11 @@
 Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
-Identifier: com.github.smithjw.jamf.jabra_direct
-ParentRecipe: com.github.moofit-recipes.pkg.jabradirect
+Identifier: com.github.smithjw.jamf.webex
+ParentRecipe: com.github.smithjw.sign.webex
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Jabra Direct
-  CATEGORY: Utilities
+  NAME: Webex
+  CATEGORY: Collaboration
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart-regex.xml
   TESTING_GROUP_NAME: Testing
@@ -14,9 +14,9 @@ Input:
   POLICY_NAME: 'Install Latest %NAME%'
   POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
-  SELF_SERVICE_DESCRIPTION: 'Jabra Direct makes sure that your headset always has the latest firmware, guaranteeing you’ll have the most up-to-date features, bug fixes and easy access to compatibility updates. With the user-friendly Direct Dashboard, staying current has never been easier.'
+  SELF_SERVICE_DESCRIPTION: 'Make teamwork your best work.'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
-  SOFTWARE_TITLE: Jabra_Direct
+  SOFTWARE_TITLE: '%NAME%'
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Install'
   UPDATE_PREDICATE: 'pkg_uploaded == False'
