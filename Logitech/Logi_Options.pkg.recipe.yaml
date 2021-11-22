@@ -1,6 +1,6 @@
 Description: Downloads the latest version of Logi Options and creates a package.
 Identifier: com.github.smithjw.pkg.logi_options
-ParentRecipe: com.github.smithjw.downloads.logi_options
+ParentRecipe: com.github.smithjw.download.logi_options
 MinimumVersion: '2.3'
 
 Input:
