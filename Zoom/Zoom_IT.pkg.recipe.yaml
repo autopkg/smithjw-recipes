@@ -1,0 +1,36 @@
+Description: Downloads the latest version of the Zoom client for IT Administrators.
+Identifier: com.github.smithjw.pkg.zoom_it
+ParentRecipe: com.github.smithjw.download.zoom_it
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Zoom
+
+Process:
+- Processor: FlatPkgUnpacker
+  Arguments:
+    destination_path: '%RECIPE_CACHE_DIR%/expand'
+    flat_pkg_path: '%pathname%'
+
+- Processor: PkgPayloadUnpacker
+  Arguments:
+    destination_path: '%RECIPE_CACHE_DIR%/unpack'
+    pkg_payload_path: '%RECIPE_CACHE_DIR%/expand/zoomus.pkg/Payload'
+
+- Processor: Versioner
+  Arguments:
+    input_plist_path: '%RECIPE_CACHE_DIR%/unpack/zoom.us.app/Contents/Info.plist'
+    plist_version_key: CFBundleShortVersionString
+
+- Processor: com.github.homebysix.VersionSplitter/VersionSplitter
+
+- Processor: PkgCopier
+  Arguments:
+    pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg'
+    source_pkg: '%pathname%'
+
+- Processor: PathDeleter
+  Arguments:
+    path_list:
+    - '%RECIPE_CACHE_DIR%/unpack'
+    - '%RECIPE_CACHE_DIR%/expand'

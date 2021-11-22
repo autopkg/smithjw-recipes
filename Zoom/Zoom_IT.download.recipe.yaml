@@ -1,0 +1,23 @@
+Description: Downloads the latest version of the Zoom client for IT Administrators.
+Identifier: com.github.smithjw.download.zoom_it
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Zoom
+  DOWNLOAD_URL: https://zoom.us/client/latest/ZoomInstallerIT.pkg
+
+Process:
+- Processor: URLDownloader
+  Arguments:
+    filename: '%NAME%.pkg'
+    url: '%DOWNLOAD_URL%'
+
+- Processor: EndOfCheckPhase
+
+- Processor: CodeSignatureVerifier
+  Arguments:
+    expected_authority_names:
+    - 'Developer ID Installer: Zoom Video Communications, Inc. (BJ4HAAB9B3)'
+    - Developer ID Certification Authority
+    - Apple Root CA
+    input_path: '%pathname%'
