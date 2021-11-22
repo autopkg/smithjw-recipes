@@ -8,7 +8,7 @@ Input:
 Process:
 - Processor: URLTextSearcher
   Arguments:
-    re_pattern: https://download01.logi.com/web/ftp/pub/techsupport/options/Options_[0-9\.]*.zip
+    re_pattern: '(?P<url>(https:\/\/www\.|https:\/\/)?[a-z0-9\/\.]+(options[a-z0-9\_\.]+zip))'
     result_output_var_name: url
     url: https://www.logitech.com/product/options
 
@@ -35,3 +35,4 @@ Process:
     - Developer ID Certification Authority
     - Apple Root CA
     input_path: '%found_filename%'
+    INSTALLER_PKG: '%found_filename%'

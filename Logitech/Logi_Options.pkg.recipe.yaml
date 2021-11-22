@@ -17,14 +17,10 @@ Process:
     input_plist_path: '%found_filename%'
     plist_version_key: CFBundleShortVersionString
 
-- Processor: FileFinder
-  Arguments:
-    pattern: '%RECIPE_CACHE_DIR%/unpack/LogiMgr Installer*.app/Contents/Resources/LogiMgr.pkg'
-
 - Processor: PkgCopier
   Arguments:
     pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
-    source_pkg: '%found_filename%'
+    source_pkg: '%INSTALLER_PKG%'
 
 - Processor: PathDeleter
   Arguments:
