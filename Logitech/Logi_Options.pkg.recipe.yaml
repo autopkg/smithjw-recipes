@@ -1,0 +1,32 @@
+Description: Downloads the latest version of Logi Options and creates a package.
+Identifier: com.github.smithjw.pkg.logi_options
+ParentRecipe: com.github.smithjw.downloads.logi_options
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Logi Options
+  SOFTWARE_TITLE: Logi_Options
+
+Process:
+- Processor: FileFinder
+  Arguments:
+    pattern: '%RECIPE_CACHE_DIR%/unpack/LogiMgr Installer*.app/Contents/Info.plist'
+
+- Processor: Versioner
+  Arguments:
+    input_plist_path: '%found_filename%'
+    plist_version_key: CFBundleShortVersionString
+
+- Processor: FileFinder
+  Arguments:
+    pattern: '%RECIPE_CACHE_DIR%/unpack/LogiMgr Installer*.app/Contents/Resources/LogiMgr.pkg'
+
+- Processor: PkgCopier
+  Arguments:
+    pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+    source_pkg: '%found_filename%'
+
+- Processor: PathDeleter
+  Arguments:
+    path_list:
+    - '%RECIPE_CACHE_DIR%/unpack'

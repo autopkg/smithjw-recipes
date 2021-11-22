@@ -1,0 +1,37 @@
+Description: Downloads the latest version of Logi Options.
+Identifier: com.github.smithjw.download.logi_options
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Logi Options
+
+Process:
+- Processor: URLTextSearcher
+  Arguments:
+    re_pattern: https://download01.logi.com/web/ftp/pub/techsupport/options/Options_[0-9\.]*.zip
+    result_output_var_name: url
+    url: https://www.logitech.com/product/options
+
+- Processor: URLDownloader
+  Arguments:
+    filename: '%NAME%.zip'
+
+- Processor: EndOfCheckPhase
+
+- Processor: Unarchiver
+  Arguments:
+    archive_path: '%pathname%'
+    destination_path: '%RECIPE_CACHE_DIR%/unpack'
+    purge_destination: true
+
+- Processor: FileFinder
+  Arguments:
+    pattern: '%RECIPE_CACHE_DIR%/unpack/LogiMgr Installer*.app/Contents/Resources/LogiMgr.pkg'
+
+- Processor: CodeSignatureVerifier
+  Arguments:
+    expected_authority_names:
+    - 'Developer ID Installer: Logitech Inc. (QED4VVPZWA)'
+    - Developer ID Certification Authority
+    - Apple Root CA
+    input_path: '%found_filename%'
