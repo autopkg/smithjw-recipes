@@ -14,7 +14,7 @@ Input:
   POLICY_NAME: 'Install Latest %NAME% (%ARCHITECTURE%)'
   POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
   SELF_SERVICE_DISPLAY_NAME: '%POLICY_NAME%'
-  SELF_SERVICE_DESCRIPTION: 'Focus on what matters instead of fighting with Git. Whether you're new to Git or a seasoned user, GitHub Desktop simplifies your development workflow.'
+  SELF_SERVICE_DESCRIPTION: "Focus on what matters instead of fighting with Git. Whether you're new to Git or a seasoned user, GitHub Desktop simplifies your development workflow."
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   SOFTWARE_TITLE: 'GitHub_Desktop'
   INSTALL_BUTTON_TEXT: 'Install'
