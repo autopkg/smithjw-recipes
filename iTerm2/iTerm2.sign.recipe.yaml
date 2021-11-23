@@ -1,0 +1,20 @@
+Comment: |
+  In order to use this Recipe, you must have a Developer ID Installer certificate in your Keychain
+Description: Downloads the latest version of iTerm2, creates a package, then signs it.
+Identifier: com.github.smithjw.sign.iterm2
+ParentRecipe: com.github.smithjw.pkg.iterm2
+MinimumVersion: '2.3'
+
+Input:
+  SIGNING_CERTIFICATE: Override_This_Value
+
+Process:
+
+- Processor: com.github.rtrouton.SharedProcessors/PkgSigner
+  Arguments:
+    signing_cert: '%SIGNING_CERTIFICATE%'
+
+- Processor: PathDeleter
+  Arguments:
+    path_list:
+    - '%RECIPE_CACHE_DIR%/%NAME%-%version%-unsigned.pkg'

@@ -1,0 +1,30 @@
+Description: Downloads the latest version of iTerm2.
+Identifier: com.github.smithjw.download.iterm2
+MinimumVersion: '2.3'
+
+Input:
+  NAME: iTerm2
+  DOWNLOAD_URL: 'https://iterm2.com/downloads/stable/latest'
+
+Process:
+- Processor: URLDownloader
+  Arguments:
+    prefetch_filename: true
+    url: '%DOWNLOAD_URL%'
+
+- Processor: EndOfCheckPhase
+
+- Processor: Unarchiver
+  Arguments:
+    destination_path: '%RECIPE_CACHE_DIR%/unpack'
+    purge_destination: true
+
+- Processor: CodeSignatureVerifier
+  Arguments:
+    input_path: '%RECIPE_CACHE_DIR%/unpack/iTerm.app'
+    requirement: 'anchor apple generic and identifier "com.googlecode.iterm2" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = H7V7XYVQ7D)'
+
+- Processor: Versioner
+  Arguments:
+    input_plist_path: '%RECIPE_CACHE_DIR%/unpack/iTerm.app/Contents/Info.plist'
+    plist_version_key: CFBundleShortVersionString

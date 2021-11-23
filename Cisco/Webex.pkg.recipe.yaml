@@ -19,3 +19,8 @@ Process:
   Arguments:
     app_path: '%pathname%/Webex.app'
     pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%.pkg'
+
+- Processor: PathDeleter
+  Arguments:
+    path_list:
+    - '%RECIPE_CACHE_DIR%/payload'

@@ -1,0 +1,46 @@
+Description: Downloads the latest version of the Microsoft Defender ATP installer package, renames the package, then imports it into your Jamf instance.
+Identifier: com.github.smithjw.jamf.microsoft_defender
+ParentRecipe: com.github.smithjw.pkg.microsoft_defender
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Microsoft Defender
+  CATEGORY: Compliance
+  GROUP_NAME: '%NAME%-update-smart'
+  GROUP_TEMPLATE: SmartGroup-update-smart-regex.xml
+  TESTING_GROUP_NAME: Testing
+  POLICY_CATEGORY: Testing
+  POLICY_TEMPLATE: Policy-install-latest.xml
+  POLICY_NAME: 'Install Latest %NAME%'
+  POLICY_RUN_COMMAND: ' '
+  SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
+  SELF_SERVICE_DESCRIPTION: 'Installs the latest version of Microsoft Defender'
+  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
+  SOFTWARE_TITLE: Microsoft_Defender
+  INSTALL_BUTTON_TEXT: 'Install'
+  REINSTALL_BUTTON_TEXT: 'Install'
+  UPDATE_PREDICATE: 'pkg_uploaded == False'
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      category_name: '%CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%UPDATE_PREDICATE%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
+    Arguments:
+      computergroup_template: '%GROUP_TEMPLATE%'
+      computergroup_name: '%GROUP_NAME%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      policy_template: '%POLICY_TEMPLATE%'
+      policy_name: '%POLICY_NAME%'
+      icon: '%SELF_SERVICE_ICON%'
