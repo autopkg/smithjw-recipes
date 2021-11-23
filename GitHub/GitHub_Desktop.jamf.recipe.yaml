@@ -1,10 +1,10 @@
 Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
-Identifier: com.github.smithjw.jamf.webex
-ParentRecipe: com.github.smithjw.sign.webex
+Identifier: com.github.smithjw.jamf.github_desktop
+ParentRecipe: com.github.smithjw.sign.github_desktop
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Webex
+  NAME: GitHub Desktop
   CATEGORY: Collaboration
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart-regex.xml
@@ -14,9 +14,9 @@ Input:
   POLICY_NAME: 'Install Latest %NAME% (%ARCHITECTURE%)'
   POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
   SELF_SERVICE_DISPLAY_NAME: '%POLICY_NAME%'
-  SELF_SERVICE_DESCRIPTION: 'Make teamwork your best work.'
+  SELF_SERVICE_DESCRIPTION: 'Focus on what matters instead of fighting with Git. Whether you're new to Git or a seasoned user, GitHub Desktop simplifies your development workflow.'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
-  SOFTWARE_TITLE: '%NAME%'
+  SOFTWARE_TITLE: 'GitHub_Desktop'
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Install'
   UPDATE_PREDICATE: 'pkg_uploaded == False'

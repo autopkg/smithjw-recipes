@@ -1,0 +1,40 @@
+Comment: |
+  Modify the ARCHITECTURE key and DOWNLOAD_URL to determine whether the Intel (amd64) or Apple Silicon (arm64) version
+  of Webex is downloaded. Defaults to Intel if not overridden.
+  eg "--key ARCHITECTURE=arm64"
+  Intel:
+    x64 & https://central.github.com/deployments/desktop/desktop/latest/darwin
+  Apple Silicon: 
+    arm64 & https://central.github.com/deployments/desktop/desktop/latest/darwin-arm64
+
+Description: Downloads the latest version of GitHub Desktop.
+Identifier: com.github.smithjw.download.github_desktop
+MinimumVersion: '2.3'
+
+Input:
+  NAME: GitHub Desktop
+  SOFTWARE_TITLE: GitHub_Desktop
+  ARCHITECTURE: x64
+  DOWNLOAD_URL: 'https://central.github.com/deployments/desktop/desktop/latest/darwin'
+
+Process:
+- Processor: URLDownloader
+  Arguments:
+    filename: '%SOFTWARE_TITLE%-%ARCHITECTURE%.zip'
+    url: '%DOWNLOAD_URL%'
+
+- Processor: Unarchiver
+  Arguments:
+    destination_path: '%RECIPE_CACHE_DIR%/unpack'
+    purge_destination: true
+
+- Processor: CodeSignatureVerifier
+  Arguments:
+    input_path: '%RECIPE_CACHE_DIR%/unpack/%NAME%.app'
+    requirement: '(identifier "com.github.GitHub" or identifier "com.github.GHAskPass") and anchor apple generic and certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = VEKTX9H2N7'
+
+- Processor: Versioner
+  Arguments:
+    input_plist_path: '%RECIPE_CACHE_DIR%/unpack/%NAME%.app/Contents/Info.plist'
+    plist_version_key: CFBundleShortVersionString
+

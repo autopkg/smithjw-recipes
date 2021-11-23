@@ -1,0 +1,19 @@
+Description: Downloads the latest version of GitHub Desktop, creates a package, then signs it.
+Identifier: com.github.smithjw.sign.github_desktop
+ParentRecipe: com.github.smithjw.pkg.github_desktop
+MinimumVersion: '2.3'
+
+Input:
+  SIGNING_CERTIFICATE: Override_This_Value
+
+Process:
+
+- Processor: com.github.rtrouton.SharedProcessors/PkgSigner
+  Arguments:
+    pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%ARCHITECTURE%-%version%.pkg'
+    signing_cert: '%SIGNING_CERTIFICATE%'
+
+- Processor: PathDeleter
+  Arguments:
+    path_list:
+    - '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%ARCHITECTURE%-%version%-unsigned.pkg'

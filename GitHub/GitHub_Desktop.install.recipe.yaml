@@ -1,0 +1,11 @@
+Description: Downloads the latest version of GitHub Desktop, packages it, then installs.
+Identifier: com.github.smithjw.install.github_desktop
+ParentRecipe: com.github.smithjw.sign.github_desktop
+MinimumVersion: '2.3'
+
+Input:
+  NAME: GitHub Desktop
+  SOFTWARE_TITLE: GitHub_Desktop
+
+Process:
+- Processor: Installer
