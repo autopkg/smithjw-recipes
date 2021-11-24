@@ -8,4 +8,4 @@ Input:
   SOFTWARE_TITLE: GitHub_Desktop
 
 Process:
-- Processor: Installer
+  - Processor: Installer
