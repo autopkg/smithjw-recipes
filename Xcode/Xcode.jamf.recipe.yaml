@@ -10,9 +10,13 @@ Input:
   GROUP_TEMPLATE: SmartGroup-update-smart-regex.xml
   TESTING_GROUP_NAME: Testing
   POLICY_CATEGORY: Testing
-  POLICY_TEMPLATE: Policy-install-latest.xml
+  POLICY_TEMPLATE: Policy-install-latest-xcode.xml
   POLICY_NAME: 'Install Latest %NAME%'
   POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
+  SCRIPT_NAME: 'autopkg_xcode_postinstall.sh'
+  SCRIPT_PRIORITY: 'After'
+  SCRIPT_PARAMETER4_TITLE: 'Xcode Version'
+  SELF_SERVICE_CATEGORY: '%CATEGORY%'
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
   SELF_SERVICE_DESCRIPTION: 'Xcode includes everything developers need to create great applications for Mac, iPhone, iPad, Apple TV, and Apple Watch.'
   SELF_SERVICE_ICON: '%NAME%.png'
@@ -29,6 +33,13 @@ Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: '%CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfScriptUploader
+    Arguments:
+      script_category: '%SELF_SERVICE_CATEGORY%'
+      script_path: '%SCRIPT_NAME%'
+      script_priority: '%SCRIPT_PRIORITY%'
+      script_parameter4: '%SCRIPT_PARAMETER4_TITLE%'
 
   - Processor: StopProcessingIf
     Arguments:

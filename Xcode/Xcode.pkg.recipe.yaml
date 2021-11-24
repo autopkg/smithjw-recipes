@@ -10,14 +10,18 @@ Process:
   - Processor: FileMover
     Arguments:
       source: '%found_filename%'
-      target: '%RECIPE_CACHE_DIR%/%NAME%/Applications/%NAME%-%major_version%.%minor_version%.app'
+      target: '%RECIPE_CACHE_DIR%/%NAME%/Applications/%NAME%-%version%.app'
 
   - Processor: DmgCreator
     Arguments:
-      dmg_path: '%RECIPE_CACHE_DIR%/%NAME%-%major_version%.%minor_version%.dmg'
+      dmg_path: '%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg'
       dmg_root: '%RECIPE_CACHE_DIR%/%NAME%'
 
   - Processor: PathDeleter
     Arguments:
       path_list:
         - '%RECIPE_CACHE_DIR%/%NAME%'
+
+  - Processor: EndOfCheckPhase
+    Arguments:
+      pkg_path: '%dmg_path%'

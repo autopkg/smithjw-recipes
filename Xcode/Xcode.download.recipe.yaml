@@ -8,30 +8,31 @@ Input:
   HOME: '~'
   XIP_PATH: '/Users/*/Downloads'
   XIP_NAME: 'Xcode_*.xip'
+  SEARCH_PREDICATE: '"%found_filename%" == "File Not Found"'
 
 Process:
-- Processor: FileFinderMod
-  Arguments:
-    pattern: '%XIP_PATH%/%XIP_NAME%'
+  - Processor: FileFinderMod
+    Arguments:
+      pattern: '%XIP_PATH%/%XIP_NAME%'
 
-- Processor: StopProcessingIf
-  Arguments:
-    predicate: '"%found_filename%" == "File Not Found"'
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%SEARCH_PREDICATE%'
 
-# This is a very hacky hack to get the Version
-- Processor: com.github.homebysix.VersionSplitter/VersionSplitter
-  Arguments:
-    version: '%found_filename%'
-    split_on: _
-    index: 1
+  # This is a very hacky hack to get the Version
+  - Processor: com.github.homebysix.VersionSplitter/VersionSplitter
+    Arguments:
+      version: '%found_filename%'
+      split_on: _
+      index: 1
 
-- Processor: com.github.homebysix.VersionSplitter/VersionSplitter
-  Arguments:
-    version: '%version%'
-    split_on: .xip
-    index: 0
+  - Processor: com.github.homebysix.VersionSplitter/VersionSplitter
+    Arguments:
+      version: '%version%'
+      split_on: .xip
+      index: 0
 
-- Processor: FileMover
-  Arguments:
-    source: '%found_filename%'
-    target: '%RECIPE_CACHE_DIR%/%NAME%-%version%.xip'
+  - Processor: FileMover
+    Arguments:
+      source: '%found_filename%'
+      target: '%RECIPE_CACHE_DIR%/%NAME%-%version%.xip'

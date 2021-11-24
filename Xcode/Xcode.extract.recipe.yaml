@@ -10,11 +10,11 @@ Process:
   - Processor: XcodeXIPUnpacker
     Arguments:
       PKG: '%RECIPE_CACHE_DIR%/%NAME%-%version%.xip'
-      output_path: '%RECIPE_CACHE_DIR%/%NAME%'
+      output_path: '%RECIPE_CACHE_DIR%/%NAME%/Applications'
 
   - Processor: FileFinder
     Arguments:
-      pattern: '%RECIPE_CACHE_DIR%/%NAME%/*.app'
+      pattern: '%RECIPE_CACHE_DIR%/%NAME%/Applications/*.app'
 
   - Processor: CodeSignatureVerifier
     Arguments:
@@ -28,8 +28,3 @@ Process:
         CFBundleShortVersionString: version
         CFBundleVersion: bundle_version
         ProductBuildVersion: build_version
-
-  - Processor: XcodeVersioner
-    Arguments:
-      app_path: '%found_filename%'
-      version: '%version%'

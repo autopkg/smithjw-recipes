@@ -6,9 +6,9 @@
 /usr/sbin/DevToolsSecurity -enable
 
 # Accept the license
-/Applications/%fixed_filename%/Contents/Developer/usr/bin/xcodebuild -license accept
+/Applications/Xcode-"$4".app/Contents/Developer/usr/bin/xcodebuild -license accept
 
 # Install embedded packages
-for PKG in $(/bin/ls /Applications/%fixed_filename%/Contents/Resources/Packages/*.pkg); do
+for PKG in $(/bin/ls /Applications/Xcode-"$4".app/Contents/Resources/Packages/*.pkg); do
     /usr/sbin/installer -pkg "$PKG" -target /
 done
