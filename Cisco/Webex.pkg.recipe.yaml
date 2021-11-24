@@ -7,12 +7,17 @@ Input:
   NAME: Webex
 
 Process:
-- Processor: AppPkgCreator
-  Arguments:
-    app_path: '%pathname%/Webex.app'
-    pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%.pkg'
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs: {}
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
 
-- Processor: PathDeleter
-  Arguments:
-    path_list:
-    - '%RECIPE_CACHE_DIR%/payload'
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%pathname%/Webex.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%.pkg'
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'

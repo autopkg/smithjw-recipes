@@ -9,7 +9,7 @@ Input:
 Process:
   - Processor: com.github.rtrouton.SharedProcessors/PkgSigner
     Arguments:
-      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%ARCHITECTURE%-%version%.pkg'
+      pkg_path: '%pkg_path%'
       signing_cert: '%SIGNING_CERTIFICATE%'
 
   - Processor: PathDeleter

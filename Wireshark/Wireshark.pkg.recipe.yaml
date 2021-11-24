@@ -7,6 +7,14 @@ Input:
   NAME: Wireshark
 
 Process:
-- Processor: AppPkgCreator
-  # Arguments:
-  #   app_path: '%pathname%/Wireshark*.app'
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs: {}
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+
+  - Processor: AppPkgCreator
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'

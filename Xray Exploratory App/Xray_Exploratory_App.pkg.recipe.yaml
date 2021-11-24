@@ -8,6 +8,16 @@ Input:
   SOFTWARE_TITLE: Xray_Exploratory_App
 
 Process:
-- Processor: AppPkgCreator
-  Arguments:
-    pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs: {}
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+
+  - Processor: AppPkgCreator
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'

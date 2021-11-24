@@ -8,13 +8,12 @@ Input:
   SOFTWARE_TITLE: Xray_Exploratory_App
 
 Process:
+  - Processor: com.github.rtrouton.SharedProcessors/PkgSigner
+    Arguments:
+      pkg_path: '%pkg_path%'
+      signing_cert: '%SIGNING_CERTIFICATE%'
 
-- Processor: com.github.rtrouton.SharedProcessors/PkgSigner
-  Arguments:
-    pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
-    signing_cert: '%SIGNING_CERTIFICATE%'
-
-- Processor: PathDeleter
-  Arguments:
-    path_list:
-    - '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%-unsigned.pkg'
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%-unsigned.pkg'

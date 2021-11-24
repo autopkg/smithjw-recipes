@@ -6,11 +6,10 @@ Input:
   NAME: NSLogger
 
 Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      github_repo: 'fpillet/%NAME%'
 
-- Processor: GitHubReleasesInfoProvider
-  Arguments:
-    github_repo: 'fpillet/%NAME%'
-    
-- Processor: URLDownloader
+  - Processor: URLDownloader
 
-- Processor: EndOfCheckPhase
+  - Processor: EndOfCheckPhase
