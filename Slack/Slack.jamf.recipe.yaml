@@ -22,6 +22,12 @@ Input:
   UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
+  - Processor: PathDeleter
+    # Cleanup parent pkg recipe
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/%NAME%'
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
       category_name: '%CATEGORY%'
