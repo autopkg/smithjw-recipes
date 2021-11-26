@@ -1,35 +1,34 @@
 Comment: |
-  Modify the ARCHITECTURE key and DOWNLOAD_TYPE to determine whether the Intel (x64) or Apple Silicon (arm64) version
-  of Webex is downloaded. Defaults to Intel if not overridden.
-  eg "--key ARCHITECTURE=arm64"
-  Intel: WebexTeamsDesktop-MACOS-Gold
-  Apple Silicon: WebexDesktop-MACOS-Apple-Silicon-Gold
-  https://binaries.webex.com/WebexDesktop-MACOS-Apple-Silicon-Gold/Webex.dmg
-  https://binaries.webex.com/WebexTeamsDesktop-MACOS-Gold/Webex.dmg
+    Modify the ARCHITECTURE key and DOWNLOAD_TYPE to determine whether the Intel (x64) or Apple Silicon (arm64) version
+    of Webex is downloaded. Defaults to Intel if not overridden.
+    eg "--key ARCHITECTURE=arm64"
+    Intel: WebexTeamsDesktop-MACOS-Gold
+    Apple Silicon: WebexDesktop-MACOS-Apple-Silicon-Gold
+    https://binaries.webex.com/WebexDesktop-MACOS-Apple-Silicon-Gold/Webex.dmg
+    https://binaries.webex.com/WebexTeamsDesktop-MACOS-Gold/Webex.dmg
 Description: Downloads the latest version of Webex.
 Identifier: com.github.smithjw.download.webex
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Webex
-  ARCHITECTURE: x64
-  DOWNLOAD_TYPE: WebexTeamsDesktop-MACOS-Gold
+    NAME: Webex
+    ARCHITECTURE: x64
+    DOWNLOAD_TYPE: WebexTeamsDesktop-MACOS-Gold
 
 Process:
-- Processor: URLDownloader
-  Arguments:
-    filename: '%NAME%-%ARCHITECTURE%.dmg'
-    url: 'https://binaries.webex.com/%DOWNLOAD_TYPE%/Webex.dmg'
+    - Processor: URLDownloader
+      Arguments:
+          filename: '%NAME%-%ARCHITECTURE%.dmg'
+          url: 'https://binaries.webex.com/%DOWNLOAD_TYPE%/Webex.dmg'
 
-- Processor: EndOfCheckPhase
+    - Processor: EndOfCheckPhase
 
-- Processor: CodeSignatureVerifier
-  Arguments:
-    input_path: '%pathname%/Webex.app'
-    requirement: identifier "Cisco-Systems.Spark" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = DE8Y96K9QP
+    - Processor: CodeSignatureVerifier
+      Arguments:
+          input_path: '%pathname%/Webex.app'
+          requirement: identifier "Cisco-Systems.Spark" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = DE8Y96K9QP
 
-
-- Processor: Versioner
-  Arguments:
-    input_plist_path: '%pathname%/Webex.app/Contents/Info.plist'
-    plist_version_key: CFBundleShortVersionString
+    - Processor: Versioner
+      Arguments:
+          input_plist_path: '%pathname%/Webex.app/Contents/Info.plist'
+          plist_version_key: CFBundleShortVersionString
