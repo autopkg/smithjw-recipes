@@ -1,45 +1,23 @@
-Comment: |
-  Use the ARCHITECTURE key to determine whether the Intel (amd64) or Apple Silicon (arm64) version
-  of Docker for Mac is downloaded. Defaults to Intel if not overridden.
-  eg "--key ARCHITECTURE=arm64"
 Description: Downloads the latest version of Docker and creates a package.
 Identifier: com.github.smithjw.pkg.Docker
 ParentRecipe: com.github.smithjw.download.Docker
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Docker
-  BUNDLE_ID: com.docker.docker
+    NAME: Docker
 
 Process:
-- Processor: PkgRootCreator
-  Arguments:
-    pkgdirs:
-      Applications: '0775'
-    pkgroot: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%'
+    - Processor: PkgRootCreator
+      Arguments:
+          pkgdirs: {}
+          pkgroot: '%RECIPE_CACHE_DIR%/payload'
 
-- Processor: EndOfCheckPhase
+    - Processor: AppPkgCreator
+      Arguments:
+          app_path: '%pathname%/%NAME%.app'
+          pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%.pkg'
 
-- Processor: Copier
-  Arguments:
-    destination_path: '%pkgroot%/Applications/Docker.app'
-    source_path: '%pathname%/Docker.app'
-
-- Processor: CodeSignatureVerifier
-  Arguments:
-    input_path: '%pkgroot%/Applications/Docker.app'
-    requirement: anchor apple generic and identifier "com.docker.docker" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "9BNSXJN65R")
-    deep_verification: True
-    strict_verification: True
-
-- Processor: PkgCreator
-  Arguments:
-    pkg_request:
-      chown:
-      - group: admin
-        path: Applications
-        user: root
-      id: '%BUNDLE_ID%.%ARCHITECTURE%'
-      options: purge_ds_store
-      pkgname: '%NAME%-%ARCHITECTURE%-%version%'
-      scripts: scripts
+    - Processor: PathDeleter
+      Arguments:
+          path_list:
+              - '%RECIPE_CACHE_DIR%/payload'
