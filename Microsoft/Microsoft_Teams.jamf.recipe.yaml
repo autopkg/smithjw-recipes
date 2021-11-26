@@ -7,14 +7,15 @@ Input:
   NAME: Microsoft Teams
   CATEGORY: Collaboration
   GROUP_NAME: '%NAME%-update-smart'
-  GROUP_TEMPLATE: SmartGroup-update-smart-regex.xml
+  GROUP_TEMPLATE: SmartGroup-update-smart.xml
   TESTING_GROUP_NAME: Testing
   POLICY_CATEGORY: Testing
   POLICY_TEMPLATE: Policy-install-latest.xml
   POLICY_NAME: 'Install Latest %NAME%'
   POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
-  SELF_SERVICE_DESCRIPTION: Microsoft Teams is a unified communications platform that
+  SELF_SERVICE_DESCRIPTION:
+    Microsoft Teams is a unified communications platform that
     combines persistent workplace chat, video meetings, file storage, and application
     integration. The service integrates with an Office 365 subscription office productivity
     suite and features extensions that can integrate with non-Microsoft products.

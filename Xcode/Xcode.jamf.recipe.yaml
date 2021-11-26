@@ -7,7 +7,7 @@ Input:
   NAME: Xcode
   CATEGORY: Developer
   GROUP_NAME: '%NAME%-update-smart'
-  GROUP_TEMPLATE: SmartGroup-update-smart-regex.xml
+  GROUP_TEMPLATE: SmartGroup-update-smart.xml
   TESTING_GROUP_NAME: Testing
   POLICY_CATEGORY: Testing
   POLICY_TEMPLATE: Policy-install-latest-xcode.xml

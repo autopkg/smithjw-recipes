@@ -1,21 +1,24 @@
+Comment: GROUP_CRITERIA should be either 'arm64' or 'x86_64'
 Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
 Identifier: com.github.smithjw.jamf.Docker
-MinimumVersion: '2.3'
 ParentRecipe: com.github.smithjw.sign.Docker
+MinimumVersion: '2.3'
 
 Input:
   NAME: Docker
   CATEGORY: Utilities
-  GROUP_NAME: '%NAME%-update-smart'
-  GROUP_TEMPLATE: SmartGroup-update-smart-regex.xml
+  GROUP_CRITERIA: 'x86_64'
+  GROUP_NAME: 'Architecture - %ARCHITECTURE%'
+  GROUP_TEMPLATE: 'SmartGroup-architecture-smart.xml'
   TESTING_GROUP_NAME: Testing
   POLICY_CATEGORY: Testing
   POLICY_TEMPLATE: Policy-install-latest.xml
   POLICY_NAME: 'Install Latest %NAME% (%ARCHITECTURE%)'
   POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
-  SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME% (%ARCHITECTURE%)'
+  SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
   SELF_SERVICE_DESCRIPTION: 'Docker containers wrap a piece of software in a complete filesystem that contains everything needed to run: code, runtime, system tools, system libraries - anything that can be installed on a server. This guarantees that the software will always run the same, regardless of its environment.'
   SELF_SERVICE_ICON: '%NAME%.png'
+  SOFTWARE_TITLE: '%NAME%'
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Install'
   UPDATE_PREDICATE: 'pkg_uploaded == False'

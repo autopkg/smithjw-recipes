@@ -1,0 +1,34 @@
+Comment: |
+    Modify the ARCHITECTURE key and DOWNLOAD_TYPE to determine whether the Intel (x64) or Apple Silicon (arm64) version
+    of Wireshark is downloaded. Defaults to Intel if not overridden.
+    Wireshark uses Arm & Intel to distinguish downloads
+    eg "--key ARCHITECTURE=arm64 --key DOWNLOAD_TYPE=Arm"
+Description: Downloads the latest version of Wireshark.
+Identifier: com.github.smithjw.download.wireshark
+MinimumVersion: '2.3'
+
+Input:
+    NAME: Wireshark
+    ARCHITECTURE: x64
+    DOWNLOAD_TYPE: Intel
+
+Process:
+    - Processor: URLTextSearcher
+      Arguments:
+          re_pattern: (Wireshark([%]20)*.*([%]20)*%DOWNLOAD_TYPE%([%]20)*64.dmg)
+          request_headers:
+              User-Agent: Safari 8.0.2
+          result_output_var_name: match
+          url: https://www.wireshark.org/download.html
+
+    - Processor: URLDownloader
+      Arguments:
+          filename: '%NAME%-%ARCHITECTURE%.dmg'
+          url: https://www.wireshark.org/download/osx/%match%
+
+    - Processor: EndOfCheckPhase
+
+    - Processor: CodeSignatureVerifier
+      Arguments:
+          input_path: '%pathname%/Wireshark*.app'
+          requirement: anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "7Z6EMTD2C6"

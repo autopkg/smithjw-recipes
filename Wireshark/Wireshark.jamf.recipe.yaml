@@ -1,45 +1,47 @@
+Comment: GROUP_CRITERIA should be either 'arm64' or 'x86_64'
 Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
-Identifier: com.github.smithjw.jamf.Wireshark
+Identifier: com.github.smithjw.jamf.wireshark
 MinimumVersion: '2.3'
-ParentRecipe: com.github.smithjw.pkg.Wireshark
+ParentRecipe: com.github.smithjw.sign.wireshark
 
 Input:
-  NAME: Wireshark
-  CATEGORY: Network
-  GROUP_NAME: '%NAME%-update-smart'
-  GROUP_TEMPLATE: SmartGroup-update-smart-regex.xml
-  TESTING_GROUP_NAME: Testing
-  POLICY_CATEGORY: Testing
-  POLICY_TEMPLATE: Policy-install-latest.xml
-  POLICY_NAME: 'Install Latest %NAME%'
-  POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
-  SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
-  SELF_SERVICE_DESCRIPTION: Wireshark is a network protocol analyzer.
-  SELF_SERVICE_ICON: '%NAME%.png'
-  INSTALL_BUTTON_TEXT: 'Install'
-  REINSTALL_BUTTON_TEXT: 'Install'
-  UPDATE_PREDICATE: 'pkg_uploaded == False'
+    NAME: Wireshark
+    CATEGORY: Network
+    GROUP_CRITERIA: 'x84_64'
+    GROUP_NAME: 'Architecture - %ARCHITECTURE%'
+    GROUP_TEMPLATE: SmartGroup-architecture-smart.xml
+    TESTING_GROUP_NAME: Testing
+    POLICY_CATEGORY: Testing
+    POLICY_TEMPLATE: Policy-install-latest.xml
+    POLICY_NAME: 'Install Latest %NAME% (%ARCHITECTURE%)'
+    POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
+    SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
+    SELF_SERVICE_DESCRIPTION: Wireshark is a network protocol analyzer.
+    SELF_SERVICE_ICON: '%NAME%.png'
+    INSTALL_BUTTON_TEXT: 'Install'
+    REINSTALL_BUTTON_TEXT: 'Install'
+    UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
-    Arguments:
-      category_name: '%CATEGORY%'
+    - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+      Arguments:
+          category_name: '%CATEGORY%'
 
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
-    Arguments:
-      pkg_category: '%CATEGORY%'
+    - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+      Arguments:
+          pkg_category: '%CATEGORY%'
 
-  - Processor: StopProcessingIf
-    Arguments:
-      predicate: '%UPDATE_PREDICATE%'
+    - Processor: StopProcessingIf
+      Arguments:
+          predicate: '%UPDATE_PREDICATE%'
 
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
-    Arguments:
-      computergroup_template: '%GROUP_TEMPLATE%'
-      computergroup_name: '%GROUP_NAME%'
+    - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
+      Arguments:
+          computergroup_template: '%GROUP_TEMPLATE%'
+          computergroup_name: '%GROUP_NAME%'
 
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
-    Arguments:
-      policy_template: '%POLICY_TEMPLATE%'
-      policy_name: '%POLICY_NAME%'
-      icon: '%SELF_SERVICE_ICON%'
+    - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+      Arguments:
+          policy_template: '%POLICY_TEMPLATE%'
+          policy_name: '%POLICY_NAME%'
+          icon: '%SELF_SERVICE_ICON%'
