@@ -8,7 +8,6 @@ Input:
   HOME: '~'
   XIP_PATH: '/Users/*/Downloads'
   XIP_NAME: 'Xcode_*.xip'
-  SEARCH_PREDICATE: '"%found_filename%" == "File Not Found"'
 
 Process:
   - Processor: FileFinderMod
@@ -17,7 +16,7 @@ Process:
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: '%SEARCH_PREDICATE%'
+      predicate: '"%found_filename%" == "File Not Found"'
 
   # This is a very hacky hack to get the Version
   - Processor: com.github.homebysix.VersionSplitter/VersionSplitter
