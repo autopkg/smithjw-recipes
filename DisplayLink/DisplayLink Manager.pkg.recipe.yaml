@@ -8,24 +8,25 @@ Input:
   DOWNLOAD_URL: https://www.displaylink.com/downloads
 
 Process:
-- Processor: FlatPkgUnpacker
-  Arguments:
-    destination_path: '%RECIPE_CACHE_DIR%/unpack'
-    flat_pkg_path: '%pathname%'
-    skip_payload: true
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      flat_pkg_path: '%pathname%'
+      skip_payload: true
 
-- Processor: com.facebook.autopkg.shared/PackageInfoVersioner
-  Arguments:
-    package_info_path: '%RECIPE_CACHE_DIR%/unpack/DisplayLinkManagerApp.pkg/PackageInfo'
+  - Processor: com.facebook.autopkg.shared/PackageInfoVersioner
+    Arguments:
+      package_info_path: '%RECIPE_CACHE_DIR%/unpack/DisplayLinkManagerApp.pkg/PackageInfo'
 
-- Processor: com.github.homebysix.VersionSplitter/VersionSplitter
+  - Processor: com.github.homebysix.VersionSplitter/VersionSplitter
 
-- Processor: PkgCopier
-  Arguments:
-    pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
-    source_pkg: '%pathname%'
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
 
-- Processor: PathDeleter
-  Arguments:
-    path_list:
-    - '%RECIPE_CACHE_DIR%/unpack'
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: True
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'

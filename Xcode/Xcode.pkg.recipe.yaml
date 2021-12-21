@@ -17,8 +17,9 @@ Process:
       dmg_path: '%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg'
       dmg_root: '%RECIPE_CACHE_DIR%/%NAME%'
 
-  - Processor: PathDeleter
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
+      fail_deleter_silently: True
       path_list:
         - '%RECIPE_CACHE_DIR%/%NAME%'
 

@@ -22,9 +22,10 @@ Input:
   UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
-  - Processor: PathDeleter
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     # Cleanup parent pkg recipe
     Arguments:
+      fail_deleter_silently: True
       path_list:
         - '%RECIPE_CACHE_DIR%/%NAME%'
 
