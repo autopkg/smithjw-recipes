@@ -4,15 +4,16 @@ ParentRecipe: com.github.smithjw.pkg.Docker
 MinimumVersion: '2.3'
 
 Input:
-    SIGNING_CERTIFICATE: Override_This_Value
+  SIGNING_CERTIFICATE: Override_This_Value
 
 Process:
-    - Processor: com.github.rtrouton.SharedProcessors/PkgSigner
-      Arguments:
-          pkg_path: '%pkg_path%'
-          signing_cert: '%SIGNING_CERTIFICATE%'
+  - Processor: com.github.rtrouton.SharedProcessors/PkgSigner
+    Arguments:
+      pkg_path: '%pkg_path%'
+      signing_cert: '%SIGNING_CERTIFICATE%'
 
-    - Processor: PathDeleter
-      Arguments:
-          path_list:
-              - '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%-unsigned.pkg'
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: True
+      path_list:
+        - '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%-unsigned.pkg'

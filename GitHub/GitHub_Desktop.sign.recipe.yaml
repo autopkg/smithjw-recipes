@@ -12,7 +12,8 @@ Process:
       pkg_path: '%pkg_path%'
       signing_cert: '%SIGNING_CERTIFICATE%'
 
-  - Processor: PathDeleter
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
+      fail_deleter_silently: True
       path_list:
         - '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%ARCHITECTURE%-%version%-unsigned.pkg'

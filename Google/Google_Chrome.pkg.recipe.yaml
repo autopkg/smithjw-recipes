@@ -7,26 +7,27 @@ Input:
   NAME: Google Chrome
 
 Process:
-- Processor: FlatPkgUnpacker
-  Arguments:
-    destination_path: '%RECIPE_CACHE_DIR%/unpack'
-    flat_pkg_path: '%pathname%'
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      flat_pkg_path: '%pathname%'
 
-- Processor: PkgPayloadUnpacker
-  Arguments:
-    destination_path: '%RECIPE_CACHE_DIR%/unpack'
-    pkg_payload_path: '%RECIPE_CACHE_DIR%/unpack/%PKGPAYLOADNAME%.pkg/Payload'
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      pkg_payload_path: '%RECIPE_CACHE_DIR%/unpack/%PKGPAYLOADNAME%.pkg/Payload'
 
-- Processor: PlistReader
-  Arguments:
-    info_path: '%RECIPE_CACHE_DIR%/unpack/%NAME%.app'
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%RECIPE_CACHE_DIR%/unpack/%NAME%.app'
 
-- Processor: PkgCopier
-  Arguments:
-    pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARETITLE%-%version%.pkg'
-    source_pkg: '%pathname%'
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARETITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
 
-- Processor: PathDeleter
-  Arguments:
-    path_list:
-    - '%RECIPE_CACHE_DIR%/unpack'
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: True
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'

@@ -8,32 +8,33 @@ Input:
   SOFTWARE_TITLE: Microsoft_Edge
 
 Process:
-- Processor: FlatPkgUnpacker
-  Arguments:
-    destination_path: '%RECIPE_CACHE_DIR%/downloads/unpack'
-    flat_pkg_path: '%pathname%'
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/unpack'
+      flat_pkg_path: '%pathname%'
 
-- Processor: FileFinder
-  Arguments:
-    pattern: '%RECIPE_CACHE_DIR%/downloads/unpack/*Edge*.pkg'
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/downloads/unpack/*Edge*.pkg'
 
-- Processor: PkgPayloadUnpacker
-  Arguments:
-    destination_path: '%RECIPE_CACHE_DIR%/downloads/payload'
-    pkg_payload_path: '%found_filename%/Payload'
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/payload'
+      pkg_payload_path: '%found_filename%/Payload'
 
-- Processor: Versioner
-  Arguments:
-    input_plist_path: '%RECIPE_CACHE_DIR%/downloads/payload/Microsoft Edge.app/Contents/Info.plist'
-    plist_version_key: CFBundleShortVersionString
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/payload/Microsoft Edge.app/Contents/Info.plist'
+      plist_version_key: CFBundleShortVersionString
 
-- Processor: PkgCopier
-  Arguments:
-    pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
-    source_pkg: '%pathname%'
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
 
-- Processor: PathDeleter
-  Arguments:
-    path_list:
-    - '%RECIPE_CACHE_DIR%/downloads/unpack'
-    - '%RECIPE_CACHE_DIR%/downloads/payload'
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: True
+      path_list:
+        - '%RECIPE_CACHE_DIR%/downloads/unpack'
+        - '%RECIPE_CACHE_DIR%/downloads/payload'
