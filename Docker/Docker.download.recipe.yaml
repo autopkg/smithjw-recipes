@@ -1,39 +1,38 @@
 Comment: |
-    Use the ARCHITECTURE and DOWNLOAD_TYPE keys to determine whether the Intel (amd64) or Apple Silicon (arm64) version
-    of Docker for Mac is downloaded. Defaults to Intel if not overridden.
-    Intel: "--key ARCHITECTURE=x64 --key DOWNLOAD_TYPE=amd64"
-    Apple Silicon: "--key ARCHITECTURE=arm64 --key DOWNLOAD_TYPE=arm64"
+  Use the ARCHITECTURE and DOWNLOAD_TYPE keys to determine whether the Intel (amd64) or Apple Silicon (arm64) version
+  of Docker for Mac is downloaded. Defaults to Intel if not overridden.
+  Intel: "--key ARCHITECTURE=x64 --key DOWNLOAD_TYPE=amd64"
+  Apple Silicon: "--key ARCHITECTURE=arm64 --key DOWNLOAD_TYPE=arm64"
 Description: Downloads the latest version of Docker.
 Identifier: com.github.smithjw.download.Docker
 MinimumVersion: '2.3'
 
 Input:
-    NAME: Docker
-    ARCHITECTURE: x64
-    DOWNLOAD_TYPE: amd64
+  NAME: Docker
+  ARCHITECTURE: x64
+  DOWNLOAD_TYPE: amd64
 
 Process:
-    - Processor: URLTextSearcher
-      Arguments:
-          re_pattern: '((\w+):\/\/(\S*)(%DOWNLOAD_TYPE%)(\S*)(dmg)(?=\?))'
-          result_output_var_name: match
-          url: 'https://www.docker.com/get-started'
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '((\w+):\/\/(\S*)(%DOWNLOAD_TYPE%)(\S*)(dmg)(?=\?))'
+      result_output_var_name: match
+      url: 'https://www.docker.com/get-started'
 
-    - Processor: URLDownloader
-      Arguments:
-          filename: '%NAME%-%ARCHITECTURE%.dmg'
-          url: '%match%'
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%NAME%-%ARCHITECTURE%.dmg'
+      url: '%match%'
 
-    - Processor: EndOfCheckPhase
+  - Processor: EndOfCheckPhase
 
-    - Processor: Versioner
-      Arguments:
-          input_plist_path: '%pathname%/%NAME%.app/Contents/Info.plist'
-          plist_version_key: CFBundleShortVersionString
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: '%pathname%'
 
-    - Processor: CodeSignatureVerifier
-      Arguments:
-          input_path: '%pathname%/%NAME%.app'
-          requirement: anchor apple generic and identifier "com.docker.docker" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "9BNSXJN65R")
-          deep_verification: True
-          strict_verification: True
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/%app_name%'
+      requirement: anchor apple generic and identifier "com.docker.docker" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "9BNSXJN65R")
+      deep_verification: True
+      strict_verification: True
