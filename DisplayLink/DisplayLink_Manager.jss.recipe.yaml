@@ -11,19 +11,20 @@ Input:
   OS_REQUIREMENTS: ''
   POLICY_CATEGORY: Testing
   POLICY_TEMPLATE: PolicyTemplate.xml
+  SOFTWARE_TITLE: DisplayLink_Manager
   SELF_SERVICE_DESCRIPTION: DisplayLink Manager is a new way to enable your DisplayLink dock, adapter or monitor on macOS platforms. It's an application that combines our latest driver with features that streamline the setup of mutliple displays up to 4K.
-  SELF_SERVICE_ICON: '%NAME%.png'
+  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
 
 Process:
-- Processor: JSSImporter
-  Arguments:
-    category: '%CATEGORY%'
-    groups:
-    - name: '%GROUP_NAME%'
-      smart: true
-      template_path: '%GROUP_TEMPLATE%'
-    policy_category: '%POLICY_CATEGORY%'
-    policy_template: '%POLICY_TEMPLATE%'
-    prod_name: '%NAME%'
-    self_service_description: '%SELF_SERVICE_DESCRIPTION%'
-    self_service_icon: '%SELF_SERVICE_ICON%'
+  - Processor: JSSImporter
+    Arguments:
+      category: '%CATEGORY%'
+      groups:
+        - name: '%GROUP_NAME%'
+          smart: true
+          template_path: '%GROUP_TEMPLATE%'
+      policy_category: '%POLICY_CATEGORY%'
+      policy_template: '%POLICY_TEMPLATE%'
+      prod_name: '%NAME%'
+      self_service_description: '%SELF_SERVICE_DESCRIPTION%'
+      self_service_icon: '%SELF_SERVICE_ICON%'
