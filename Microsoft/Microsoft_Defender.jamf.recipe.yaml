@@ -1,10 +1,11 @@
 Description: Downloads the latest version of the Microsoft Defender ATP installer package, renames the package, then imports it into your Jamf instance.
 Identifier: com.github.smithjw.jamf.microsoft_defender
-ParentRecipe: com.github.smithjw.pkg.microsoft_defender
+ParentRecipe: com.github.rtrouton.pkg.microsoftdefenderatp
 MinimumVersion: '2.3'
 
 Input:
   NAME: Microsoft Defender
+  SOFTWARE_TITLE: Microsoft_Defender
   CATEGORY: Compliance
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
@@ -16,14 +17,19 @@ Input:
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
   SELF_SERVICE_DESCRIPTION: 'Installs the latest version of Microsoft Defender'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
-  SOFTWARE_TITLE: Microsoft_Defender
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Install'
   UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
+  - Processor: FileMover
+    Arguments:
+      source: '%pkg_path%'
+      target: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
       category_name: '%CATEGORY%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader

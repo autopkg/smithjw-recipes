@@ -1,10 +1,11 @@
 Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
 Identifier: com.github.smithjw.jamf.microsoft_teams
-ParentRecipe: com.github.smithjw.pkg.microsoft_teams
+ParentRecipe: com.github.rtrouton.pkg.microsoftteams
 MinimumVersion: '2.3'
 
 Input:
   NAME: Microsoft Teams
+  SOFTWARE_TITLE: Microsoft_Teams
   CATEGORY: Collaboration
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
@@ -20,14 +21,19 @@ Input:
     integration. The service integrates with an Office 365 subscription office productivity
     suite and features extensions that can integrate with non-Microsoft products.
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
-  SOFTWARE_TITLE: Microsoft_Teams
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Install'
   UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
+  - Processor: FileMover
+    Arguments:
+      source: '%pkg_path%'
+      target: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
       category_name: '%CATEGORY%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader

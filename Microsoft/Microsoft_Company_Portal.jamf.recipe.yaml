@@ -1,10 +1,11 @@
 Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
 Identifier: com.github.smithjw.jamf.microsoft_company_portal
-ParentRecipe: com.github.smithjw.pkg.microsoft_company_portal
+ParentRecipe: com.github.rtrouton.pkg.MicrosoftIntuneCompanyPortal
 MinimumVersion: '2.3'
 
 Input:
   NAME: Microsoft Company Portal
+  SOFTWARE_TITLE: Microsoft_Company_Portal
   CATEGORY: Collaboration
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
@@ -16,14 +17,19 @@ Input:
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
   SELF_SERVICE_DESCRIPTION: 'Company Portal helps simplify the tasks you need to do for work.'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
-  SOFTWARE_TITLE: Microsoft_Company_Portal
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Install'
   UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
+  - Processor: FileMover
+    Arguments:
+      source: '%pkg_path%'
+      target: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
       category_name: '%CATEGORY%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
