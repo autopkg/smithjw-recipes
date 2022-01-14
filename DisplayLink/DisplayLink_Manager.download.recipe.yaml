@@ -1,0 +1,35 @@
+Description: Downloads the latest version of the DisplayLink Manager App.
+Identifier: com.github.smithjw.download.DisplayLink_Manager
+MinimumVersion: '2.3'
+
+Input:
+  NAME: DisplayLink Manager
+  SOFTWARE_TITLE: DisplayLink_Manager
+  BASE_URL: https://www.synaptics.com
+  SEARCH_URL: products/displaylink-graphics/downloads/macos
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: DisplayLink Manager Graphics Connectivity(?! BETA).*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*a href=\"(?P<match>\/node\/\d{4}\?filetype=exe)\" class=\"download-link\">Download<\/a>
+      url: '%BASE_URL%/%SEARCH_URL%'
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: <a.*href="(?P<download_url>.*[.]pkg)" download>Accept<\/a>
+      url: '%BASE_URL%%match%'
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%SOFTWARE_TITLE%.pkg'
+      url: '%BASE_URL%%download_url%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: DisplayLink Corp (73YQY62QM3)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'
