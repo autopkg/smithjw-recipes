@@ -8,17 +8,17 @@ Input:
   DOWNLOAD_URL: https://www.displaylink.com/downloads
 
 Process:
-  - Processor: FlatPkgUnpacker
+  - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
     Arguments:
-      destination_path: '%RECIPE_CACHE_DIR%/unpack'
-      flat_pkg_path: '%pathname%'
-      skip_payload: true
+      archive_path: '%pathname%'
+      file_to_extract: Distribution
 
-  - Processor: com.facebook.autopkg.shared/PackageInfoVersioner
+  - Processor: com.github.mlbz521.SharedProcessors/XPathParser
     Arguments:
-      package_info_path: '%RECIPE_CACHE_DIR%/unpack/DisplayLinkManagerApp.pkg/PackageInfo'
-
-  - Processor: com.github.homebysix.VersionSplitter/VersionSplitter
+      xml_file: '%extracted_file%'
+      xpath: './/bundle[@id="com.displaylink.DisplayLinkUserAgent"][@CFBundleShortVersionString]'
+      attribute_one: CFBundleShortVersionString
+      return_variable_attribute_one: version
 
   - Processor: PkgCopier
     Arguments:
@@ -29,4 +29,4 @@ Process:
     Arguments:
       fail_deleter_silently: True
       path_list:
-        - '%RECIPE_CACHE_DIR%/unpack'
+        - '%RECIPE_CACHE_DIR%/extractedfile'
