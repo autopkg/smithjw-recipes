@@ -27,13 +27,16 @@ Input:
   POLICY_NAME: 'Reset %NAME%'
   POLICY_RUN_COMMAND: ' '
   SELF_SERVICE_DISPLAY_NAME: 'Reset %NAME%'
-  SELF_SERVICE_DESCRIPTION: |
-    "The %NAME% Reset policy will revert %NAME% back to its original state leving behind only the application's app bundle. This will remove:
+  SELF_SERVICE_DESCRIPTION:
+    '"The %NAME% Reset policy will revert %NAME% back to its
+    original state leving behind only the application''s app bundle. This will remove:
+
     - All user-preferences
     - Group/per-app containers
     - Temporary caches
     - Heychain entries
     - Mailbox content (Office & Outlook Office-Reset packages)"
+    '
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Install'
@@ -42,7 +45,7 @@ Input:
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
-      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      pkg_path: '%RECIPE_CACHE_DIR%/Microsoft_%SOFTWARE_TITLE%-%version%.pkg'
       category_name: '%CATEGORY%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
