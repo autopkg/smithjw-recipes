@@ -1,0 +1,15 @@
+#!/bin/bash
+
+/bin/echo "Installing Wireshark components..."
+extras="/Applications/Wireshark.app/Contents/Resources/Extras"
+packages=(
+    "Install ChmodBPF.pkg"
+    "Add Wireshark to the system path.pkg"
+)
+
+for package in "${packages[@]}"; do
+    echo "Installing: $extras/$package"
+    installer -pkg "$extras/$package" -target /
+done
+
+exit 0

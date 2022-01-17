@@ -6,6 +6,7 @@ MinimumVersion: '2.3'
 Input:
   NAME: Microsoft OneDrive
   SOFTWARE_TITLE: Microsoft_OneDrive
+  SOFTWARETITLE: OneDrive
   CATEGORY: Collaboration
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
@@ -13,7 +14,7 @@ Input:
   POLICY_CATEGORY: Testing
   POLICY_TEMPLATE: Policy-install-latest.xml
   POLICY_NAME: 'Install Latest %NAME%'
-  POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
+  POLICY_RUN_COMMAND: ' '
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
   SELF_SERVICE_DESCRIPTION:
     Get to your files from anywhere, on any device, with Microsoft OneDrive.

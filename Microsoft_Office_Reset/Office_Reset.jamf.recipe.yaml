@@ -31,10 +31,15 @@ Input:
     '"The %NAME% Reset policy will revert %NAME% back to its
     original state leving behind only the application''s app bundle. This will remove:
 
+
     - All user-preferences
+
     - Group/per-app containers
+
     - Temporary caches
+
     - Heychain entries
+
     - Mailbox content (Office & Outlook Office-Reset packages)"
     '
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
