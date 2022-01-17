@@ -45,7 +45,7 @@ Input:
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
-      pkg_path: '%RECIPE_CACHE_DIR%/Microsoft_%SOFTWARE_TITLE%-%version%.pkg'
+      pkg_path: '%RECIPE_CACHE_DIR%/Microsoft_%SOFTWARE_TITLE%_Reset-%version%.pkg'
       category_name: '%CATEGORY%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
