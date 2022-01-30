@@ -1,6 +1,6 @@
 Description: Downloads the latest version of the Microsoft Defender ATP installer package, renames the package, then imports it into your Jamf instance.
 Identifier: com.github.smithjw.jamf.Microsoft_Defender
-ParentRecipe: com.github.rtrouton.pkg.microsoftdefenderatp
+ParentRecipe: com.github.rtrouton.pkg.microsoftdefender
 MinimumVersion: '2.3'
 
 Input:
