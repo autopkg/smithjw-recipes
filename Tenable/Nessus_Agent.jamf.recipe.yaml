@@ -1,4 +1,3 @@
-Description: Uses parent pkg recipe to download latest GoogleChrome and import it into the JSS.
 Identifier: com.github.smithjw.jamf.Nessus_Agent
 ParentRecipe: com.github.smithjw.pkg.Nessus_Agent
 MinimumVersion: '2.3'
