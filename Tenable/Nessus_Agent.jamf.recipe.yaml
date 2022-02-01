@@ -1,0 +1,42 @@
+Description: Uses parent pkg recipe to download latest GoogleChrome and import it into the JSS.
+Identifier: com.github.smithjw.jamf.Nessus_Agent
+ParentRecipe: com.github.smithjw.pkg.Nessus_Agent
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Nessus Agent
+  SOFTWARE_TITLE: Nessus_Agent
+  CATEGORY: Security
+  GROUP_NAME: '%NAME%-update-smart'
+  GROUP_TEMPLATE: SmartGroup-update-smart.xml
+  TESTING_GROUP_NAME: Testing
+  POLICY_CATEGORY: Testing
+  POLICY_TEMPLATE: Policy-install-latest.xml
+  POLICY_NAME: 'Install Latest %NAME%'
+  POLICY_RUN_COMMAND: ' '
+  SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
+  SELF_SERVICE_DESCRIPTION: 'Nessus Agents are lightweight programs installed locally on a host a laptop, virtual system, desktop, and/or server. Agents receive scanning instructions from a central Nessus Manager server, perform scans locally, and report vulnerability, compliance and system results back to the central server.'
+  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
+  INSTALL_BUTTON_TEXT: 'Install'
+  REINSTALL_BUTTON_TEXT: 'Install'
+  UPDATE_PREDICATE: 'pkg_uploaded == False'
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%UPDATE_PREDICATE%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
+    Arguments:
+      computergroup_template: '%GROUP_TEMPLATE%'
+      computergroup_name: '%GROUP_NAME%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      policy_template: '%POLICY_TEMPLATE%'
+      policy_name: '%POLICY_NAME%'
+      icon: '%SELF_SERVICE_ICON%'
