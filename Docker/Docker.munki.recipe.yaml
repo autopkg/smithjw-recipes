@@ -1,23 +1,22 @@
-Comment: Created with Recipe Robot v2.2.0 (https://github.com/homebysix/recipe-robot)
 Description: Downloads the latest version of Docker and imports it into Munki.
 Identifier: com.github.smithjw.munki.Docker
-ParentRecipe: com.github.smithjw.download.Docker
-MinimumVersion: 1.0.0
+ParentRecipe: com.github.smithjw.pkg.Docker
+MinimumVersion: '2.3'
 
 Input:
   NAME: Docker
-  MUNKI_REPO_SUBDIR: apps/%NAME%
+  MUNKI_REPO_SUBDIR: apps/%NAME%-%ARCHITECTURE%
   pkginfo:
     catalogs:
-    - testing
+      - testing
     description: Spice up your Dock a little.
     developer: Docker Inc
     display_name: Docker
-    name: '%NAME%'
+    name: '%NAME%-%ARCHITECTURE%'
     unattended_install: true
 
 Process:
-- Processor: MunkiImporter
-  Arguments:
-    pkg_path: '%pathname%'
-    repo_subdirectory: '%MUNKI_REPO_SUBDIR%'
+  - Processor: MunkiImporter
+    Arguments:
+      pkg_path: '%pathname%'
+      repo_subdirectory: '%MUNKI_REPO_SUBDIR%'
