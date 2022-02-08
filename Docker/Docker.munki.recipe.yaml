@@ -1,7 +1,7 @@
 Comment: Created with Recipe Robot v2.2.0 (https://github.com/homebysix/recipe-robot)
 Description: Downloads the latest version of Docker and imports it into Munki.
-Identifier: com.github.autopkg-jby-recipes.munki.Docker
-ParentRecipe: com.github.autopkg-jby-recipes.download.Docker
+Identifier: com.github.smithjw.munki.Docker
+ParentRecipe: com.github.smithjw.download.Docker
 MinimumVersion: 1.0.0
 
 Input:
