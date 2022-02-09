@@ -30,9 +30,10 @@ Process:
       source: '%pkg_path%'
       target: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
 
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
-      pkg_category: '%CATEGORY%'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      category_name: '%CATEGORY%'
 
   - Processor: StopProcessingIf
     Arguments:
