@@ -19,7 +19,7 @@ Input:
   DOWNLOAD_URL: 'https://dl.pstmn.io/download/latest/osx_%DOWNLOAD_TYPE%'
   GROUP_CRITERIA: '%ARCHITECTURE%'
   GROUP_NAME: 'Architecture - %ARCHITECTURE%'
-  GROUP_TEMPLATE: SmartGroup-architecture-smart
+  GROUP_TEMPLATE: SmartGroup-architecture-smart.xml
   POLICY_CATEGORY: Testing
   POLICY_TEMPLATE: PolicyTemplate.xml
   POLICY_NAME: 'Install Latest %NAME%'
