@@ -1,0 +1,50 @@
+Identifier: com.github.smithjw.jamf.Sketch
+ParentRecipe: com.github.amsysuk-recipes.pkg.Sketch
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Sketch
+  SOFTWARE_TITLE: '%NAME%'
+  CATEGORY: Design
+  GROUP_NAME: '%NAME%-update-smart'
+  GROUP_TEMPLATE: SmartGroup-update-smart.xml
+  POLICY_CATEGORY: Testing
+  POLICY_TEMPLATE: PolicyTemplate.xml
+  POLICY_NAME: 'Install Latest %NAME%'
+  POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
+  SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
+  SELF_SERVICE_DESCRIPTION: |
+    Sketch gives you all the tools you need for a truly collaborative design process. From early ideas to pixel-perfect artwork,
+    playable prototypes and developer handoff. It all starts here.
+  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
+  INSTALL_BUTTON_TEXT: 'Install'
+  REINSTALL_BUTTON_TEXT: 'Install'
+  UPDATE_PREDICATE: 'pkg_uploaded == False'
+
+Process:
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%UPDATE_PREDICATE%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      category_name: '%CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%UPDATE_PREDICATE%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
+    Arguments:
+      computergroup_template: '%GROUP_TEMPLATE%'
+      computergroup_name: '%GROUP_NAME%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      policy_template: '%POLICY_TEMPLATE%'
+      policy_name: '%POLICY_NAME%'
+      icon: '%SELF_SERVICE_ICON%'

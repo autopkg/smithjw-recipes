@@ -1,0 +1,66 @@
+Comment: |
+  To download platform-specific versions, use the ARCHITECTURE and GROUP_CRITERIA keys
+  Intel:
+    ARCHITECTURE: 'x86_64'
+    DOWNLOAD_TYPE: '64'
+  Arm:
+    ARCHITECTURE: 'arm64'
+    DOWNLOAD_TYPE: 'arm64'
+Identifier: com.github.smithjw.jamf.Postman
+ParentRecipe: com.github.dataJAR-recipes.pkg.postman
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Postman
+  SOFTWARE_TITLE: '%NAME%'
+  CATEGORY: Development
+  ARCHITECTURE: 'x86_64'
+  DOWNLOAD_TYPE: '64'
+  DOWNLOAD_URL: 'https://dl.pstmn.io/download/latest/osx_%DOWNLOAD_TYPE%'
+  GROUP_CRITERIA: '%ARCHITECTURE%'
+  GROUP_NAME: 'Architecture - %ARCHITECTURE%'
+  GROUP_TEMPLATE: SmartGroup-architecture-smart
+  POLICY_CATEGORY: Testing
+  POLICY_TEMPLATE: PolicyTemplate.xml
+  POLICY_NAME: 'Install Latest %NAME%'
+  POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
+  SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
+  SELF_SERVICE_DESCRIPTION: 'Postman Makes API Development Simple.'
+  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
+  INSTALL_BUTTON_TEXT: 'Install'
+  REINSTALL_BUTTON_TEXT: 'Install'
+  UPDATE_PREDICATE: 'pkg_uploaded == False'
+
+Process:
+  - Processor: FileMover
+    Arguments:
+      source: '%pkg_path%'
+      target: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%ARCHITECTURE%-%version%.pkg'
+
+  - Processor: StopProcessingIf
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%ARCHITECTURE%-%version%.pkg'
+      predicate: '%UPDATE_PREDICATE%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      category_name: '%CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%UPDATE_PREDICATE%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
+    Arguments:
+      computergroup_template: '%GROUP_TEMPLATE%'
+      computergroup_name: '%GROUP_NAME%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      policy_template: '%POLICY_TEMPLATE%'
+      policy_name: '%POLICY_NAME%'
+      icon: '%SELF_SERVICE_ICON%'
