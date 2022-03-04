@@ -7,10 +7,9 @@ Input:
   NAME: NSLogger
 
 Process:
-  - Processor: PkgRootCreator
+  - Processor: Unarchiver
     Arguments:
-      pkgdirs: {}
-      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      destination_path: '%RECIPE_CACHE_DIR%/downloads'
 
   - Processor: AppPkgCreator
     Arguments:
@@ -21,4 +20,3 @@ Process:
       fail_deleter_silently: True
       path_list:
         - '%RECIPE_CACHE_DIR%/downloads/%NAME%.app'
-        - '%RECIPE_CACHE_DIR%/payload'
