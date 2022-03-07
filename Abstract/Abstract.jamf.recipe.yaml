@@ -1,9 +1,9 @@
-Identifier: com.github.smithjw.jamf.Sketch
-ParentRecipe: com.github.amsysuk-recipes.pkg.Sketch
+Identifier: com.github.smithjw.jamf.Abstract
+ParentRecipe: com.github.dataJAR-recipes.pkg.Abstract
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Sketch
+  NAME: Abstract
   SOFTWARE_TITLE: '%NAME%'
   CATEGORY: Design
   GROUP_NAME: '%NAME%-update-smart'
@@ -11,11 +11,9 @@ Input:
   POLICY_CATEGORY: Testing
   POLICY_TEMPLATE: PolicyTemplate.xml
   POLICY_NAME: 'Install Latest %NAME%'
-  POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
+  POLICY_RUN_COMMAND: ' '
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
-  SELF_SERVICE_DESCRIPTION: |
-    Sketch gives you all the tools you need for a truly collaborative design process. From early ideas to pixel-perfect artwork,
-    playable prototypes and developer handoff. It all starts here.
+  SELF_SERVICE_DESCRIPTION: 'Version Control for Sketch'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Install'

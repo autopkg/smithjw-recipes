@@ -1,29 +1,33 @@
-Identifier: com.github.smithjw.jamf.Sketch
-ParentRecipe: com.github.amsysuk-recipes.pkg.Sketch
+Identifier: com.github.smithjw.jamf.Citrix_Workspace
+ParentRecipe: com.github.grahampugh.recipes.pkg.CitrixWorkspace
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Sketch
-  SOFTWARE_TITLE: '%NAME%'
-  CATEGORY: Design
+  NAME: Citrix Workspace
+  SOFTWARE_TITLE: 'Citrix_Workspace'
+  CATEGORY: Virtualization
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
   POLICY_CATEGORY: Testing
   POLICY_TEMPLATE: PolicyTemplate.xml
   POLICY_NAME: 'Install Latest %NAME%'
-  POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
+  POLICY_RUN_COMMAND: ' '
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
-  SELF_SERVICE_DESCRIPTION: |
-    Sketch gives you all the tools you need for a truly collaborative design process. From early ideas to pixel-perfect artwork,
-    playable prototypes and developer handoff. It all starts here.
+  SELF_SERVICE_DESCRIPTION: 'Citrix Workspace is the easy-to-install client software that provides access to your Citrix XenDesktop and XenApp installations.'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Install'
   UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
+  - Processor: FileMover
+    Arguments:
+      source: '%pkg_path%'
+      target: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
       category_name: '%CATEGORY%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
