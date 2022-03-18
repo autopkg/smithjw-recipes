@@ -3,4 +3,4 @@
 
 `autopkg repo-add smithjw-recipes`
 
-New Recipes require `autopkg` 2.3 or higher due to new YAML formatting.
+New recipes require `autopkg` 2.3 or higher due to new YAML formatting.
