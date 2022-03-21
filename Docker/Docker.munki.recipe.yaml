@@ -11,10 +11,11 @@ Input:
       - testing
     description: Spice up your Dock a little.
     developer: Docker Inc
-    display_name: Docker
-    name: '%NAME%-%ARCHITECTURE%'
+    display_name: '%NAME'
+    name: '%NAME%'
     unattended_install: true
-    supported_architectures: '%ARCHITECTURE%'
+    supported_architectures:
+    - '%ARCHITECTURE%'
 
 Process:
   - Processor: MunkiImporter
