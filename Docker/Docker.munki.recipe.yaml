@@ -15,7 +15,7 @@ Input:
     name: '%NAME%'
     unattended_install: true
     supported_architectures:
-    - '%ARCHITECTURE%'
+      - '%ARCHITECTURE%'
 
 Process:
   - Processor: MunkiImporter
