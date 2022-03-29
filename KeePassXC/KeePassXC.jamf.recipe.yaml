@@ -1,0 +1,54 @@
+Comment: Set ARCHITECTURE to x86_64 or arm64
+Identifier: com.github.smithjw.jamf.KeePassXC
+ParentRecipe: com.github.smithjw.sign.KeePassXC
+MinimumVersion: '2.3'
+
+Input:
+  NAME: KeePassXC
+  SOFTWARE_TITLE: '%NAME%'
+  ARCHITECTURE: 'x86_64'
+  ASSET_REGEX: 'KeePassXC-.*-%ARCHITECTURE%\.dmg'
+  CATEGORY: Utilities
+  GROUP_CRITERIA: '%ARCHITECTURE%'
+  GROUP_NAME: 'Architecture - %ARCHITECTURE%'
+  GROUP_TEMPLATE: 'SmartGroup-architecture-smart.xml'
+  POLICY_CATEGORY: Testing
+  POLICY_TEMPLATE: PolicyTemplate.xml
+  POLICY_NAME: 'Install Latest %NAME%'
+  POLICY_RUN_COMMAND: ' '
+  SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
+  SELF_SERVICE_DESCRIPTION: |
+    Never forget a password again.
+    Securely store passwords using industry standard encryption, quickly auto-type them into desktop applications, and use our browser extension to log into websites.
+  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
+  INSTALL_BUTTON_TEXT: 'Install'
+  REINSTALL_BUTTON_TEXT: 'Install'
+  UPDATE_PREDICATE: 'pkg_uploaded == False'
+
+Process:
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%UPDATE_PREDICATE%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      category_name: '%CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%UPDATE_PREDICATE%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
+    Arguments:
+      computergroup_template: '%GROUP_TEMPLATE%'
+      computergroup_name: '%GROUP_NAME%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      policy_template: '%POLICY_TEMPLATE%'
+      policy_name: '%POLICY_NAME%'
+      icon: '%SELF_SERVICE_ICON%'
