@@ -1,5 +1,5 @@
-Identifier: com.github.smithjw.jamf.RoyalTSX
-ParentRecipe: com.github.smithjw.sign.RoyalTSX
+Identifier: com.github.smithjw.jamf.Royal_TSX
+ParentRecipe: com.github.smithjw.sign.Royal_TSX
 MinimumVersion: '2.3'
 
 Input:
