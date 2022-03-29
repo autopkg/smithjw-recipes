@@ -1,0 +1,9 @@
+Identifier: com.github.smithjw.install.RoyalTSX
+ParentRecipe: com.github.smithjw.sign.RoyalTSX
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Royal TSX
+
+Process:
+  - Processor: Installer

@@ -1,0 +1,24 @@
+Identifier: com.github.smithjw.sign.RoyalTSX
+ParentRecipe: com.github.homebysix.pkg.RoyalTSX
+MinimumVersion: '2.3'
+
+Input:
+  SOFTWARE_TITLE: Royal_TSX
+  SIGNING_CERTIFICATE: Override_This_Value
+
+Process:
+  - Processor: FileMover
+    Arguments:
+      source: '%pkg_path%'
+      target: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: com.github.rtrouton.SharedProcessors/PkgSigner
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      signing_cert: '%SIGNING_CERTIFICATE%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: True
+      path_list:
+        - '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%-unsigned.pkg'
