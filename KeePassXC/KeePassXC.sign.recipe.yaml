@@ -1,5 +1,5 @@
 Identifier: com.github.smithjw.sign.KeePassXC
-ParentRecipe: com.github.crystalllized.pkg.KeePassXC
+ParentRecipe: com.github.smithjw.pkg.KeePassXC
 MinimumVersion: '2.3'
 
 Input:
@@ -15,4 +15,4 @@ Process:
     Arguments:
       fail_deleter_silently: True
       path_list:
-        - '%RECIPE_CACHE_DIR%/%NAME%-%version%-unsigned.pkg'
+        - '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%-unsigned.pkg'
