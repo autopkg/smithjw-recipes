@@ -1,5 +1,5 @@
 Identifier: com.github.smithjw.sign.Royal_TSX
-ParentRecipe: com.github.homebysix.pkg.Royal_TSX
+ParentRecipe: com.github.homebysix.pkg.RoyalTSX
 MinimumVersion: '2.3'
 
 Input:
