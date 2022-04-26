@@ -6,7 +6,6 @@ Input:
   NAME: Stats
   SOFTWARE_TITLE: '%NAME%'
   CATEGORY: Utilities
-  ARCHITECTURE: 'x86_64'
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
   POLICY_CATEGORY: Testing
