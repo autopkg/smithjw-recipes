@@ -20,6 +20,13 @@ Process:
       attribute_one: CFBundleShortVersionString
       return_variable_attribute_one: version
 
+  - Processor: com.github.mlbz521.SharedProcessors/XPathParser
+    Arguments:
+      xml_file: '%extracted_file%'
+      xpath: './/os-version[@min]'
+      attribute_one: min
+      return_variable_attribute_one: minimum_os_version
+
   - Processor: PkgCopier
     Arguments:
       pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
