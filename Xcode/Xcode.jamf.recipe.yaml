@@ -12,7 +12,7 @@ Input:
   POLICY_CATEGORY: Testing
   POLICY_TEMPLATE: Policy-install-latest-xcode.xml
   POLICY_NAME: 'Install Latest %NAME%'
-  POLICY_RUN_COMMAND: 'chown -R "$(stat -f%Su /dev/console):staff" "/Applications/%NAME%.app" && echo "Corrected permissions for %NAME%."'
+  POLICY_RUN_COMMAND: ' '
   SCRIPT_NAME: 'autopkg_xcode_postinstall.sh'
   SCRIPT_PRIORITY: 'After'
   SCRIPT_PARAMETER4_TITLE: 'Xcode Version'
