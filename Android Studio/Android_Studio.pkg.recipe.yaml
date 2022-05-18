@@ -3,9 +3,9 @@ ParentRecipe: com.github.smithjw.download.Android_Studio
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Android Studio
+  SOFTWARE_TITLE: Android_Studio
 
 Process:
   - Processor: AppPkgCreator
     Arguments:
-      pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%.pkg'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%ARCHITECTURE%-%version%.pkg'
