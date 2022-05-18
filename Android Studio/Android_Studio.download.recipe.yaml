@@ -1,0 +1,28 @@
+Identifier: com.github.smithjw.download.Android_Studio
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Android Studio
+  SOFTWARE_TITLE: Android_Studio
+  ARCHITECTURE: 'arm64'
+  ARCH_SEARCH: 'mac_arm'
+  SEARCH_PATTERN: '(https\://redirector\.gvt1\.com/edgedl/android/studio/install/.+/android-studio.+%ARCH_SEARCH%\.dmg)'
+  SEARCH_URL: 'https://developer.android.com/studio'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '%SEARCH_PATTERN%'
+      url: '%SEARCH_URL%'
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%NAME%-%ARCHITECTURE%.dmg'
+      url: '%match%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      requirements: 'identifier "com.google.android.studio" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = EQHXZ8M8AV'
+      input_path: '%pathname%'
+
+  - Processor: EndOfCheckPhase

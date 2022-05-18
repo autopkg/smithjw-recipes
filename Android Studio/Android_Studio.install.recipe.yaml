@@ -1,0 +1,9 @@
+Identifier: com.github.smithjw.install.Android_Studio
+ParentRecipe: com.github.smithjw.sign.Android_Studio
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Android Studio
+
+Process:
+  - Processor: Installer

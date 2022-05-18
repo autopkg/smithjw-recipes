@@ -1,0 +1,11 @@
+Identifier: com.github.smithjw.pkg.Android_Studio
+ParentRecipe: com.github.smithjw.download.Android_Studio
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Android Studio
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%.pkg'
