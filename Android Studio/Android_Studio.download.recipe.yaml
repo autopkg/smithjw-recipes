@@ -17,7 +17,6 @@ Process:
 
   - Processor: URLDownloader
     Arguments:
-      filename: '%NAME%-%ARCHITECTURE%.dmg'
       url: '%match%'
 
   - Processor: CodeSignatureVerifier
