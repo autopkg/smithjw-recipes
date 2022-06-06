@@ -5,6 +5,7 @@ MinimumVersion: '2.3'
 Input:
   NAME: Figma
   SOFTWARE_TITLE: '%NAME%'
+  ARCHITECTURE: 'arm64'
   CATEGORY: Design
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
@@ -22,9 +23,15 @@ Input:
   UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
+  - Processor: FileMover
+    Arguments:
+      source: '%pkg_path%'
+      target: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%'
+
   - Processor: StopProcessingIf
     Arguments:
       predicate: '%UPDATE_PREDICATE%'
+      pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
