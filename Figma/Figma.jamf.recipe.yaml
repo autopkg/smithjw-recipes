@@ -26,12 +26,12 @@ Process:
   - Processor: FileMover
     Arguments:
       source: '%pkg_path%'
-      target: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%'
+      target: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%.pkg'
 
   - Processor: StopProcessingIf
     Arguments:
       predicate: '%UPDATE_PREDICATE%'
-      pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%'
+      pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%.pkg'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
