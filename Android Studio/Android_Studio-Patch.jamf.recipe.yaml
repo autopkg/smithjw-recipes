@@ -1,13 +1,14 @@
-Identifier: com.github.smithjw.jamf.DisplayLink_Manager-Patch
-ParentRecipe: com.github.smithjw.jamf.DisplayLink_Manager
+Identifier: com.github.smithjw.jamf.Android_Studio-Patch
+ParentRecipe: com.github.smithjw.jamf.Android_Studio
 MinimumVersion: '2.3'
 
 Input:
-  NAME: DisplayLink Manager
-  CATEGORY: Utilities
+  NAME: Android Studio
+  SOFTWARE_TITLE: Android_Studio
+  CATEGORY: Development
   PATCH_NAME: 'Auto-Update - %NAME%'
   PATCH_SOFTWARE_TITLE: '%NAME%'
-  PATCH_TEMPLATE: 'PatchTemplate-automatic.xml'
+  PATCH_TEMPLATE: 'PatchTemplate-selfservice.xml'
   POLICY_NAME: '%NAME%'
   PATCH_ENABLED: 'true'
   PATCH_UNKNOWN: 'true'
