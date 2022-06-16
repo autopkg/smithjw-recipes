@@ -1,18 +1,18 @@
-Identifier: com.github.smithjw.jamf.Microsoft_Company_Portal-patch
-ParentRecipe: com.github.smithjw.jamf.Microsoft_Company_Portal
+Identifier: com.github.smithjw.jamf.Google_Chrome-patch
+ParentRecipe: com.github.smithjw.jamf.Google_Chrome
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Microsoft Company Portal
-  SOFTWARE_TITLE: Microsoft_Company_Portal
-  CATEGORY: Compliance
+  NAME: Google Chrome
+  SOFTWARE_TITLE: 'Google_Chrome'
+  CATEGORY: Browsers
   PATCH_NAME: 'Auto-Update - %NAME%'
   PATCH_SOFTWARE_TITLE: '%NAME%'
-  PATCH_TEMPLATE: 'PatchTemplate-automatic.xml'
+  PATCH_TEMPLATE: 'PatchTemplate-selfservice.xml'
   POLICY_NAME: '%NAME%'
   PATCH_ENABLED: 'true'
   PATCH_UNKNOWN: 'true'
-  PATCH_GRACE: '0'
+  PATCH_GRACE: '20'
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader

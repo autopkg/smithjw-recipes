@@ -12,7 +12,7 @@ Input:
   POLICY_NAME: '%NAME%'
   PATCH_ENABLED: 'true'
   PATCH_UNKNOWN: 'true'
-  PATCH_GRACE: '20'
+  PATCH_GRACE: '0'
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
