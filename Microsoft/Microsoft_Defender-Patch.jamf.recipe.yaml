@@ -1,0 +1,23 @@
+Identifier: com.github.smithjw.jamf.Microsoft_Defender-Patch
+ParentRecipe: com.github.smithjw.jamf.Microsoft_Defender
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Microsoft Defender
+  SOFTWARE_TITLE: Microsoft_Defender
+  CATEGORY: Compliance
+  PATCH_NAME: 'Auto-Update - %NAME%'
+  PATCH_SOFTWARE_TITLE: '%NAME%'
+  PATCH_TEMPLATE: 'PatchTemplate-automatic.xml'
+  POLICY_NAME: '%NAME%'
+  PATCH_ENABLED: 'true'
+  PATCH_UNKNOWN: 'true'
+  PATCH_GRACE: '20'
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
+    Arguments:
+      patch_name: '%PATCH_NAME%'
+      patch_template: '%PATCH_TEMPLATE%'
+      patch_softwaretitle: '%PATCH_SOFTWARE_TITLE%'
+      patch_icon_policy_name: '%POLICY_NAME%'
