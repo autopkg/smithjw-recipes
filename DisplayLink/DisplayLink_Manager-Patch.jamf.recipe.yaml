@@ -1,4 +1,4 @@
-Identifier: com.github.smithjw.jamf.DisplayLink_Manager-Patch
+Identifier: com.github.smithjw.jamf.DisplayLink_Manager-patch
 ParentRecipe: com.github.smithjw.jamf.DisplayLink_Manager
 MinimumVersion: '2.3'
 

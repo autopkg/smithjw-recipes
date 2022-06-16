@@ -1,4 +1,4 @@
-Identifier: com.github.smithjw.jamf.Adobe_Acrobat_Reader_DC-Patch
+Identifier: com.github.smithjw.jamf.Adobe_Acrobat_Reader_DC-patch
 ParentRecipe: com.github.smithjw.jamf.Adobe_Acrobat_Reader_DC
 MinimumVersion: '2.3'
 

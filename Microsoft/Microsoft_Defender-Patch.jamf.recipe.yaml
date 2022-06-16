@@ -1,4 +1,4 @@
-Identifier: com.github.smithjw.jamf.Microsoft_Defender-Patch
+Identifier: com.github.smithjw.jamf.Microsoft_Defender-patch
 ParentRecipe: com.github.smithjw.jamf.Microsoft_Defender
 MinimumVersion: '2.3'
 

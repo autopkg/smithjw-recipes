@@ -1,4 +1,4 @@
-Identifier: com.github.smithjw.jamf.Citrix_Workspace-Patch
+Identifier: com.github.smithjw.jamf.Citrix_Workspace-patch
 ParentRecipe: com.github.smithjw.jamf.Citrix_Workspace
 MinimumVersion: '2.3'
 

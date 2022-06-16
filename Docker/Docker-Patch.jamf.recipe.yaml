@@ -1,4 +1,4 @@
-Identifier: com.github.smithjw.jamf.Docker-Patch
+Identifier: com.github.smithjw.jamf.Docker-patch
 ParentRecipe: com.github.smithjw.jamf.Docker
 MinimumVersion: '2.3'
 

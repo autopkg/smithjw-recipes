@@ -1,4 +1,4 @@
-Identifier: com.github.smithjw.jamf.Adobe_Creative_Cloud_Installer-Patch
+Identifier: com.github.smithjw.jamf.Adobe_Creative_Cloud_Installer-patch
 ParentRecipe: com.github.smithjw.jamf.Adobe_Creative_Cloud_Installer
 MinimumVersion: '2.3'
 

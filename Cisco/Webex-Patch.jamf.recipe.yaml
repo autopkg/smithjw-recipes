@@ -1,4 +1,4 @@
-Identifier: com.github.smithjw.jamf.webex-Patch
+Identifier: com.github.smithjw.jamf.webex-patch
 ParentRecipe: com.github.smithjw.jamf.webex
 MinimumVersion: '2.3'
 

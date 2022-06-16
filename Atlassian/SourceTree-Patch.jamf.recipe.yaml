@@ -1,4 +1,4 @@
-Identifier: com.github.smithjw.jamf.SourceTree-Patch
+Identifier: com.github.smithjw.jamf.SourceTree-patch
 ParentRecipe: com.github.smithjw.jamf.SourceTree
 MinimumVersion: '2.3'
 

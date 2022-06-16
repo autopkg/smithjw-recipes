@@ -1,4 +1,4 @@
-Identifier: com.github.smithjw.jamf.Figma-Patch
+Identifier: com.github.smithjw.jamf.Figma-patch
 ParentRecipe: com.github.smithjw.jamf.Figma
 MinimumVersion: '2.3'
 

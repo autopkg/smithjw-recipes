@@ -1,4 +1,4 @@
-Identifier: com.github.smithjw.jamf.draw.io-Patch
+Identifier: com.github.smithjw.jamf.draw.io-patch
 ParentRecipe: com.github.smithjw.jamf.draw.io
 MinimumVersion: '2.3'
 
