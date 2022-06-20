@@ -1,5 +1,5 @@
 Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
-Identifier: com.github.smithjw.jamf.slack
+Identifier: com.github.smithjw.jamf.Slack
 ParentRecipe: com.github.killahquam.pkg.slack
 MinimumVersion: '2.3'
 
