@@ -3,8 +3,8 @@ ParentRecipe: com.github.smithjw.jamf.Python3
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Python3
-  SOFTWARE_TITLE: '%NAME%'
+  NAME: Python 3
+  SOFTWARE_TITLE: 'Python3'
   CATEGORY: Development
   PATCH_NAME: 'Auto-Update - %NAME%'
   PATCH_SOFTWARE_TITLE: '%NAME%'
