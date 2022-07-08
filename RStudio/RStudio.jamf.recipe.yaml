@@ -1,9 +1,9 @@
-Identifier: com.github.smithjw.jamf.Rstudio
+Identifier: com.github.smithjw.jamf.RStudio
 ParentRecipe: com.github.rtrouton.pkg.RStudio
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Rstudio
+  NAME: RStudio
   SOFTWARE_TITLE: '%NAME%'
   CATEGORY: Development
   GROUP_NAME: '%NAME%-update-smart'
