@@ -14,6 +14,10 @@ Input:
   SELF_SERVICE_ICON: '%NAME%.png'
 
 Process:
+  - Processor: DeprecationWarning
+    Arguments:
+      warning_message: JSS Recipes will cease working soon and this recipe will be removed on the 30th of September
+
   - Processor: JSSImporter
     Arguments:
       category: '%CATEGORY%'

@@ -15,6 +15,10 @@ Input:
   SOFTWARE_TITLE: Xray_Exploratory_App
 
 Process:
+  - Processor: DeprecationWarning
+    Arguments:
+      warning_message: JSS Recipes will cease working soon and this recipe will be removed on the 30th of September
+
   - Processor: JSSImporter
     Arguments:
       category: '%CATEGORY%'
