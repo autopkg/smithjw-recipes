@@ -5,6 +5,9 @@
 SEEDUTIL="/System/Library/PrivateFrameworks/Seeding.framework/Resources/seedutil"
 SEED="${4}"
 
+echo " "
+echo "Selected Seed Program: ${SEED}"
+
 if [[ -e "${SEEDUTIL}" ]]; then
 
     if "${SEEDUTIL}" enroll "${SEED}" 2>&1 | grep -q 'Enrollment was successful'; then
