@@ -4,7 +4,7 @@
     <name>%POLICY_NAME%</name>
     <enabled>true</enabled>
     <frequency>Ongoing</frequency>
-    <trigger>%POLICY_CUSTOM_TRIGGER%</trigger>
+    <trigger_other>%POLICY_CUSTOM_TRIGGER%</trigger_other>
     <category>
       <name>%POLICY_CATEGORY%</name>
     </category>
