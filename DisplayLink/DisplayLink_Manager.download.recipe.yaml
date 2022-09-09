@@ -11,7 +11,7 @@ Input:
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      re_pattern: DisplayLink Manager Graphics Connectivity(?! BETA).*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*a href=\"(?P<match>\/node\/\d{4}\?filetype=exe)\" class=\"download-link\">Download<\/a>
+      re_pattern: (<.*>DisplayLink Manager Graphics Connectivity<\/.*>)((.|\n)*?)a href=\"(\/node\/\d*\?filetype=exe)
       url: '%BASE_URL%/%SEARCH_URL%'
 
   - Processor: URLTextSearcher
