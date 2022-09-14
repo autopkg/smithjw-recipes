@@ -1,6 +1,6 @@
 Description: Downloads both Arm and Intel verions of the Figma App, and packages them into a universal installer
 Identifier: com.github.smithjw.pkg.Figma-Universal
-ParentRecipe: com.github.smithjw.downloads.Figma-Universal
+ParentRecipe: com.github.smithjw.download.Figma-Universal
 MinimumVersion: '2.3'
 
 Input:
