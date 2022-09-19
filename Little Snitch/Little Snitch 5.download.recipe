@@ -4,7 +4,7 @@
     <dict>
         <key>Description</key>
         <string>Downloads the latest version of Little Snitch 5.
-        Please Note: In order to minimise user requests on first launch you'll need to 
+        Please Note: In order to minimise user requests on first launch you'll need to
         deploy a System Extension Profile and Content Filter profile with this title
         Minimum OS is macOS 11.x</string>
         <key>Identifier</key>

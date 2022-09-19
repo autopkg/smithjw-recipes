@@ -4,7 +4,7 @@ Comment: |
   eg "--key ARCHITECTURE=arm64"
   Intel:
     x64 & https://central.github.com/deployments/desktop/desktop/latest/darwin
-  Apple Silicon: 
+  Apple Silicon:
     arm64 & https://central.github.com/deployments/desktop/desktop/latest/darwin-arm64
 
 Description: Downloads the latest version of GitHub Desktop.
