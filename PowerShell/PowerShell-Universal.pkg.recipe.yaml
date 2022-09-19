@@ -1,0 +1,73 @@
+Description: Downloads both Arm and Intel verions of PowerShell from GitHub, and packages them into a universal installer
+Identifier: com.github.smithjw.pkg.PowerShell-Universal
+ParentRecipe: com.github.smithjw.download.PowerShell-Universal
+MinimumVersion: '2.3'
+
+Input:
+  NAME: PowerShell
+
+Process:
+  - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
+    Arguments:
+      archive_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.pkg'
+      file_to_extract: Distribution
+
+  - Processor: com.github.mlbz521.SharedProcessors/XPathParser
+    Arguments:
+      attribute_one: id
+      return_variable_attribute_one: bundleid
+      xml_file: '%extracted_file%'
+      xpath: .//product
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        Scripts: '0775'
+        pkgroot: '0775'
+      pkgroot: '%RECIPE_CACHE_DIR%/Universal'
+
+  - Processor: FileMover
+    Arguments:
+      source: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.pkg'
+      target: '%RECIPE_CACHE_DIR%/Universal/Scripts/%NAME%-arm64-%version%.pkg'
+
+  - Processor: FileMover
+    Arguments:
+      source: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x86_64.pkg'
+      target: '%RECIPE_CACHE_DIR%/Universal/Scripts/%NAME%-x86_64-%version%.pkg'
+
+  - Processor: FileCreator
+    Arguments:
+      file_content: |
+        #!/bin/bash
+
+        arm64_package="%NAME%-arm64-%version%.pkg"
+        x86_64_package="%NAME%-x86_64-%version%.pkg"
+
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          /usr/sbin/installer -pkg "$arm64_package" -target "$3"
+        else
+          /usr/sbin/installer -pkg "$x86_64_package" -target "$3"
+        fi
+
+        exit 0
+      file_mode: '0755'
+      file_path: '%RECIPE_CACHE_DIR%/Universal/Scripts/preinstall'
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%NAME%-Universal-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/Universal/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/Universal/Scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/Universal'
+        - '%RECIPE_CACHE_DIR%/extractedfile'

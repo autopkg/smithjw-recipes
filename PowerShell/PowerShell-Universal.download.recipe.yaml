@@ -1,0 +1,50 @@
+Description: Downloads the latest versions (arm and intel) of PowerShell from GitHub.
+Identifier: com.github.smithjw.download.PowerShell-Universal
+MinimumVersion: '2.3'
+
+Input:
+  NAME: PowerShell
+  MAJOR_VERSION: '7.2'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: powershell-%MAJOR_VERSION%[0-9\.]+-osx-arm64.pkg
+      github_repo: PowerShell/PowerShell
+
+  - Processor: URLDownloader
+    Arguments:
+      download_dir: '%RECIPE_CACHE_DIR%/downloads'
+      filename: '%NAME%-arm64.pkg'
+
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: powershell-%MAJOR_VERSION%[0-9\.]+-osx-x64.pkg
+      github_repo: PowerShell/PowerShell
+
+  - Processor: URLDownloader
+    Arguments:
+      download_dir: '%RECIPE_CACHE_DIR%/downloads'
+      filename: '%NAME%-x86_64.pkg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Microsoft Corporation (UBF8T346G9)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.pkg'
+      strict_verification: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Microsoft Corporation (UBF8T346G9)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x86_64.pkg'
+      strict_verification: true
