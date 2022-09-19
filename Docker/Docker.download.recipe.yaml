@@ -1,3 +1,4 @@
+---
 Comment: |
   Use the ARCHITECTURE and DOWNLOAD_TYPE keys to determine whether the Intel (amd64) or Apple Silicon (arm64) version
   of Docker for Mac is downloaded. Defaults to Intel if not overridden.
@@ -15,9 +16,9 @@ Input:
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      re_pattern: '((\w+):\/\/(\S*)(%DOWNLOAD_TYPE%)(\S*)(dmg)(?=\?))'
+      re_pattern: ((\w+):\/\/(\S*)(%DOWNLOAD_TYPE%)(\S*)(dmg)(?=\?))
       result_output_var_name: match
-      url: 'https://www.docker.com/get-started'
+      url: https://www.docker.com/get-started
 
   - Processor: URLDownloader
     Arguments:
@@ -33,6 +34,10 @@ Process:
   - Processor: CodeSignatureVerifier
     Arguments:
       input_path: '%pathname%/%app_name%'
-      requirement: anchor apple generic and identifier "com.docker.docker" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "9BNSXJN65R")
-      deep_verification: True
-      strict_verification: True
+      requirement: |
+        anchor apple generic and identifier "com.docker.docker" and (certificate
+        leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6]
+        /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists
+        */ and certificate leaf[subject.OU] = "9BNSXJN65R")
+      deep_verification: true
+      strict_verification: true

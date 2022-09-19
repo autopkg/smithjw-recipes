@@ -1,14 +1,15 @@
+---
 Identifier: com.github.smithjw.jamf.Docker-patch
-ParentRecipe: com.github.smithjw.jamf.Docker
+ParentRecipe: com.github.smithjw.jamf.Docker-Universal
 MinimumVersion: '2.3'
 
 Input:
   NAME: Docker
   SOFTWARE_TITLE: '%NAME%'
   CATEGORY: Utilities
-  PATCH_NAME: 'Auto-Update - %NAME%'
+  PATCH_NAME: Auto-Update - %NAME%
   PATCH_SOFTWARE_TITLE: '%NAME%'
-  PATCH_TEMPLATE: 'PatchTemplate-selfservice.xml'
+  PATCH_TEMPLATE: PatchTemplate-selfservice.xml
   POLICY_NAME: '%NAME%'
   PATCH_ENABLED: 'true'
   PATCH_UNKNOWN: 'true'

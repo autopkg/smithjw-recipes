@@ -1,0 +1,107 @@
+Description: Downloads the latest versions of Docker (arm and intel) and creates a package.
+Identifier: com.github.smithjw.pkg.Docker-Universal
+# ParentRecipe: com.github.smithjw.download.Docker-Universal
+ParentRecipe: /Users/James.Smith/code/smithjw-recipes/Docker/Docker-Universal.download.recipe.yaml
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Docker
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/Universal'
+      pkgdirs:
+        pkgroot: '0775'
+        Scripts: '0775'
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        Applications: '0775'
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.dmg/%NAME%.app'
+      destination_path: '%pkgroot%/Applications/%NAME%.app'
+      overwrite: True
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        chown:
+          - group: admin
+            path: Applications
+            user: root
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%NAME%-arm64-%version%'
+        scripts: scripts
+
+  - Processor: FileMover
+    Arguments:
+      source: '%pkg_path%'
+      target: '%RECIPE_CACHE_DIR%/Universal/Scripts/%NAME%-arm64-%version%.pkg'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x86_64.dmg/%NAME%.app'
+      destination_path: '%pkgroot%/Applications/%NAME%.app'
+      overwrite: True
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        chown:
+          - group: admin
+            path: Applications
+            user: root
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%NAME%-x86_64-%version%'
+        scripts: scripts
+
+  - Processor: FileMover
+    Arguments:
+      source: '%pkg_path%'
+      target: '%RECIPE_CACHE_DIR%/Universal/Scripts/%NAME%-x86_64-%version%.pkg'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/Universal/Scripts/preinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+
+        arm64_package="%NAME%-arm64-%version%.pkg"
+        x86_64_package="%NAME%-x86_64-%version%.pkg"
+
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          /usr/sbin/installer -pkg "$arm64_package" -target "$3"
+        else
+          /usr/sbin/installer -pkg "$x86_64_package" -target "$3"
+        fi
+
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%bundleid%'
+        version: '%version%'
+        options: purge_ds_store
+        pkgname: '%NAME%-Universal-%version%'
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        scripts: '%RECIPE_CACHE_DIR%/Universal/Scripts'
+        pkgroot: '%RECIPE_CACHE_DIR%/Universal/pkgroot'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: True
+      path_list:
+        - '%RECIPE_CACHE_DIR%/Universal'
+        - '%RECIPE_CACHE_DIR%/unpack'
+        - '%RECIPE_CACHE_DIR%/payload'

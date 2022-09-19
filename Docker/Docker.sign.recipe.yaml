@@ -1,4 +1,7 @@
-Description: Downloads the latest version of Docker, creates a package, then signs it.
+---
+Description:
+  Downloads the latest version of Docker, creates a package, then signs
+  it.
 Identifier: com.github.smithjw.sign.Docker
 ParentRecipe: com.github.smithjw.pkg.Docker
 MinimumVersion: '2.3'
@@ -14,6 +17,6 @@ Process:
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
-      fail_deleter_silently: True
+      fail_deleter_silently: true
       path_list:
         - '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%-unsigned.pkg'

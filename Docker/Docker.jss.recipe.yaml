@@ -1,4 +1,7 @@
-Description: Downloads the latest version of Docker, packages it, then imports it into your Jamf instance using JSS-Importer.
+---
+Description:
+  Downloads the latest version of Docker, packages it, then imports it
+  into your Jamf instance using JSS-Importer.
 Identifier: com.github.smithjw.jss.Docker
 ParentRecipe: com.github.smithjw.sign.Docker
 MinimumVersion: '2.3'
@@ -6,17 +9,23 @@ MinimumVersion: '2.3'
 Input:
   NAME: Docker
   CATEGORY: Productivity
-  GROUP_NAME: 'App Update - %NAME% (%ARCHITECTURE%)'
+  GROUP_NAME: App Update - %NAME% (%ARCHITECTURE%)
   GROUP_TEMPLATE: SmartGroupTemplate.xml
   POLICY_CATEGORY: Testing - App QA
   POLICY_TEMPLATE: PolicyTemplate.xml
-  SELF_SERVICE_DESCRIPTION: 'Docker containers wrap a piece of software in a complete filesystem that contains everything needed to run: code, runtime, system tools, system libraries - anything that can be installed on a server. This guarantees that the software will always run the same, regardless of its environment.'
+  SELF_SERVICE_DESCRIPTION:
+    'Docker containers wrap a piece of software in a complete
+    filesystem that contains everything needed to run: code, runtime, system tools,
+    system libraries - anything that can be installed on a server. This guarantees
+    that the software will always run the same, regardless of its environment.'
   SELF_SERVICE_ICON: '%NAME%.png'
 
 Process:
   - Processor: DeprecationWarning
     Arguments:
-      warning_message: JSS Recipes will cease working soon and this recipe will be removed on the 30th of September
+      warning_message:
+        JSS Recipes will cease working soon and this recipe will be removed
+        on the 30th of September
 
   - Processor: JSSImporter
     Arguments:

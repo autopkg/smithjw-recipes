@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Docker and creates a package.
 Identifier: com.github.smithjw.pkg.Docker
 ParentRecipe: com.github.smithjw.download.Docker
@@ -33,6 +34,6 @@ Process:
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
-      fail_deleter_silently: True
+      fail_deleter_silently: true
       path_list:
         - '%RECIPE_CACHE_DIR%/payload'

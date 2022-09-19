@@ -1,3 +1,4 @@
+---
 Comment: |
   Use the ARCHITECTURE key to determine whether the Intel (amd64) or Apple Silicon (arm64) version
   of Docker for Mac is downloaded. Defaults to Intel if not overridden.
@@ -12,4 +13,4 @@ Input:
   ARCHITECTURE: amd64
 
 Process:
-- Processor: Installer
+  - Processor: Installer

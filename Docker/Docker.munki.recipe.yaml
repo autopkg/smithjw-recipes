@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Docker and imports it into Munki.
 Identifier: com.github.smithjw.munki.Docker
 ParentRecipe: com.github.smithjw.pkg.Docker
