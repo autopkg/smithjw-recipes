@@ -1,4 +1,7 @@
-Description: Downloads both Arm and Intel verions of the Figma App, and packages them into a universal installer
+---
+Description:
+  Downloads both Arm and Intel verions of the Figma App, and packages them
+  into a universal installer
 Identifier: com.github.smithjw.pkg.Figma-Universal
 ParentRecipe: com.github.smithjw.download.Figma-Universal
 MinimumVersion: '2.3'
@@ -63,7 +66,7 @@ Process:
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
-      fail_deleter_silently: True
+      fail_deleter_silently: true
       path_list:
         - '%RECIPE_CACHE_DIR%/Universal'
         - '%RECIPE_CACHE_DIR%/unpack'
