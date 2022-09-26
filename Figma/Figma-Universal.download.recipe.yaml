@@ -37,7 +37,7 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%RECIPE_CACHE_DIR%/unpack/arm64/Figma.app'
+      input_path: '%RECIPE_CACHE_DIR%/unpack/arm64/%NAME%.app'
       requirement: |
         identifier "com.figma.Desktop" and anchor apple generic and certificate
         1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13]
@@ -47,10 +47,15 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%RECIPE_CACHE_DIR%/unpack/x86_64/Figma.app'
+      input_path: '%RECIPE_CACHE_DIR%/unpack/x86_64/%NAME%.app'
       requirement: |
         identifier "com.figma.Desktop" and anchor apple generic and certificate
         1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13]
         /* exists */ and certificate leaf[subject.OU] = T8RA8NE3B7
       deep_verification: true
       strict_verification: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/unpack/arm64/%NAME%.app/Contents/Info.plist'
+      plist_version_key: CFBundleShortVersionString
