@@ -1,5 +1,5 @@
 Identifier: com.github.smithjw.jamf.Adobe_Acrobat_Reader_DC
-ParentRecipe: com.github.autopkg.pkg.AdobeReaderDC
+ParentRecipe: com.github.novaksam.pkg.AdobeAcrobatReaderDC
 MinimumVersion: '2.3'
 
 Input:
@@ -21,6 +21,11 @@ Input:
   UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
+  - Processor: FileMover
+    Arguments:
+      source: '%pkg_path%'
+      target: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
       pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
