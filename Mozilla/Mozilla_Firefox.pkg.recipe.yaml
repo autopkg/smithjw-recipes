@@ -1,0 +1,33 @@
+Description: Downloads the latest version of Firefox and renames it with the version without repackaging.
+Identifier: com.github.smithjw.pkg.Mozilla_Firefox
+ParentRecipe: com.github.autopkg.download.FirefoxSignedPkg
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Mozilla Firefox
+  SOFTWARE_TITLE: Mozilla_Firefox
+  BUNDLE_ID: 'org.mozilla.firefox'
+
+Process:
+  - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
+    Arguments:
+      archive_path: '%pathname%'
+      file_to_extract: Distribution
+
+  - Processor: com.github.mlbz521.SharedProcessors/XPathParser
+    Arguments:
+      xml_file: '%extracted_file%'
+      xpath: './/bundle[@id="%BUNDLE_ID%"][@CFBundleShortVersionString]'
+      attribute_one: CFBundleShortVersionString
+      return_variable_attribute_one: version
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: True
+      path_list:
+        - '%RECIPE_CACHE_DIR%/extractedfile'
