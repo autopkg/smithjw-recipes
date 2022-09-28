@@ -1,22 +1,31 @@
 Description: Downloads the latest version of the DisplayLink Manager App.
 Identifier: com.github.smithjw.pkg.DisplayLink_Manager
-ParentRecipe: com.github.smithjw.download.DisplayLink_Manager
+# ParentRecipe: com.github.smithjw.download.DisplayLink_Manager
+ParentRecipe: /Users/James.Smith/code/smithjw-recipes/DisplayLink/DisplayLink_Manager.download.recipe.yaml
 MinimumVersion: '2.3'
 
 Input:
   NAME: DisplayLink Manager
-  DOWNLOAD_URL: https://www.displaylink.com/downloads
+  SOFTWARE_TITLE: DisplayLink_Manager
+  BUNDLE_ID: com.displaylink.displaylinkmanagerapp
 
 Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%'
+      pkgdirs:
+        pkgroot: '0775'
+        Scripts: '0775'
+
   - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
     Arguments:
-      archive_path: '%pathname%'
+      archive_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.pkg'
       file_to_extract: Distribution
 
   - Processor: com.github.mlbz521.SharedProcessors/XPathParser
     Arguments:
       xml_file: '%extracted_file%'
-      xpath: './/bundle[@id="com.displaylink.DisplayLinkUserAgent"][@CFBundleShortVersionString]'
+      xpath: './/pkg-ref[@id="%BUNDLE_ID%"]/bundle-version/bundle[@path="%NAME%.app"]'
       attribute_one: CFBundleShortVersionString
       return_variable_attribute_one: version
 
@@ -29,11 +38,43 @@ Process:
 
   - Processor: PkgCopier
     Arguments:
-      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
-      source_pkg: '%pathname%'
+      source_pkg: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.pkg'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%/Scripts/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: PkgCopier
+    Arguments:
+      source_pkg: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%_Extension.dmg/%found_basename%'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%/Scripts/%SOFTWARE_TITLE%_Extension-%version%.pkg'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%/Scripts/preinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+
+        DISPLAYLINK_PKG="%SOFTWARE_TITLE%-%version%.pkg"
+        DISPLAYLINK_EXTENTION_PKG="%SOFTWARE_TITLE%_Extension-%version%.pkg"
+
+        /usr/sbin/installer -pkg "$DISPLAYLINK_PKG" -target "$3"
+        /usr/sbin/installer -pkg "$DISPLAYLINK_EXTENTION_PKG" -target "$3"
+
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%BUNDLE_ID%'
+        version: '%version%'
+        options: purge_ds_store
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        scripts: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%/Scripts'
+        pkgroot: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%/pkgroot'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
-      fail_deleter_silently: True
+      fail_deleter_silently: true
       path_list:
+        - '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%'
         - '%RECIPE_CACHE_DIR%/extractedfile'
