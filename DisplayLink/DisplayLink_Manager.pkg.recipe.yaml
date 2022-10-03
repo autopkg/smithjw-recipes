@@ -1,7 +1,6 @@
 Description: Downloads the latest version of the DisplayLink Manager App.
 Identifier: com.github.smithjw.pkg.DisplayLink_Manager
-# ParentRecipe: com.github.smithjw.download.DisplayLink_Manager
-ParentRecipe: /Users/James.Smith/code/smithjw-recipes/DisplayLink/DisplayLink_Manager.download.recipe.yaml
+ParentRecipe: com.github.smithjw.download.DisplayLink_Manager
 MinimumVersion: '2.3'
 
 Input:
