@@ -2,6 +2,7 @@ Description: Downloads the latest versions of Docker (arm and intel) and creates
 Identifier: com.github.smithjw.pkg.Docker-Universal
 ParentRecipe: com.github.smithjw.download.Docker-Universal
 MinimumVersion: '2.3'
+Comment: 'Please Note: Due to recent changes to Docker, the postinstall script will only run for the current user. More info here https://dazwallace.wordpress.com/2022/12/02/changes-to-docker-desktop-for-mac/'
 
 Input:
   NAME: Docker
