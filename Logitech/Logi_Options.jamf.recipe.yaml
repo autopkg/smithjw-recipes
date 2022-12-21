@@ -22,6 +22,10 @@ Input:
   UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
+  - Processor: DeprecationWarning
+    Arguments:
+      warning_message: This recipe will be removed on the 31st of January. Please use com.github.smithjw.jamf.logi_options_plus instead
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
       category_name: '%CATEGORY%'

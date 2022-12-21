@@ -8,6 +8,10 @@ Input:
   SOFTWARE_TITLE: Logi_Options
 
 Process:
+  - Processor: DeprecationWarning
+    Arguments:
+      warning_message: This recipe will be removed on the 31st of January. Please use com.github.wegotoeleven-recipes.pkg.LogiOptionsPlus instead
+
   - Processor: FileFinder
     Arguments:
       pattern: '%RECIPE_CACHE_DIR%/unpack/LogiMgr Installer*.app/Contents/Info.plist'

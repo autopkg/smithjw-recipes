@@ -6,33 +6,37 @@ Input:
   NAME: Logi Options
 
 Process:
-- Processor: URLTextSearcher
-  Arguments:
-    re_pattern: '(?P<url>(https:\/\/www\.|https:\/\/)?[a-z0-9\/\.]+(options[a-z0-9\_\.]+zip))'
-    result_output_var_name: url
-    url: https://www.logitech.com/product/options
+  - Processor: DeprecationWarning
+    Arguments:
+      warning_message: This recipe will be removed on the 31st of January. Please use com.github.wegotoeleven-recipes.download.LogiOptionsPlus instead
 
-- Processor: URLDownloader
-  Arguments:
-    filename: '%NAME%.zip'
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '(?P<url>(https:\/\/www\.|https:\/\/)?[a-z0-9\/\.]+(options[a-z0-9\_\.]+zip))'
+      result_output_var_name: url
+      url: https://www.logitech.com/product/options
 
-- Processor: EndOfCheckPhase
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%NAME%.zip'
 
-- Processor: Unarchiver
-  Arguments:
-    archive_path: '%pathname%'
-    destination_path: '%RECIPE_CACHE_DIR%/unpack'
-    purge_destination: true
+  - Processor: EndOfCheckPhase
 
-- Processor: FileFinder
-  Arguments:
-    pattern: '%RECIPE_CACHE_DIR%/unpack/LogiMgr Installer*.app/Contents/Resources/LogiMgr.pkg'
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
 
-- Processor: CodeSignatureVerifier
-  Arguments:
-    expected_authority_names:
-    - 'Developer ID Installer: Logitech Inc. (QED4VVPZWA)'
-    - Developer ID Certification Authority
-    - Apple Root CA
-    input_path: '%found_filename%'
-    INSTALLER_PKG: '%found_filename%'
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/unpack/LogiMgr Installer*.app/Contents/Resources/LogiMgr.pkg'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Logitech Inc. (QED4VVPZWA)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%found_filename%'
+      INSTALLER_PKG: '%found_filename%'
