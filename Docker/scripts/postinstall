@@ -28,6 +28,8 @@ if [[ -e /Library/LaunchDaemons/com.docker.vmnetd.plist ]] ; then
 fi
 
 /bin/echo "Installing Docker privileged components..."
-/Applications/Docker.app/Contents/MacOS/Docker --unattended --install-privileged-components
+
+logged_in_user=$( scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ { print $3 }' )
+"/Applications/Docker.app/Contents/MacOS/install" --accept-license --user "${logged_in_user}"
 
 exit 0
