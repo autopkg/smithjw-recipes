@@ -24,7 +24,7 @@ Process:
   - Processor: com.github.mlbz521.SharedProcessors/XPathParser
     Arguments:
       xml_file: '%extracted_file%'
-      xpath: './/pkg-ref[@id="%BUNDLE_ID%"]/bundle-version/bundle[@path="%NAME%.app"]'
+      xpath: './/pkg-ref[@id="%BUNDLE_ID%"]/bundle-version/bundle[@path="DisplayLink Manager.app"]'
       attribute_one: CFBundleShortVersionString
       return_variable_attribute_one: version
 
