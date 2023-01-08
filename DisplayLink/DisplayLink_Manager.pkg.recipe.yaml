@@ -6,7 +6,6 @@ MinimumVersion: '2.3'
 Input:
   NAME: DisplayLink Manager
   SOFTWARE_TITLE: DisplayLink_Manager
-  BUNDLE_ID: com.displaylink.displaylinkmanagerapp
 
 Process:
   - Processor: PkgRootCreator
@@ -24,7 +23,7 @@ Process:
   - Processor: com.github.mlbz521.SharedProcessors/XPathParser
     Arguments:
       xml_file: '%extracted_file%'
-      xpath: './/pkg-ref[@id="%BUNDLE_ID%"]/bundle-version/bundle[@path="%NAME%.app"]'
+      xpath: './/pkg-ref[@id="com.displaylink.displaylinkmanagerapp"]/bundle-version/bundle[@path="DisplayLink Manager.app"]'
       attribute_one: CFBundleShortVersionString
       return_variable_attribute_one: version
 
@@ -63,7 +62,7 @@ Process:
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        id: '%BUNDLE_ID%'
+        id: 'com.displaylink.displaylinkmanagerapp'
         version: '%version%'
         options: purge_ds_store
         pkgname: '%SOFTWARE_TITLE%-%version%'
