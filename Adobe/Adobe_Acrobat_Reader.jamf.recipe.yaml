@@ -1,10 +1,10 @@
-Identifier: com.github.smithjw.jamf.Adobe_Acrobat_Reader_DC
-ParentRecipe: com.github.novaksam.pkg.AdobeAcrobatReaderDC
+Identifier: com.github.smithjw.jamf.Adobe_Acrobat_Reader
+ParentRecipe: com.github.autopkg.pkg.AdobeReader
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Adobe Acrobat Reader DC
-  SOFTWARE_TITLE: Adobe_Acrobat_Reader_DC
+  NAME: Adobe Acrobat Reader
+  SOFTWARE_TITLE: Adobe_Acrobat_Reader
   CATEGORY: Productivity
   GROUP_NAME: '%NAME%-update-smart'
   GROUP_TEMPLATE: SmartGroup-update-smart.xml
@@ -14,17 +14,13 @@ Input:
   POLICY_NAME: 'Install Latest %NAME%'
   POLICY_RUN_COMMAND: ' '
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
-  SELF_SERVICE_DESCRIPTION: "Adobe Reader DC is Adobe's official application for viewing, printing, and annotating PDF documents on OS X 10.9 and later."
+  SELF_SERVICE_DESCRIPTION: "Adobe Reader is Adobe's official application for viewing, printing, and annotating PDF documents on OS X 10.9 and later."
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   INSTALL_BUTTON_TEXT: 'Install'
   REINSTALL_BUTTON_TEXT: 'Install'
   UPDATE_PREDICATE: 'pkg_uploaded == False'
 
 Process:
-  - Processor: DeprecationWarning
-    Arguments:
-      warning_message: This recipe will be removed on the 31st of January. Please use com.github.smithjw.jamf.Adobe_Acrobat_Reader instead
-
   - Processor: FileMover
     Arguments:
       source: '%pkg_path%'

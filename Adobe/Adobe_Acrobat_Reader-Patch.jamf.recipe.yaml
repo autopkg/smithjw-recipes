@@ -1,10 +1,10 @@
-Identifier: com.github.smithjw.jamf.Adobe_Acrobat_Reader_DC-patch
-ParentRecipe: com.github.smithjw.jamf.Adobe_Acrobat_Reader_DC
+Identifier: com.github.smithjw.jamf.Adobe_Acrobat_Reader-patch
+ParentRecipe: com.github.smithjw.jamf.Adobe_Acrobat_Reader
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Adobe Acrobat Reader DC
-  SOFTWARE_TITLE: Adobe_Acrobat_Reader_DC
+  NAME: Adobe Acrobat Reader
+  SOFTWARE_TITLE: Adobe_Acrobat_Reader
   CATEGORY: Productivity
   PATCH_NAME: 'Auto-Update - %NAME%'
   PATCH_SOFTWARE_TITLE: '%NAME%'
@@ -16,10 +16,6 @@ Input:
   PATCH_ICON_POLICY_NAME: '%NAME%'
 
 Process:
-  - Processor: DeprecationWarning
-    Arguments:
-      warning_message: This recipe will be removed on the 31st of January. Please use com.github.smithjw.jamf.Adobe_Acrobat_Reader-patch instead
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
     Arguments:
       patch_name: '%PATCH_NAME%'
