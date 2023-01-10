@@ -16,8 +16,8 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: '%pathname%/%NAME%.app'
-      destination_path: '%pkgroot%/Applications/%NAME%.app'
+      source_path: '%pathname%/Docker.app'
+      destination_path: '%pkgroot%/Applications/Docker.app'
 
   - Processor: PkgCreator
     Arguments:
