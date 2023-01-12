@@ -23,8 +23,8 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.dmg/%NAME%.app'
-      destination_path: '%pkgroot%/Applications/%NAME%.app'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.dmg/Docker.app'
+      destination_path: '%pkgroot%/Applications/Docker.app'
       overwrite: True
 
   - Processor: PkgCreator
@@ -47,8 +47,8 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x86_64.dmg/%NAME%.app'
-      destination_path: '%pkgroot%/Applications/%NAME%.app'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x86_64.dmg/Docker.app'
+      destination_path: '%pkgroot%/Applications/Docker.app'
       overwrite: True
 
   - Processor: PkgCreator

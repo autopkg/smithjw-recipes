@@ -15,7 +15,7 @@ Process:
 
   - Processor: AppPkgCreator
     Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/unpack/%NAME%.app'
+      app_path: '%RECIPE_CACHE_DIR%/unpack/GitHub Desktop.app'
       pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%ARCHITECTURE%-%version%.pkg'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter

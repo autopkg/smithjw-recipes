@@ -19,5 +19,5 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%pathname%/%NAME%.app'
+      input_path: '%pathname%/Kap.app'
       requirement: identifier "com.wulkano.kap" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2KEEHXF6R6"
