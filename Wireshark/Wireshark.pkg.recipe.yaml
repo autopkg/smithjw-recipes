@@ -15,8 +15,8 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: '%pathname%/%NAME%.app'
-      destination_path: '%pkgroot%/Applications/%NAME%.app'
+      source_path: '%pathname%/Wireshark.app'
+      destination_path: '%pkgroot%/Applications/Wireshark.app'
 
   - Processor: PkgCreator
     Arguments:

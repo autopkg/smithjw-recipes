@@ -36,19 +36,19 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%RECIPE_CACHE_DIR%/unpack/arm64/%NAME%.app'
+      input_path: '%RECIPE_CACHE_DIR%/unpack/arm64/Postman.app'
       requirement: identifier "com.postmanlabs.mac" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = H7H8Q7M5CK
       deep_verification: True
       strict_verification: True
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%RECIPE_CACHE_DIR%/unpack/x86_64/%NAME%.app'
+      input_path: '%RECIPE_CACHE_DIR%/unpack/x86_64/Postman.app'
       requirement: identifier "com.postmanlabs.mac" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = H7H8Q7M5CK
       deep_verification: True
       strict_verification: True
 
   - Processor: Versioner
     Arguments:
-      input_plist_path: '%RECIPE_CACHE_DIR%/unpack/arm64/%NAME%.app/Contents/Info.plist'
+      input_plist_path: '%RECIPE_CACHE_DIR%/unpack/arm64/Postman.app/Contents/Info.plist'
       plist_version_key: CFBundleShortVersionString

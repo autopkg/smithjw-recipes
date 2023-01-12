@@ -17,12 +17,12 @@ Process:
 
   - Processor: AppPkgCreator
     Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/unpack/arm64/%NAME%.app'
+      app_path: '%RECIPE_CACHE_DIR%/unpack/arm64/GitHub Desktop.app'
       pkg_path: '%RECIPE_CACHE_DIR%/Universal/Scripts/%SOFTWARE_TITLE%-arm64-%version%.pkg'
 
   - Processor: AppPkgCreator
     Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/unpack/x86_64/%NAME%.app'
+      app_path: '%RECIPE_CACHE_DIR%/unpack/x86_64/GitHub Desktop.app'
       pkg_path: '%RECIPE_CACHE_DIR%/Universal/Scripts/%SOFTWARE_TITLE%-x86_64-%version%.pkg'
 
   - Processor: FileCreator

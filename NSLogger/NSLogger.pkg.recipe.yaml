@@ -13,10 +13,10 @@ Process:
 
   - Processor: AppPkgCreator
     Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%.app'
+      app_path: '%RECIPE_CACHE_DIR%/downloads/NSLogger.app'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
       fail_deleter_silently: True
       path_list:
-        - '%RECIPE_CACHE_DIR%/downloads/%NAME%.app'
+        - '%RECIPE_CACHE_DIR%/downloads/NSLogger.app'

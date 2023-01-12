@@ -19,7 +19,7 @@ Process:
 
   - Processor: PlistReader
     Arguments:
-      info_path: '%RECIPE_CACHE_DIR%/unpack/%NAME%.app'
+      info_path: '%RECIPE_CACHE_DIR%/unpack/Google Chrome.app'
 
   - Processor: PkgCopier
     Arguments:
