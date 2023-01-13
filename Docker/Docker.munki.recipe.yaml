@@ -15,10 +15,11 @@ Input:
     display_name: Docker
     name: '%NAME%-%ARCHITECTURE%'
     unattended_install: true
-    supported_architectures: '%ARCHITECTURE%'
+    supported_architectures: 
+      - '%ARCHITECTURE%'
 
 Process:
   - Processor: MunkiImporter
     Arguments:
-      pkg_path: '%pathname%'
+      pkg_path: '%pkg_path%'
       repo_subdirectory: '%MUNKI_REPO_SUBDIR%'
