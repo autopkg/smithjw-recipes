@@ -1,0 +1,13 @@
+Identifier: com.github.smithjw.pkg.PyCharm_PE
+ParentRecipe: com.github.bnpl.autopkg.download.pycharmpe
+MinimumVersion: '2.3'
+
+Input:
+  NAME: PyCharm Professional Edition
+  ARCH_TYPE: macM1
+  SOFTWARE_TITLE: PyCharm_PE
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

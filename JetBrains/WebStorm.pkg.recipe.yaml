@@ -1,0 +1,12 @@
+Identifier: com.github.smithjw.pkg.WebStorm
+ParentRecipe: com.github.bnpl.autopkg.download.webstorm
+MinimumVersion: '2.3'
+
+Input:
+  NAME: WebStorm
+  SOFTWARE_TITLE: WebStorm
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
