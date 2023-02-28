@@ -1,4 +1,5 @@
 .vscode
+.envrc
 .DS_Store
 .DS\_Store
 __pycache__
