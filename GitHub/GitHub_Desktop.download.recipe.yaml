@@ -23,6 +23,8 @@ Process:
       filename: '%SOFTWARE_TITLE%-%ARCHITECTURE%.zip'
       url: '%DOWNLOAD_URL%'
 
+  - Processor: EndOfCheckPhase
+
   - Processor: PkgRootCreator
     Arguments:
       pkgdirs: {}
