@@ -44,6 +44,10 @@
                     <string>http://luxafor.com/uploads/%match%</string>
                 </dict>
             </dict>
+            <dict>
+                <key>Processor</key>
+                <string>EndOfCheckPhase</string>
+            </dict>
         </array>
     </dict>
 </plist>

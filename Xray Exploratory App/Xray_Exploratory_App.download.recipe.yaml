@@ -14,12 +14,12 @@ Process:
   #     url: https://docs.getxray.app/display/XEA/Release+Notes
   #     result_output_var_name: version
 
-  - Processor: EndOfCheckPhase
-
   - Processor: URLDownloader
     Arguments:
       filename: 'xea.dmg'
       url: https://xeamacos-bucket-autoupdater.s3.amazonaws.com/xray-exploratory-app-%version%-x64.dmg
+
+  - Processor: EndOfCheckPhase
 
   - Processor: CodeSignatureVerifier
     Arguments:
