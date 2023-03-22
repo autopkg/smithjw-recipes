@@ -22,7 +22,4 @@ Process:
       fail_deleter_silently: True
       path_list:
         - '%RECIPE_CACHE_DIR%/%NAME%'
-
-  - Processor: EndOfCheckPhase
-    Arguments:
       pkg_path: '%dmg_path%'

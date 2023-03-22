@@ -26,12 +26,9 @@ Process:
       source: '%pkg_path%'
       target: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
 
-  - Processor: EndOfCheckPhase
-    Arguments:
-      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
       pkg_category: '%CATEGORY%'
 
   - Processor: StopProcessingIf
