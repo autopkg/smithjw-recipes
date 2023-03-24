@@ -15,7 +15,7 @@ Input:
     display_name: Docker
     name: '%NAME%-%ARCHITECTURE%'
     unattended_install: true
-    supported_architectures: 
+    supported_architectures:
       - '%ARCHITECTURE%'
 
 Process:
