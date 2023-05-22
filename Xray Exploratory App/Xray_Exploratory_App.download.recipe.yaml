@@ -1,4 +1,4 @@
-Comment: Uses a very hacky method to find the current version of the Xray App
+Comment: Uses a very hacky method to find the current version of the Xray App, updated CodeSignature to reflect new App signing
 Description: Downloads the latest version of Xray Exploratory App
 Identifier: com.github.smithjw.download.Xray_Exploratory_App
 MinimumVersion: '2.3'
@@ -24,7 +24,7 @@ Process:
   - Processor: CodeSignatureVerifier
     Arguments:
       input_path: '%pathname%/Xray Exploratory App.app'
-      requirement: identifier "com.xpand-it.xeta" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "93TTVSKJQ2"
+      requirement: identifier "com.xblend.xea" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "6DU9D8Q52R"
 
   - Processor: Versioner
     Arguments:
