@@ -1,0 +1,42 @@
+Description: Downloads the latest version of the Microsoft Edge installer package and renames the package.
+Identifier: com.github.smithjw.pkg.Microsoft_Edge_alt
+ParentRecipe: com.github.smithjw.download.Microsoft_Edge_alt
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Microsoft Edge
+  VENDOR: Microsoft
+  SOFTWARETITLE: Edge
+  VERSIONTYPE: CFBundleShortVersionString
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/unpack'
+      flat_pkg_path: '%pathname%'
+
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/downloads/unpack/*MicrosoftEdge*.pkg'
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/payload'
+      pkg_payload_path: '%found_filename%/Payload'
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/payload/Microsoft Edge.app/Contents/Info.plist'
+      plist_version_key: '%VERSIONTYPE%'
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%VENDOR%_%SOFTWARETITLE%_%version%.pkg'
+      source_pkg: '%pathname%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: True
+      path_list:
+        - '%RECIPE_CACHE_DIR%/downloads/unpack'
+        - '%RECIPE_CACHE_DIR%/downloads/payload'

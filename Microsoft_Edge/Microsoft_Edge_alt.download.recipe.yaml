@@ -1,0 +1,26 @@
+Description: Downloads the latest Microsoft Edge installer pkg using the URLDownloaderPython processor.
+Identifier: com.github.smithjw.download.Microsoft_Edge_alt
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Microsoft Edge
+  VENDOR: Microsoft
+  SOFTWARETITLE: Edge
+  PRODUCTID: '2093504'
+  DOWNLOADURL: https://go.microsoft.com/fwlink/?linkid=%PRODUCTID%
+
+Process:
+  - Processor: URLDownloaderPython
+    Arguments:
+      filename: '%VENDOR%_%SOFTWARETITLE%.pkg'
+      url: '%DOWNLOADURL%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Microsoft Corporation (UBF8T346G9)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'
