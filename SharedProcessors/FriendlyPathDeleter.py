@@ -66,14 +66,15 @@ class FriendlyPathDeleter(Processor):
                         try:
                             shutil.rmtree(path)
                             self.output(f"Deleted {path}")
-                            return
+                            break
                         except OSError:
                             self.output(f"Unable to remove path: {path}")
                             self.output(f"Retrying in {dt} seconds")
                             time.sleep(dt)
                             dt *= 2
-                    shutil.rmtree(path, ignore_errors=fail_deleter_silently)
-                    self.output(f"Deleted {path}")
+                    if os.path.exists(path):
+                        self.output(f"Ignoring errors on final deletion for {path}")
+                        shutil.rmtree(path, ignore_errors=fail_deleter_silently)
                 elif not os.path.exists(path):
                     if not fail_deleter_silently:
                         raise ProcessorError(
