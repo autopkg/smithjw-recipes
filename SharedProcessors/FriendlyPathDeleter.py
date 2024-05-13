@@ -17,6 +17,7 @@
 
 import os
 import shutil
+import time
 
 from autopkglib import Processor, ProcessorError
 
@@ -60,7 +61,18 @@ class FriendlyPathDeleter(Processor):
                     os.remove(path)
                     self.output(f"Deleted {path}")
                 elif os.path.isdir(path):
-                    shutil.rmtree(path)
+                    dt = 1
+                    for _i in range(5):
+                        try:
+                            shutil.rmtree(path)
+                            self.output(f"Deleted {path}")
+                            return
+                        except OSError:
+                            self.output(f"Unable to remove path: {path}")
+                            self.output(f"Retrying in {dt} seconds")
+                            time.sleep(dt)
+                            dt *= 2
+                    shutil.rmtree(path, ignore_errors=fail_deleter_silently)
                     self.output(f"Deleted {path}")
                 elif not os.path.exists(path):
                     if not fail_deleter_silently:
@@ -77,7 +89,7 @@ class FriendlyPathDeleter(Processor):
                         "or directory"
                     )
             except OSError as err:
-                raise ProcessorError(f"Could not remove {path}: {err}")
+                raise ProcessorError(f"Could not remove {path}: {err}") from err
 
 
 if __name__ == "__main__":
