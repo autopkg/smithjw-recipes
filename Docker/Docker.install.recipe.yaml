@@ -1,8 +1,9 @@
 ---
 Comment: |
-  Use the ARCHITECTURE key to determine whether the Intel (amd64) or Apple Silicon (arm64) version
+  Use the ARCHITECTURE and DOWNLOAD_TYPE keys to determine whether the Intel (amd64) or Apple Silicon (arm64) version
   of Docker for Mac is downloaded. Defaults to Intel if not overridden.
-  eg "--key ARCHITECTURE=arm64"
+  Intel: "--key ARCHITECTURE=x86_64 --key DOWNLOAD_TYPE=amd64"
+  Apple Silicon: "--key ARCHITECTURE=arm64 --key DOWNLOAD_TYPE=arm64"
 Description: Downloads the latest version of Docker, packages it, then installs.
 Identifier: com.github.smithjw.install.Docker
 ParentRecipe: com.github.smithjw.pkg.Docker
@@ -10,7 +11,7 @@ MinimumVersion: '2.3'
 
 Input:
   NAME: Docker
-  ARCHITECTURE: amd64
+  ARCHITECTURE: x86_64
 
 Process:
   - Processor: Installer

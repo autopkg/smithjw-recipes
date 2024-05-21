@@ -1,8 +1,12 @@
+---
+Comment: |
+  Please Note: Due to recent changes to Docker, the postinstall
+  script will only run for the current user. More info here
+  https://dazwallace.wordpress.com/2022/12/02/changes-to-docker-desktop-for-mac/
 Description: Downloads the latest versions of Docker (arm and intel) and creates a package.
 Identifier: com.github.smithjw.pkg.Docker-Universal
 ParentRecipe: com.github.smithjw.download.Docker-Universal
 MinimumVersion: '2.3'
-Comment: 'Please Note: Due to recent changes to Docker, the postinstall script will only run for the current user. More info here https://dazwallace.wordpress.com/2022/12/02/changes-to-docker-desktop-for-mac/'
 
 Input:
   NAME: Docker
@@ -10,80 +14,65 @@ Input:
 Process:
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/Universal'
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
       pkgdirs:
         pkgroot: '0775'
-        Scripts: '0775'
+        scripts: '0775'
 
-  - Processor: PkgRootCreator
+  - Processor: PlistReader
     Arguments:
-      pkgdirs:
-        Applications: '0775'
-      pkgroot: '%RECIPE_CACHE_DIR%/payload'
-
-  - Processor: Copier
-    Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.dmg/Docker.app'
-      destination_path: '%pkgroot%/Applications/Docker.app'
-      overwrite: True
-
-  - Processor: PkgCreator
-    Arguments:
-      pkg_request:
-        chown:
-          - group: admin
-            path: Applications
-            user: root
-        id: '%bundleid%'
-        options: purge_ds_store
-        pkgdir: '%RECIPE_CACHE_DIR%'
-        pkgname: '%NAME%-arm64-%version%'
-        scripts: scripts
-
-  - Processor: FileMover
-    Arguments:
-      source: '%pkg_path%'
-      target: '%RECIPE_CACHE_DIR%/Universal/Scripts/%NAME%-arm64-%version%.pkg'
+      info_path: '%RECIPE_CACHE_DIR%/downloads/Docker-arm64.dmg/Docker.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleShortVersionString: version
+        CFBundleIdentifier: bundleid
+        CFBundleName: app_name
 
   - Processor: Copier
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x86_64.dmg/Docker.app'
-      destination_path: '%pkgroot%/Applications/Docker.app'
-      overwrite: True
+      source_path: '%RECIPE_CACHE_DIR%/downloads/Docker-arm64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/Docker-arm64-%version%.dmg'
 
-  - Processor: PkgCreator
+  - Processor: Copier
     Arguments:
-      pkg_request:
-        chown:
-          - group: admin
-            path: Applications
-            user: root
-        id: '%bundleid%'
-        options: purge_ds_store
-        pkgdir: '%RECIPE_CACHE_DIR%'
-        pkgname: '%NAME%-x86_64-%version%'
-        scripts: scripts
-
-  - Processor: FileMover
-    Arguments:
-      source: '%pkg_path%'
-      target: '%RECIPE_CACHE_DIR%/Universal/Scripts/%NAME%-x86_64-%version%.pkg'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/Docker-x86_64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/Docker-x86_64-%version%.dmg'
 
   - Processor: FileCreator
     Arguments:
-      file_path: '%RECIPE_CACHE_DIR%/Universal/Scripts/preinstall'
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
       file_mode: '0755'
       file_content: |
         #!/bin/bash
+        # https://forums.docker.com/t/feature-request-cli-tool-for-automated-installation/18334/4
+        # https://github.com/autopkg/chilcote-recipes/blob/master/Docker/Docker.munki.recipe
+        # https://github.com/docker/for-mac/issues/2359
+        # https://macadmins.slack.com/archives/C056155B4/p1716206699338559
 
-        arm64_package="%NAME%-arm64-%version%.pkg"
-        x86_64_package="%NAME%-x86_64-%version%.pkg"
+        logged_in_user=$( scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ { print $3 }' )
+        declare -r docker_bundle_dir=/Applications/Docker.app/Contents
+        declare -r privtools=/Library/PrivilegedHelperTools
+        declare -r usr_local_bin=/usr/local/bin
 
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
-          /usr/sbin/installer -pkg "$arm64_package" -target "$3"
+          /usr/bin/hdiutil attach "Docker-arm64-%version%.dmg" -mountpoint "/Volumes/Docker-%version%" -nobrowse
         else
-          /usr/sbin/installer -pkg "$x86_64_package" -target "$3"
+          /usr/bin/hdiutil attach "Docker-x86_64-%version%.dmg" -mountpoint "/Volumes/Docker-%version%" -nobrowse
         fi
+
+        if [[ -e /Library/LaunchDaemons/com.docker.vmnetd.plist ]] ; then
+          /bin/launchctl unload /Library/LaunchDaemons/com.docker.vmnetd.plist
+        fi
+
+        "/Volumes/Docker-%version%/Docker.app/Contents/MacOS/install" --accept-license --user "${logged_in_user}"
+
+        [[ ! -d ${usr_local_bin} ]] && /bin/mkdir -p ${usr_local_bin} ; /bin/chmod 1755 ${usr_local_bin}
+        [[ ! -d ${privtools} ]] && /bin/mkdir -p ${privtools} ; /bin/chmod 1755 ${privtools}
+
+        for tool in docker docker-compose docker-diagnose docker-machine notary; do
+          /bin/ln -sf ${docker_bundle_dir}/Resources/bin/${tool} /usr/local/bin
+        done
+
+        /usr/bin/hdiutil detach "/Volumes/Docker-%version%"
 
         exit 0
 
@@ -91,17 +80,15 @@ Process:
     Arguments:
       pkg_request:
         id: '%bundleid%'
-        version: '%version%'
         options: purge_ds_store
-        pkgname: '%NAME%-Universal-%version%'
         pkgdir: '%RECIPE_CACHE_DIR%'
-        scripts: '%RECIPE_CACHE_DIR%/Universal/Scripts'
-        pkgroot: '%RECIPE_CACHE_DIR%/Universal/pkgroot'
+        pkgname: '%NAME%_Universal-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
-      fail_deleter_silently: True
+      fail_deleter_silently: true
       path_list:
-        - '%RECIPE_CACHE_DIR%/Universal'
-        - '%RECIPE_CACHE_DIR%/unpack'
         - '%RECIPE_CACHE_DIR%/payload'
