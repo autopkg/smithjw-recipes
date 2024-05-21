@@ -1,4 +1,5 @@
 Comment: |
+  Utilises Shared Processors from https://github.com/jgstew/jgstew-recipes
   This recipe uses the processor StopProcessingIfDownloadUnchanged which by defauly will stop your recipe
   processing if the download has not changed. To override this you can run the recipe with
   --key bypass_stop_processing_if=TRUE
