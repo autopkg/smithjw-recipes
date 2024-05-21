@@ -20,24 +20,23 @@ Process:
       result_output_var_name: match
       url: https://www.docker.com/get-started
 
-  - Processor: URLDownloader
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%NAME%-%ARCHITECTURE%.dmg'
+      filename: 'Docker-%ARCHITECTURE%.dmg'
+      download_dir: '%RECIPE_CACHE_DIR%/downloads'
       url: '%match%'
 
   - Processor: EndOfCheckPhase
-
-  - Processor: AppDmgVersioner
-    Arguments:
-      dmg_path: '%pathname%'
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%pathname%/%app_name%'
-      requirement: |
-        anchor apple generic and identifier "com.docker.docker" and (certificate
-        leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6]
-        /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists
-        */ and certificate leaf[subject.OU] = "9BNSXJN65R")
+      input_path: '%RECIPE_CACHE_DIR%/downloads/Docker-%ARCHITECTURE%.dmg/Docker.app'
       deep_verification: true
       strict_verification: true
+      requirement: >-
+        anchor apple generic and identifier "com.docker.docker" and
+        (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = "9BNSXJN65R")

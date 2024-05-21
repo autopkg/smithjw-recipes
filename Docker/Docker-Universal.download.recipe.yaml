@@ -1,3 +1,7 @@
+Comment: |
+  This recipe uses the processor StopProcessingIfDownloadUnchanged which by defauly will stop your recipe
+  processing if the download has not changed. To override this you can run the recipe with
+  --key bypass_stop_processing_if=TRUE
 Description: Downloads the latest versions of Docker (arm and intel).
 Identifier: com.github.smithjw.download.Docker-Universal
 MinimumVersion: '2.3'
@@ -12,9 +16,9 @@ Process:
       result_output_var_name: match
       url: 'https://www.docker.com/get-started'
 
-  - Processor: URLDownloader
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%NAME%-arm64.dmg'
+      filename: 'Docker-arm64.dmg'
       download_dir: '%RECIPE_CACHE_DIR%/downloads'
       url: '%match%'
 
@@ -24,28 +28,35 @@ Process:
       result_output_var_name: match
       url: 'https://www.docker.com/get-started'
 
-  - Processor: URLDownloader
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%NAME%-x86_64.dmg'
+      filename: 'Docker-x86_64.dmg'
       download_dir: '%RECIPE_CACHE_DIR%/downloads'
       url: '%match%'
 
   - Processor: EndOfCheckPhase
-
-  - Processor: AppDmgVersioner
-    Arguments:
-      dmg_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.dmg'
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-arm64.dmg/Docker.app'
-      requirement: anchor apple generic and identifier "com.docker.docker" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "9BNSXJN65R")
-      deep_verification: True
-      strict_verification: True
+      input_path: '%RECIPE_CACHE_DIR%/downloads/Docker-arm64.dmg/Docker.app'
+      deep_verification: true
+      strict_verification: true
+      requirement: >-
+        anchor apple generic and identifier "com.docker.docker" and
+        (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = "9BNSXJN65R")
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%-x86_64.dmg/Docker.app'
-      requirement: anchor apple generic and identifier "com.docker.docker" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "9BNSXJN65R")
-      deep_verification: True
-      strict_verification: True
+      input_path: '%RECIPE_CACHE_DIR%/downloads/Docker-x86_64.dmg/Docker.app'
+      deep_verification: true
+      strict_verification: true
+      requirement: >-
+        anchor apple generic and identifier "com.docker.docker" and
+        (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = "9BNSXJN65R")
