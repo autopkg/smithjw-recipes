@@ -1,0 +1,34 @@
+Description: |
+  Downloads the latest version of Little Snitch 5 and builds a pkg.
+  Please Note: In order to minimise user requests on first launch you'll need to
+  deploy a System Extension Profile and Content Filter profile with this title
+  Minimum OS is macOS 11.x
+Identifier: com.github.smithjw.pkg.LittleSnitch5
+ParentRecipe: com.github.smithjw.download.LittleSnitch5
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Little Snitch 5
+  SOFTWARE_TITLE: Little_Snitch
+  USER_AGENT: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.28.10 (KHTML, like Gecko) Version/6.0.3 Safari/536.28.10
+
+Process:
+  # - Processor: AppDmgVersioner
+  #   Arguments:
+  #     dmg_path: '%SOFTWARE_TITLE%.dmg'
+
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%SOFTWARE_TITLE%.dmg/*.app'
+      pkg_path: '%SOFTWARE_TITLE%-%version%.pkg'
+      # pkg_request:
+      #   chown:
+      #     - group: admin
+      #       mode: '0755'
+      #       path: Applications/Little Snitch.app
+      #       user: root
+      #   id: '%bundleid%'
+      #   options: purge_ds_store
+      #   pkgname: '%NAME%-%version%'
+      #   pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
+      #   version: '%version%'
