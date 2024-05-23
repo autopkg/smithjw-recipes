@@ -13,22 +13,11 @@ Input:
   USER_AGENT: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.28.10 (KHTML, like Gecko) Version/6.0.3 Safari/536.28.10
 
 Process:
-  # - Processor: AppDmgVersioner
-  #   Arguments:
-  #     dmg_path: '%SOFTWARE_TITLE%.dmg'
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg'
 
   - Processor: AppPkgCreator
     Arguments:
-      app_path: '%SOFTWARE_TITLE%.dmg/*.app'
-      pkg_path: '%SOFTWARE_TITLE%-%version%.pkg'
-      # pkg_request:
-      #   chown:
-      #     - group: admin
-      #       mode: '0755'
-      #       path: Applications/Little Snitch.app
-      #       user: root
-      #   id: '%bundleid%'
-      #   options: purge_ds_store
-      #   pkgname: '%NAME%-%version%'
-      #   pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
-      #   version: '%version%'
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/*.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

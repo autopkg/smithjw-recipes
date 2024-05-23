@@ -21,6 +21,7 @@ Process:
 
   - Processor: URLDownloader
     Arguments:
+      download_dir: '%RECIPE_CACHE_DIR%/downloads'
       filename: '%SOFTWARE_TITLE%.dmg'
       url: https://www.obdev.at/downloads/littlesnitch/legacy/%match%
 
@@ -28,7 +29,7 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%SOFTWARE_TITLE%.dmg/Little Snitch.app'
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/*.app'
       deep_verification: true
       strict_verification: true
       requirement: >-
