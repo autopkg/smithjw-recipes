@@ -1,0 +1,14 @@
+Description: |
+  Downloads latest version of Little Snitch 5, creates a package and installs it.
+  Please Note: In order to minimise user requests on first launch you'll need to
+  deploy a System Extension Profile and Content Filter profile with this title
+  Minimum OS is macOS 11.x
+Identifier: com.github.smithjw.install.LittleSnitch5
+ParentRecipe: com.github.smithjw.pkg.LittleSnitch5
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Little Snitch 5
+
+Process:
+  - Processor: Installer

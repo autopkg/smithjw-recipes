@@ -1,0 +1,39 @@
+Description: |
+  Downloads the latest version of Little Snitch 5.
+  Please Note: In order to minimise user requests on first launch you'll need to
+  deploy a System Extension Profile and Content Filter profile with this title
+  Minimum OS is macOS 11.x
+Identifier: com.github.smithjw.download.LittleSnitch5
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Little Snitch 5
+  SOFTWARE_TITLE: Little_Snitch
+  USER_AGENT: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.28.10 (KHTML, like Gecko) Version/6.0.3 Safari/536.28.10
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: (LittleSnitch-5[\d\.]+\.dmg)
+      request_headers:
+        User-Agent: Safari 8.0.2
+      url: https://www.obdev.at/products/littlesnitch/download-previous-versions.html
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%SOFTWARE_TITLE%.dmg'
+      url: https://www.obdev.at/downloads/littlesnitch/legacy/%match%
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%SOFTWARE_TITLE%.dmg/Little Snitch.app'
+      deep_verification: true
+      strict_verification: true
+      requirement: >-
+        anchor apple generic and identifier "at.obdev.littlesnitch" and
+        (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = MLZF7K7B5R)
