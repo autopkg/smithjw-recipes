@@ -49,9 +49,17 @@ Process:
         # https://macadmins.slack.com/archives/C056155B4/p1716206699338559
 
         logged_in_user=$( scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ { print $3 }' )
-        declare -r docker_bundle_dir=/Applications/Docker.app/Contents
-        declare -r privtools=/Library/PrivilegedHelperTools
-        declare -r usr_local_bin=/usr/local/bin
+        docker_daemons=(
+          "com.docker.socket"
+          "com.docker.vmnetd"
+        )
+
+        for daemon in "${docker_daemons[@]}"; do
+          if /bin/launchctl print "system/${daemon}" >/dev/null 2>&1; then
+            echo "bootout: ${daemon}"
+            /bin/launchctl bootout "system/${daemon}"
+          fi
+        done
 
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
           /usr/bin/hdiutil attach "Docker-arm64-%version%.dmg" -mountpoint "/Volumes/Docker-%version%" -nobrowse
@@ -59,18 +67,7 @@ Process:
           /usr/bin/hdiutil attach "Docker-x86_64-%version%.dmg" -mountpoint "/Volumes/Docker-%version%" -nobrowse
         fi
 
-        if [[ -e /Library/LaunchDaemons/com.docker.vmnetd.plist ]] ; then
-          /bin/launchctl unload /Library/LaunchDaemons/com.docker.vmnetd.plist
-        fi
-
         "/Volumes/Docker-%version%/Docker.app/Contents/MacOS/install" --accept-license --user "${logged_in_user}"
-
-        [[ ! -d ${usr_local_bin} ]] && /bin/mkdir -p ${usr_local_bin} ; /bin/chmod 1755 ${usr_local_bin}
-        [[ ! -d ${privtools} ]] && /bin/mkdir -p ${privtools} ; /bin/chmod 1755 ${privtools}
-
-        for tool in docker docker-compose docker-diagnose docker-machine notary; do
-          /bin/ln -sf ${docker_bundle_dir}/Resources/bin/${tool} /usr/local/bin
-        done
 
         /usr/bin/hdiutil detach "/Volumes/Docker-%version%"
 
