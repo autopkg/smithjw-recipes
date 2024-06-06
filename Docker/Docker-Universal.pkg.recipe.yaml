@@ -1,8 +1,8 @@
 ---
 Comment: |
-  Please Note: Due to recent changes to Docker, the postinstall
-  script will only run for the current user. More info here
-  https://dazwallace.wordpress.com/2022/12/02/changes-to-docker-desktop-for-mac/
+  Current versions of Docker Desktop may not install correctly in unattented environments.
+  Due to recent changes to Docker, the postinstall will check for the logged_in_user
+  and may not install correctly if there is no user logged in.
 Description: Downloads the latest versions of Docker (arm and intel) and creates a package.
 Identifier: com.github.smithjw.pkg.Docker-Universal
 ParentRecipe: com.github.smithjw.download.Docker-Universal
@@ -47,8 +47,10 @@ Process:
         # https://github.com/autopkg/chilcote-recipes/blob/master/Docker/Docker.munki.recipe
         # https://github.com/docker/for-mac/issues/2359
         # https://macadmins.slack.com/archives/C056155B4/p1716206699338559
+        # https://macadmins.slack.com/archives/C056155B4/p1717624187018149
 
         logged_in_user=$( scutil <<< "show State:/Users/ConsoleUser" | awk '/Name :/ && ! /loginwindow/ { print $3 }' )
+        echo "logged_in_user: $logged_in_user"
         docker_daemons=(
           "com.docker.socket"
           "com.docker.vmnetd"
@@ -62,13 +64,26 @@ Process:
         done
 
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          echo "Attaching Docker-arm64-%version%.dmg"
           /usr/bin/hdiutil attach "Docker-arm64-%version%.dmg" -mountpoint "/Volumes/Docker-%version%" -nobrowse
         else
+          echo "Attaching Docker-x86_64-%version%.dmg"
           /usr/bin/hdiutil attach "Docker-x86_64-%version%.dmg" -mountpoint "/Volumes/Docker-%version%" -nobrowse
         fi
 
-        "/Volumes/Docker-%version%/Docker.app/Contents/MacOS/install" --accept-license --user "${logged_in_user}"
+        if [[ -z "$logged_in_user" ]] || [[ "$logged_in_user" =~ (loginwindow|_mbsetupuser|root) ]]; then
+          echo "User not logged in, running: /Volumes/Docker-%version%/Docker.app/Contents/MacOS/install --accept-license"
+          "/Volumes/Docker-%version%/Docker.app/Contents/MacOS/install" --accept-license
+        else
+          echo "User logged in, running:"
+          echo "  - '/Volumes/Docker-%version%/Docker.app/Contents/MacOS/install config --user ${logged_in_user}'"
+          "/Volumes/Docker-%version%/Docker.app/Contents/MacOS/install" config --user "${logged_in_user}"
 
+          echo "  - '/Volumes/Docker-%version%/Docker.app/Contents/MacOS/install --accept-license --user ${logged_in_user}'"
+          "/Volumes/Docker-%version%/Docker.app/Contents/MacOS/install" --accept-license --user "${logged_in_user}"
+        fi
+
+        echo "Detatching /Volumes/Docker-%version%"
         /usr/bin/hdiutil detach "/Volumes/Docker-%version%"
 
         exit 0
