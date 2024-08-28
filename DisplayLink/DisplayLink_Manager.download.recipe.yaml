@@ -12,7 +12,7 @@ Input:
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      re_pattern: (\/products\/displaylink-graphics\/downloads\/macos-connectivity-[\d\.]*\?filetype=exe)
+      re_pattern: /%SEARCH_URL%.+\?filetype=exe
       url: '%BASE_URL%/%SEARCH_URL%'
 
   - Processor: URLTextSearcher
