@@ -1,5 +1,5 @@
 Identifier: com.github.smithjw.jamf.Visual_Studio_Code
-ParentRecipe: com.github.killahquam.pkg.visualstudioscode
+ParentRecipe: com.github.amsysuk-recipes.pkg.VisualStudioCode
 MinimumVersion: '2.3'
 
 Input:
