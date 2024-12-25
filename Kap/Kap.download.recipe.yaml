@@ -8,6 +8,10 @@ Input:
   DOWNLOAD_ARCHITECTURE: x64
 
 Process:
+  - Processor: DeprecationWarning
+    Arguments:
+      warning_message: Consider switching to the Kap recipes in the wardsparadox-recipes repo. This recipe is deprecated and will be removed in the future.
+
   - Processor: GitHubReleasesInfoProvider
     Arguments:
       github_repo: 'wulkano/kap'
