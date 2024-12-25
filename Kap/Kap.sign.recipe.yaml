@@ -15,4 +15,4 @@ Process:
     Arguments:
       fail_deleter_silently: True
       path_list:
-        - '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%-unsigned.pkg'
+        - '%RECIPE_CACHE_DIR%/%NAME%-%ARCH%-%version%-unsigned.pkg'
