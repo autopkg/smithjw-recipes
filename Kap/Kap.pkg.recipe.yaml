@@ -1,6 +1,6 @@
 Description: Downloads the latest version of Kap and creates a package.
 Identifier: com.github.smithjw.pkg.Kap
-ParentRecipe: com.github.smithjw.download.Kap
+ParentRecipe: com.github.autopkg.wardsparadox.download.Kap
 MinimumVersion: '2.3'
 
 Input:
@@ -9,4 +9,4 @@ Input:
 Process:
   - Processor: AppPkgCreator
     Arguments:
-      pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%.pkg'
+      pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%ARCH%-%version%.pkg'
