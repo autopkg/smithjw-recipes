@@ -16,9 +16,18 @@
 			<string>https://rink.hockeyapp.net/api/2/apps/5e0c144289a51fca2d3bfa39ce7f2b06</string>
 		</dict>
 		<key>MinimumVersion</key>
-		<string>0.6.1</string>
+		<string>1.1</string>
 		<key>Process</key>
 		<array>
+			<dict>
+				<key>Processor</key>
+				<string>DeprecationWarning</string>
+				<key>Arguments</key>
+				<dict>
+					<key>warning_message</key>
+					<string>Consider switching to the MicrosoftRemoteDesktopBeta recipes in the n8felton-recipes repo. This recipe is deprecated and will be removed in the future.</string>
+				</dict>
+			</dict>
 			<dict>
 				<key>Arguments</key>
 				<dict>
