@@ -13,6 +13,10 @@ Input:
   DOWNLOAD_TYPE: Intel
 
 Process:
+  - Processor: DeprecationWarning
+    Arguments:
+      warning_message: Consider switching to one of the many other Wireshark recipes (https://github.com/search?q=org%3Aautopkg%20wireshark&type=code). This recipe is deprecated and will be removed in the future.
+
   - Processor: URLTextSearcher
     Arguments:
       re_pattern: (Wireshark([%]20)*.*([%]20)*%DOWNLOAD_TYPE%([%]20)*64.dmg)
