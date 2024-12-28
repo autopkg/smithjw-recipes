@@ -14,9 +14,18 @@
             <string>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.28.10 (KHTML, like Gecko) Version/6.0.3 Safari/536.28.10</string>
         </dict>
         <key>MinimumVersion</key>
-        <string>0.2.9</string>
+        <string>1.1</string>
         <key>Process</key>
         <array>
+            <dict>
+                <key>Processor</key>
+                <string>DeprecationWarning</string>
+                <key>Arguments</key>
+                <dict>
+                    <key>warning_message</key>
+                    <string>With the release of v2, Luxafor is now available via the AppStore only: https://apps.apple.com/app/id1559879690. As such, this recipe no longer works.</string>
+                </dict>
+            </dict>
             <dict>
                 <key>Processor</key>
                 <string>URLTextSearcher</string>
