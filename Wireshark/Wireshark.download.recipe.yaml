@@ -15,16 +15,17 @@ Input:
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      re_pattern: (Wireshark([%]20)*.*([%]20)*%DOWNLOAD_TYPE%([%]20)*64.dmg)
+      re_pattern: ((https:\/\/)([a-zA-Z0-9.\/])+(Wireshark[%]20([\d\.]+)[%]20%DOWNLOAD_TYPE%[%]2064.dmg))
       request_headers:
-        User-Agent: Safari 8.0.2
-      result_output_var_name: match
+        User-Agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+      result_output_var_name: url
       url: https://www.wireshark.org/download.html
 
   - Processor: URLDownloader
     Arguments:
       filename: '%NAME%-%ARCHITECTURE%.dmg'
-      url: https://www.wireshark.org/download/osx/%match%
+      request_headers:
+        user-agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
 
   - Processor: EndOfCheckPhase
 
