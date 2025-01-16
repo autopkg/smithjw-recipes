@@ -30,13 +30,6 @@ Process:
     Arguments:
       category_name: '%CATEGORY%'
 
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfScriptUploader
-    Arguments:
-      script_category: '%SELF_SERVICE_CATEGORY%'
-      script_path: '%SCRIPT_NAME%'
-      script_priority: '%SCRIPT_PRIORITY%'
-      script_parameter4: '%SCRIPT_PARAMETER4_TITLE%'
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: '%CATEGORY%'
@@ -44,6 +37,13 @@ Process:
   - Processor: StopProcessingIf
     Arguments:
       predicate: '%UPDATE_PREDICATE%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfScriptUploader
+    Arguments:
+      script_category: '%SELF_SERVICE_CATEGORY%'
+      script_path: '%SCRIPT_NAME%'
+      script_priority: '%SCRIPT_PRIORITY%'
+      script_parameter4: '%SCRIPT_PARAMETER4_TITLE%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
     Arguments:

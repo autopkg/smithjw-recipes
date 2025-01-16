@@ -1,6 +1,6 @@
 Description: Downloads the latest Microsoft Edge installer pkg using the URLDownloaderPython processor.
 Identifier: com.github.smithjw.download.Microsoft_Edge_alt
-MinimumVersion: '2.3'
+MinimumVersion: '2.4.1'
 
 Input:
   NAME: Microsoft Edge
