@@ -8,7 +8,7 @@ Input:
   BASE_URL: https://www.synaptics.com
   SEARCH_URL: products/displaylink-graphics/downloads/macos
   RE_PATTERN_1: /products/displaylink-.+\?filetype=exe
-  RE_PATTERN_2: <a.*href="(?P<download_url>.*[.]pkg)" download>Accept<\/a>
+  RE_PATTERN_2: <a.*href="(?P<download_url>.*[.]zip)" download>Accept<\/a>
   LOGIN_EXTENSION_URL: https://www.synaptics.com/sites/default/files/exe_files/2021-02/macOS%20App%20LoginExtension-EXE.dmg
 
 Process:
@@ -24,8 +24,14 @@ Process:
 
   - Processor: URLDownloader
     Arguments:
-      filename: '%SOFTWARE_TITLE%.pkg'
+      filename: '%SOFTWARE_TITLE%.zip'
       url: '%BASE_URL%%download_url%'
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/%NAME%'
+      purge_destination: true
 
   - Processor: URLDownloader
     Arguments:
@@ -44,7 +50,7 @@ Process:
         - 'Developer ID Installer: DisplayLink Corp (73YQY62QM3)'
         - Developer ID Certification Authority
         - Apple Root CA
-      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.pkg'
+      input_path: '%RECIPE_CACHE_DIR%/%NAME%/DisplayLink*.pkg'
 
   - Processor: CodeSignatureVerifier
     Arguments:
