@@ -30,9 +30,9 @@ Process:
   - Processor: Unarchiver
     Arguments:
       archive_path: '%pathname%'
-      destination_path: '%RECIPE_CACHE_DIR%/%NAME%'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
       purge_destination: true
-
+  
   - Processor: URLDownloader
     Arguments:
       filename: '%SOFTWARE_TITLE%_Extension.dmg'
@@ -50,7 +50,7 @@ Process:
         - 'Developer ID Installer: DisplayLink Corp (73YQY62QM3)'
         - Developer ID Certification Authority
         - Apple Root CA
-      input_path: '%RECIPE_CACHE_DIR%/%NAME%/DisplayLink*.pkg'
+      input_path: '%RECIPE_CACHE_DIR%/unpack/*.pkg'
 
   - Processor: CodeSignatureVerifier
     Arguments:
