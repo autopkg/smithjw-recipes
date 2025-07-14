@@ -54,18 +54,35 @@ Process:
 
   - Processor: FileCreator
     Arguments:
-      file_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%/Scripts/preinstall'
+      file_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%/Scripts/postinstall'
       file_mode: '0755'
       file_content: |
         #!/bin/bash
 
-        DISPLAYLINK_PKG="%SOFTWARE_TITLE%-%version%.pkg"
-        DISPLAYLINK_EXTENTION_PKG="%SOFTWARE_TITLE%_Extension-%version%.pkg"
+        SCRIPT_DIR="$(dirname "$0")"
+        DISPLAYLINK_PKG="$SCRIPT_DIR/%SOFTWARE_TITLE%-%version%.pkg"
+        DISPLAYLINK_EXTENSION_PKG="$SCRIPT_DIR/%SOFTWARE_TITLE%_Extension-%version%.pkg"
 
+        echo "Installing DisplayLink Manager..."
         /usr/sbin/installer -pkg "$DISPLAYLINK_PKG" -target "$3"
-        /usr/sbin/installer -pkg "$DISPLAYLINK_EXTENTION_PKG" -target "$3"
+        MAIN_EXIT_CODE=$?
 
-        exit 0
+        if [ $MAIN_EXIT_CODE -eq 0 ]; then
+            echo "Installing DisplayLink Extension..."
+            /usr/sbin/installer -pkg "$DISPLAYLINK_EXTENSION_PKG" -target "$3"
+            EXTENSION_EXIT_CODE=$?
+
+            if [ $EXTENSION_EXIT_CODE -eq 0 ]; then
+                echo "Both DisplayLink packages installed successfully"
+                exit 0
+            else
+                echo "DisplayLink Extension installation failed with exit code: $EXTENSION_EXIT_CODE"
+                exit $EXTENSION_EXIT_CODE
+            fi
+        else
+            echo "DisplayLink Manager installation failed with exit code: $MAIN_EXIT_CODE"
+            exit $MAIN_EXIT_CODE
+        fi
 
   - Processor: PkgCreator
     Arguments:
@@ -75,8 +92,8 @@ Process:
         options: purge_ds_store
         pkgname: '%SOFTWARE_TITLE%-%version%'
         pkgdir: '%RECIPE_CACHE_DIR%'
-        scripts: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%/Scripts'
         pkgroot: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%/Scripts'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
