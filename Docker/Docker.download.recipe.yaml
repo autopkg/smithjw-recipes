@@ -15,17 +15,11 @@ Input:
   DOWNLOAD_TYPE: amd64
 
 Process:
-  - Processor: URLTextSearcher
-    Arguments:
-      re_pattern: ((\w+):\/\/(\S*)(%DOWNLOAD_TYPE%)(\S*)(dmg)(?=\?))
-      result_output_var_name: match
-      url: https://www.docker.com/get-started
-
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
       filename: 'Docker-%ARCHITECTURE%.dmg'
       download_dir: '%RECIPE_CACHE_DIR%/downloads'
-      url: '%match%'
+      url: 'https://desktop.docker.com/mac/main/%DOWNLOAD_TYPE%/Docker.dmg'
 
   - Processor: EndOfCheckPhase
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
