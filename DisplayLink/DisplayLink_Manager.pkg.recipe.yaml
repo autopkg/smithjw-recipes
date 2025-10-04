@@ -89,7 +89,6 @@ Process:
       pkg_request:
         id: 'com.displaylink.displaylinkmanagerapp'
         version: '%version%'
-        options: purge_ds_store
         pkgname: '%SOFTWARE_TITLE%-%version%'
         pkgdir: '%RECIPE_CACHE_DIR%'
         pkgroot: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%/pkgroot'
