@@ -47,7 +47,6 @@ Process:
       pkg_request:
         id: '%bundleid%'
         version: '%version%'
-        options: purge_ds_store
         pkgname: '%NAME%-Universal-%version%'
         pkgdir: '%RECIPE_CACHE_DIR%'
         scripts: '%RECIPE_CACHE_DIR%/Universal/Scripts'

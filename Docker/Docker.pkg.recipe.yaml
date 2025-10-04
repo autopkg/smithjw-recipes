@@ -83,7 +83,6 @@ Process:
     Arguments:
       pkg_request:
         id: '%bundleid%'
-        options: purge_ds_store
         pkgdir: '%RECIPE_CACHE_DIR%'
         pkgname: '%NAME%-%ARCHITECTURE%-%version%'
         pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
