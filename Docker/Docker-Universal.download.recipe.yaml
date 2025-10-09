@@ -5,21 +5,21 @@ Comment: |
   --key bypass_stop_processing_if=TRUE
 Description: Downloads the latest versions of Docker (arm and intel).
 Identifier: com.github.smithjw.download.Docker-Universal
-MinimumVersion: '2.3'
+MinimumVersion: '2.4.1'
 
 Input:
   NAME: Docker
-  arm_dl_url: "https://desktop.docker.com/mac/main/arm64/Docker.dmg"
-  intel_dl_url: "https://desktop.docker.com/mac/main/amd64/Docker.dmg"
+  arm_dl_url: 'https://desktop.docker.com/mac/main/arm64/Docker.dmg'
+  intel_dl_url: 'https://desktop.docker.com/mac/main/amd64/Docker.dmg'
 
 Process:
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       filename: 'Docker-arm64.dmg'
       download_dir: '%RECIPE_CACHE_DIR%/downloads'
       url: '%arm_dl_url%'
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       filename: 'Docker-x86_64.dmg'
       download_dir: '%RECIPE_CACHE_DIR%/downloads'

@@ -32,7 +32,7 @@ Process:
       archive_path: '%pathname%'
       destination_path: '%RECIPE_CACHE_DIR%/unpack'
       purge_destination: true
-  
+
   - Processor: URLDownloader
     Arguments:
       filename: '%SOFTWARE_TITLE%_Extension.dmg'
