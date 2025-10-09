@@ -7,7 +7,7 @@ Comment: |
   Apple Silicon: "--key ARCHITECTURE=arm64 --key DOWNLOAD_TYPE=arm64"
 Description: Downloads the latest version of Docker.
 Identifier: com.github.smithjw.download.Docker
-MinimumVersion: '2.3'
+MinimumVersion: '2.4.1'
 
 Input:
   NAME: Docker
@@ -15,7 +15,7 @@ Input:
   DOWNLOAD_TYPE: amd64
 
 Process:
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       filename: 'Docker-%ARCHITECTURE%.dmg'
       download_dir: '%RECIPE_CACHE_DIR%/downloads'
