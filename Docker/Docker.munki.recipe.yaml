@@ -20,7 +20,30 @@ Input:
       - '%ARCHITECTURE%'
 
 Process:
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/downloads/Docker-%ARCHITECTURE%.dmg/*.app'
+
+  - Processor: Copier
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/Applications/%dmg_found_filename%'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/Docker-%ARCHITECTURE%.dmg/%dmg_found_filename%'
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      derive_minimum_os_version: true
+      faux_root: '%RECIPE_CACHE_DIR%'
+      installs_item_paths:
+        - /Applications/Docker.app
+
+  - Processor: MunkiPkginfoMerger
+
   - Processor: MunkiImporter
     Arguments:
       pkg_path: '%pkg_path%'
       repo_subdirectory: '%MUNKI_REPO_SUBDIR%'
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+      - '%RECIPE_CACHE_DIR%/Applications'
