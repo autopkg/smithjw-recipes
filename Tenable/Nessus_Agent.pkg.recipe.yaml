@@ -10,5 +10,5 @@ Input:
 Process:
 - Processor: PkgCopier
   Arguments:
-    source_pkg: '%pathname%/.NessusAgent.pkg'
+    source_pkg: '%pathname%/%dmg_found_filename%'
     pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
