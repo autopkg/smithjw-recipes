@@ -15,13 +15,9 @@ Process:
         pkgroot: '0775'
         Scripts: '0775'
 
-  - Processor: FileFinder
-    Arguments:
-      pattern: '%RECIPE_CACHE_DIR%/unpack/*.pkg'
-
   - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
     Arguments:
-      archive_path: '%found_filename%'
+      archive_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.pkg'
       file_to_extract: Distribution
 
   - Processor: com.github.mlbz521.SharedProcessors/XPathParser
@@ -40,7 +36,7 @@ Process:
 
   - Processor: PkgCopier
     Arguments:
-      source_pkg: '%found_filename%'
+      source_pkg: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.pkg'
       pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%/Scripts/%SOFTWARE_TITLE%-%version%.pkg'
 
   - Processor: FileFinder
