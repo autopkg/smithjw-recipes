@@ -8,6 +8,10 @@ Input:
   SOFTWARE_TITLE: DisplayLink_Manager
 
 Process:
+  - Processor: DeprecationWarning
+    Arguments:
+      warning_message: "This recipe has been deprecated, please switch to com.github.smithjw.download.DisplayLink_Manager."
+
   - Processor: PkgRootCreator
     Arguments:
       pkgroot: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%'
