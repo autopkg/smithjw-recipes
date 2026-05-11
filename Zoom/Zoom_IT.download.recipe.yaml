@@ -1,18 +1,25 @@
 Description: Downloads the latest version of the Zoom client for IT Administrators.
 Identifier: com.github.smithjw.download.zoom_it
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Zoom
   DOWNLOAD_URL: https://zoom.us/client/latest/ZoomInstallerIT.pkg
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
-- Processor: URLDownloader
+- Processor: URLDownloaderPython
   Arguments:
+    download_missing_file: '%DOWNLOAD_MISSING_FILE%'
     filename: '%NAME%.pkg'
     url: '%DOWNLOAD_URL%'
 
 - Processor: EndOfCheckPhase
+
+- Processor: StopProcessingIf
+  Arguments:
+    predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
 - Processor: CodeSignatureVerifier
   Arguments:

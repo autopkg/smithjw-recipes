@@ -9,21 +9,28 @@ Comment: |
 
 Description: Downloads the latest version of GitHub Desktop.
 Identifier: com.github.smithjw.download.github_desktop
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: GitHub Desktop
   SOFTWARE_TITLE: GitHub_Desktop
   ARCHITECTURE: x64
   DOWNLOAD_URL: 'https://central.github.com/deployments/desktop/desktop/latest/darwin'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
-  - Processor: URLDownloader
+  - Processor: URLDownloaderPython
     Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-%ARCHITECTURE%.zip'
       url: '%DOWNLOAD_URL%'
 
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: PkgRootCreator
     Arguments:

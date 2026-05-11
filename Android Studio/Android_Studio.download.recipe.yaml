@@ -1,5 +1,5 @@
 Identifier: com.github.smithjw.download.Android_Studio
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Android Studio
@@ -8,6 +8,8 @@ Input:
   ARCH_SEARCH: 'mac_arm'
   SEARCH_PATTERN: '(https\://redirector\.gvt1\.com/edgedl/android/studio/install/.+/android-studio.+%ARCH_SEARCH%\.dmg)'
   SEARCH_URL: 'https://developer.android.com/studio'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: URLTextSearcher
@@ -15,11 +17,16 @@ Process:
       re_pattern: '%SEARCH_PATTERN%'
       url: '%SEARCH_URL%'
 
-  - Processor: URLDownloader
+  - Processor: URLDownloaderPython
     Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       url: '%match%'
 
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: AppDmgVersioner
     Arguments:

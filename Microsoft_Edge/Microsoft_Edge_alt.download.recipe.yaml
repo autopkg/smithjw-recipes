@@ -1,6 +1,6 @@
 Description: Downloads the latest Microsoft Edge installer pkg using the URLDownloaderPython processor.
 Identifier: com.github.smithjw.download.Microsoft_Edge_alt
-MinimumVersion: '2.4.1'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Microsoft Edge
@@ -8,14 +8,21 @@ Input:
   SOFTWARETITLE: Edge
   PRODUCTID: '2093504'
   DOWNLOADURL: https://go.microsoft.com/fwlink/?linkid=%PRODUCTID%
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: URLDownloaderPython
     Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%VENDOR%_%SOFTWARETITLE%.pkg'
       url: '%DOWNLOADURL%'
 
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:

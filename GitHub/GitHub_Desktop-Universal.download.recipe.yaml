@@ -1,27 +1,35 @@
 Description: Downloads the latest versions (ARM and INTEL) of GitHub Desktop.
 Identifier: com.github.smithjw.download.GitHub_Desktop-Universal
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: GitHub Desktop
   SOFTWARE_TITLE: GitHub_Desktop
   URL_ARM64: https://central.github.com/deployments/desktop/desktop/latest/darwin-arm64
   URL_X86_64: https://central.github.com/deployments/desktop/desktop/latest/darwin
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
-  - Processor: URLDownloader
+  - Processor: URLDownloaderPython
     Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-arm64.zip'
       download_dir: '%RECIPE_CACHE_DIR%/downloads'
       url: '%URL_ARM64%'
 
-  - Processor: URLDownloader
+  - Processor: URLDownloaderPython
     Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-x86_64.zip'
       download_dir: '%RECIPE_CACHE_DIR%/downloads'
       url: '%URL_X86_64%'
 
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: Unarchiver
     Arguments:

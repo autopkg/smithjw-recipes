@@ -1,32 +1,38 @@
 Comment: |
-  Utilises Shared Processors from https://github.com/jgstew/jgstew-recipes
-  This recipe uses the processor StopProcessingIfDownloadUnchanged which by defauly will stop your recipe
-  processing if the download has not changed. To override this you can run the recipe with
-  --key bypass_stop_processing_if=TRUE
+  This recipe uses StopProcessingIf with `download_changed == False` to short-circuit
+  the chain when the download is unchanged. To bypass and continue processing even
+  when the download is unchanged, set BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED=True.
 Description: Downloads the latest versions of Docker (arm and intel).
 Identifier: com.github.smithjw.download.Docker-Universal
-MinimumVersion: '2.4.1'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Docker
   arm_dl_url: 'https://desktop.docker.com/mac/main/arm64/Docker.dmg'
   intel_dl_url: 'https://desktop.docker.com/mac/main/amd64/Docker.dmg'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: URLDownloaderPython
     Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: 'Docker-arm64.dmg'
       download_dir: '%RECIPE_CACHE_DIR%/downloads'
       url: '%arm_dl_url%'
 
   - Processor: URLDownloaderPython
     Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: 'Docker-x86_64.dmg'
       download_dir: '%RECIPE_CACHE_DIR%/downloads'
       url: '%intel_dl_url%'
 
   - Processor: EndOfCheckPhase
-  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:

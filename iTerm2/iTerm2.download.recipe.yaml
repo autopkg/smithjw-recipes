@@ -1,18 +1,25 @@
 Description: Downloads the latest version of iTerm2.
 Identifier: com.github.smithjw.download.iterm2
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: iTerm2
   DOWNLOAD_URL: 'https://iterm2.com/downloads/stable/latest'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
-- Processor: URLDownloader
+- Processor: URLDownloaderPython
   Arguments:
+    download_missing_file: '%DOWNLOAD_MISSING_FILE%'
     prefetch_filename: true
     url: '%DOWNLOAD_URL%'
 
 - Processor: EndOfCheckPhase
+
+- Processor: StopProcessingIf
+  Arguments:
+    predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
 - Processor: Unarchiver
   Arguments:
