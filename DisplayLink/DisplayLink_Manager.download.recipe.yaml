@@ -1,6 +1,6 @@
 Description: Downloads the latest version of the DisplayLink Manager App.
 Identifier: com.github.smithjw.download.DisplayLink_Manager
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: DisplayLink Manager
@@ -9,6 +9,8 @@ Input:
   SEARCH_URL: products/displaylink-graphics/downloads/macos
   RE_PATTERN_1: /products/displaylink-.+\?filetype=exe
   RE_PATTERN_2: <a.*href="(?P<download_url>.*[.]pkg)" download>Accept<\/a>
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: URLTextSearcher
@@ -21,12 +23,17 @@ Process:
       re_pattern: '%RE_PATTERN_2%'
       url: '%BASE_URL%%match%'
 
-  - Processor: URLDownloader
+  - Processor: URLDownloaderPython
     Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.pkg'
       url: '%BASE_URL%%download_url%'
 
   - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:

@@ -7,22 +7,28 @@ Comment: |
   Apple Silicon: "--key ARCHITECTURE=arm64 --key DOWNLOAD_TYPE=arm64"
 Description: Downloads the latest version of Docker.
 Identifier: com.github.smithjw.download.Docker
-MinimumVersion: '2.4.1'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Docker
   ARCHITECTURE: x86_64
   DOWNLOAD_TYPE: amd64
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: URLDownloaderPython
     Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: 'Docker-%ARCHITECTURE%.dmg'
       download_dir: '%RECIPE_CACHE_DIR%/downloads'
       url: 'https://desktop.docker.com/mac/main/%DOWNLOAD_TYPE%/Docker.dmg'
 
   - Processor: EndOfCheckPhase
-  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:
