@@ -1,22 +1,47 @@
 Description: Downloads latest version of the Wireshark DMG and creates a Package.
 Identifier: com.github.smithjw.pkg.wireshark
 ParentRecipe: com.github.smithjw.download.wireshark
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Wireshark
+  SOFTWARE_TITLE: '%NAME%'
+  ARCHITECTURE: x64
 
 Process:
   - Processor: PkgRootCreator
     Arguments:
       pkgdirs:
-        Applications: '0775'
-      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+        payload/Applications: '0775'
+        scripts: '0775'
+      pkgroot: '%RECIPE_CACHE_DIR%/pkgroot'
 
   - Processor: Copier
     Arguments:
+      destination_path: '%pkgroot%/payload/Applications/Wireshark.app'
       source_path: '%pathname%/Wireshark.app'
-      destination_path: '%pkgroot%/Applications/Wireshark.app'
+
+  - Processor: FileCreator
+    Arguments:
+      file_content: |
+        #!/bin/bash
+
+        /bin/echo "Installing Wireshark components..."
+        extras="/Applications/Wireshark.app/Contents/Resources/Extras"
+
+        packages=(
+            "Install ChmodBPF.pkg"
+            "Add Wireshark to the system path.pkg"
+        )
+
+        for package in "${packages[@]}"; do
+            echo "Installing: $extras/$package"
+            installer -pkg "$extras/$package" -target /
+        done
+
+        exit 0
+      file_mode: '0755'
+      file_path: '%pkgroot%/scripts/postinstall'
 
   - Processor: PkgCreator
     Arguments:
@@ -26,12 +51,15 @@ Process:
             path: Applications
             user: root
         id: '%bundleid%'
+        options: purge_ds_store
         pkgdir: '%RECIPE_CACHE_DIR%'
-        pkgname: '%NAME%-%ARCHITECTURE%-%version%'
-        scripts: scripts
+        pkgname: '%SOFTWARE_TITLE%-%ARCHITECTURE%-%version%'
+        pkgroot: '%pkgroot%/payload'
+        scripts: '%pkgroot%/scripts'
+        version: '%version%'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
-      fail_deleter_silently: True
+      fail_deleter_silently: true
       path_list:
-        - '%RECIPE_CACHE_DIR%/payload'
+        - '%RECIPE_CACHE_DIR%/pkgroot'
