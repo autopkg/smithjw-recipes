@@ -1,25 +1,16 @@
 Description: Downloads latest Google Chrome enterprise package and renames it based on the Chrome version.
 Identifier: com.github.smithjw.pkg.Google_Chrome
 ParentRecipe: com.github.smithjw.download.Google_Chrome
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Google Chrome
+  SOFTWARETITLE: Google_Chrome
 
 Process:
-  - Processor: FlatPkgUnpacker
+  - Processor: com.github.dataJAR-recipes.Shared Processors/DistributionPkgInfo
     Arguments:
-      destination_path: '%RECIPE_CACHE_DIR%/unpack'
-      flat_pkg_path: '%pathname%'
-
-  - Processor: PkgPayloadUnpacker
-    Arguments:
-      destination_path: '%RECIPE_CACHE_DIR%/unpack'
-      pkg_payload_path: '%RECIPE_CACHE_DIR%/unpack/%PKGPAYLOADNAME%.pkg/Payload'
-
-  - Processor: PlistReader
-    Arguments:
-      info_path: '%RECIPE_CACHE_DIR%/unpack/Google Chrome.app'
+      pkg_path: '%pathname%'
 
   - Processor: PkgCopier
     Arguments:
@@ -28,6 +19,6 @@ Process:
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
-      fail_deleter_silently: True
+      fail_deleter_silently: true
       path_list:
         - '%RECIPE_CACHE_DIR%/unpack'

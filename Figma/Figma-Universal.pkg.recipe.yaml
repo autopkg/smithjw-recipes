@@ -1,63 +1,64 @@
 ---
-Description:
-  Downloads both Arm and Intel verions of the Figma App, and packages them
-  into a universal installer
+Description: |
+  Builds separate arm64 and x86_64 component packages, then wraps them in a
+  top-level installer whose postinstall script installs only the package that
+  matches the device architecture.
 Identifier: com.github.smithjw.pkg.Figma-Universal
 ParentRecipe: com.github.smithjw.download.Figma-Universal
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Figma
+  SOFTWARE_TITLE: '%NAME%'
 
 Process:
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/Universal'
+      pkgroot: '%RECIPE_CACHE_DIR%/wrapper'
       pkgdirs:
-        pkgroot: '0775'
-        Scripts: '0775'
+        pkgroot: '0755'
+        scripts: '0755'
 
   - Processor: AppPkgCreator
     Arguments:
       app_path: '%RECIPE_CACHE_DIR%/unpack/arm64/Figma.app'
-      pkg_path: '%RECIPE_CACHE_DIR%/Universal/Scripts/%NAME%-arm64-%version%.pkg'
+      force_pkg_build: true
+      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-arm64.pkg'
 
   - Processor: AppPkgCreator
     Arguments:
       app_path: '%RECIPE_CACHE_DIR%/unpack/x86_64/Figma.app'
-      pkg_path: '%RECIPE_CACHE_DIR%/Universal/Scripts/%NAME%-x86_64-%version%.pkg'
+      force_pkg_build: true
+      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
 
   - Processor: FileCreator
     Arguments:
-      file_path: '%RECIPE_CACHE_DIR%/Universal/Scripts/preinstall'
+      file_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/postinstall'
       file_mode: '0755'
       file_content: |
         #!/bin/bash
-
-        arm64_package="%NAME%-arm64-%version%.pkg"
-        x86_64_package="%NAME%-x86_64-%version%.pkg"
-
+        set -euo pipefail
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
-          /usr/sbin/installer -pkg "$arm64_package" -target "$3"
+          /usr/sbin/installer -pkg "%SOFTWARE_TITLE%-arm64.pkg" -target "$3"
         else
-          /usr/sbin/installer -pkg "$x86_64_package" -target "$3"
+          /usr/sbin/installer -pkg "%SOFTWARE_TITLE%-x86_64.pkg" -target "$3"
         fi
-
         exit 0
 
   - Processor: PkgCreator
     Arguments:
       pkg_request:
         id: '%bundleid%'
-        version: '%version%'
-        pkgname: '%NAME%-Universal-%version%'
+        options: purge_ds_store
         pkgdir: '%RECIPE_CACHE_DIR%'
-        scripts: '%RECIPE_CACHE_DIR%/Universal/Scripts'
-        pkgroot: '%RECIPE_CACHE_DIR%/Universal/pkgroot'
+        pkgname: '%SOFTWARE_TITLE%-Universal-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/wrapper/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/wrapper/scripts'
+        version: '%version%'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
       fail_deleter_silently: true
       path_list:
-        - '%RECIPE_CACHE_DIR%/Universal'
+        - '%RECIPE_CACHE_DIR%/wrapper'
         - '%RECIPE_CACHE_DIR%/unpack'

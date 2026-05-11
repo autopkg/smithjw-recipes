@@ -1,7 +1,7 @@
 Description: Downloads the latest version of the Microsoft Edge installer package and renames the package.
 Identifier: com.github.smithjw.pkg.Microsoft_Edge_alt
 ParentRecipe: com.github.smithjw.download.Microsoft_Edge_alt
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Microsoft Edge
@@ -36,7 +36,7 @@ Process:
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
-      fail_deleter_silently: True
+      fail_deleter_silently: true
       path_list:
         - '%RECIPE_CACHE_DIR%/downloads/unpack'
         - '%RECIPE_CACHE_DIR%/downloads/payload'

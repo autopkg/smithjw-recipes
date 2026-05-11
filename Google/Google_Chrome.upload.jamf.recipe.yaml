@@ -1,0 +1,37 @@
+Description: |
+  Downloads the latest Google Chrome enterprise pkg, renames it based on the
+  Chrome version, and uploads to Jamf Pro. Old packages matching PKG_NAME_MATCH
+  are pruned to keep the most recent PKG_TO_KEEP versions.
+
+  This recipe stops at "upload + cleanup". Downstream override repos own their
+  own policy / scope. Run as part of the full download -> pkg -> upload chain
+  so URLDownloaderPython's HTTP cache can short-circuit unchanged builds.
+Identifier: com.github.smithjw.jamf.upload.Google_Chrome
+ParentRecipe: com.github.smithjw.pkg.Google_Chrome
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Google Chrome
+  SOFTWARETITLE: Google_Chrome
+  CATEGORY: Apps
+  REMOVE_OLD_PACKAGES: 'true'
+  PACKAGE_INFO: autopkg
+  PKG_TO_KEEP: '2'
+  PKG_NAME_MATCH: '%SOFTWARETITLE%-'
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%PKG_NAME_MATCH%'
+      versions_to_keep: '%PKG_TO_KEEP%'
