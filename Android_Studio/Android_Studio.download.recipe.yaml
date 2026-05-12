@@ -6,21 +6,19 @@ Input:
   SOFTWARE_TITLE: Android_Studio
   ARCHITECTURE: 'arm64'
   ARCH_SEARCH: 'mac_arm'
-  SEARCH_PATTERN: '(https\://redirector\.gvt1\.com/edgedl/android/studio/install/.+/android-studio.+%ARCH_SEARCH%\.dmg)'
-  SEARCH_URL: 'https://developer.android.com/studio'
   DOWNLOAD_MISSING_FILE: null
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      re_pattern: '%SEARCH_PATTERN%'
-      url: '%SEARCH_URL%'
+      re_pattern: (?P<%ARCHITECTURE%_url>(https\://edgedl\.me\.gvt1\.com/android/studio/install/(?P<version>[\d{4,}\.\d{1,}\.\d{1,}\.\d{1,}]+)/android-studio-.*-%ARCH_SEARCH%.dmg))
+      url: 'https://developer.android.com/studio'
 
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      url: '%match%'
+      url: '%ARCHITECTURE%_url'
 
   - Processor: EndOfCheckPhase
 
