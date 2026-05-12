@@ -7,8 +7,8 @@ Description: |
   This recipe stops at "upload + cleanup". Downstream override repos own their
   own policy / scope. Run as part of the full download -> pkg -> upload chain
   so URLDownloaderPython's HTTP cache can short-circuit unchanged builds.
-Identifier: com.github.smithjw.jamf.upload.Docker-Universal
-ParentRecipe: com.github.smithjw.pkg.Docker-Universal
+Identifier: com.github.smithjw.jamf.upload.Docker
+ParentRecipe: com.github.smithjw.pkg.Docker
 MinimumVersion: '2.9'
 
 Input:
@@ -16,7 +16,7 @@ Input:
   SOFTWARE_TITLE: '%NAME%'
   CATEGORY: Utilities
   PACKAGE_INFO: autopkg
-  PKG_NAME_MATCH: '%SOFTWARE_TITLE%_Universal-'
+  PKG_NAME_MATCH: '%SOFTWARE_TITLE%-'
   PKG_TO_KEEP: '2'
   REMOVE_OLD_PACKAGES: 'true'
 
