@@ -1,0 +1,34 @@
+Description: Downloads the latest version of OpenCode .
+Identifier: com.github.smithjw.download.OpenCode
+MinimumVersion: '2.9'
+
+Input:
+  NAME: OpenCode
+  ARCHITECTURE: 'arm64'
+  DOWNLOAD_TYPE: 'aarch64'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%NAME%-%ARCHITECTURE%.dmg'
+      url: 'https://opencode.ai/download/stable/darwin-%DOWNLOAD_TYPE%-dmg'
+      request_headers:
+        user-agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: '%pathname%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/OpenCode.app'
+      requirement: identifier "ai.opencode.desktop" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "5NZ4Q7NXJ4"

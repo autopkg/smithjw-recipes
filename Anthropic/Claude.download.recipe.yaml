@@ -1,0 +1,37 @@
+Description: Downloads the latest version of Claude Desktop.
+Identifier: com.github.smithjw.download.Claude
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Claude
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: https?://downloads\.claude\.ai/releases/darwin/universal/[0-9]+(?:\.[0-9]+)*/Claude-[a-f0-9]{40}(?=\.zip)
+      url: https://downloads.claude.ai/releases/darwin/universal/RELEASES.json
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%NAME%.dmg'
+      url: '%match%.dmg'
+      request_headers:
+        user-agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: '%pathname%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/Claude.app'
+      requirement: identifier "com.anthropic.claudefordesktop" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = Q6L2SF6YDW

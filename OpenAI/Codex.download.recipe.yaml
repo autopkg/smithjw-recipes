@@ -1,0 +1,32 @@
+Description: Downloads the latest version of Codex.
+Identifier: com.github.smithjw.download.Codex
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Codex
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%NAME%.dmg'
+      url: 'https://persistent.oaistatic.com/codex-app-prod/Codex.dmg'
+      request_headers:
+        user-agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: '%pathname%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/Codex.app'
+      requirement: identifier "com.openai.codex" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2DC432GLL2"

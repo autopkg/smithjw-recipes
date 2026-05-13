@@ -8,12 +8,13 @@ repos:
       - id: check-yaml
       - id: check-xml
       - id: check-added-large-files
+        args: ['--maxkb=1024']
 
   - repo: https://github.com/homebysix/pre-commit-macadmin
     rev: v1.24.1
     hooks:
       - id: check-autopkg-recipes
-        args: ["--recipe-prefix=com.github.smithjw.", "--strict", "--"]
+        args: ['--recipe-prefix=com.github.smithjw.', '--strict', '--']
         exclude: ^Xcode/Xcode.pkg.recipe.yaml$
       - id: forbid-autopkg-overrides
       - id: forbid-autopkg-trust-info

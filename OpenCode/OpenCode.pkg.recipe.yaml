@@ -1,0 +1,14 @@
+Description: Downloads latest version of the OpenCode DMG and creates a Package.
+Identifier: com.github.smithjw.pkg.OpenCode
+ParentRecipe: com.github.smithjw.download.OpenCode
+MinimumVersion: '2.9'
+
+Input:
+  NAME: OpenCode
+  SOFTWARE_TITLE: '%NAME%'
+  ARCHITECTURE: 'arm64'
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%-%version%.pkg'

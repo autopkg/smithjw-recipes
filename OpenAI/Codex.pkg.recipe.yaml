@@ -1,0 +1,11 @@
+Description: Downloads latest version of the Codex DMG and creates a Package.
+Identifier: com.github.smithjw.pkg.Codex
+ParentRecipe: com.github.smithjw.download.Codex
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Codex
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: AppPkgCreator
