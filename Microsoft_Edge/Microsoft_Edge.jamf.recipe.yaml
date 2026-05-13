@@ -1,0 +1,54 @@
+Description: |
+  Downloads the latest version and makes a pkg. Then, uploads the package to the
+  Jamf Pro Server and creates a Self Service Policy and Smart Group.
+Identifier: com.github.smithjw.jamf.Microsoft_Edge
+ParentRecipe: com.github.smithjw.pkg.Microsoft_Edge
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Microsoft Edge
+  SOFTWARE_TITLE: Microsoft_Edge
+  CATEGORY: Browsers
+  POLICY_CATEGORY: Apps
+  POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
+  POLICY_NAME: '%NAME%'
+  POLICY_RUN_COMMAND: ' '
+  POLICY_RUN_RECON: 'false'
+  POLICY_SCOPE_ALL_COMPUTERS: 'true'
+  POLICY_TEMPLATE: Policy_Template-Self_Service.xml
+  REMOVE_OLD_PACKAGES: 'true'
+  SELF_SERVICE_AVAILABLE: 'true'
+  SELF_SERVICE_CATEGORY: '%CATEGORY%'
+  SELF_SERVICE_DESCRIPTION: |
+    Microsoft Edge is a cross-platform web browser created and developed by
+    Microsoft.
+  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
+  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
+  SELF_SERVICE_INSTALL_BUTTON: Install
+  SELF_SERVICE_REINSTALL_BUTTON: Install
+  REPLACE_POLICY: 'true'
+  PACKAGE_INFO: autopkg
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      icon: '%SELF_SERVICE_ICON%'
+      policy_name: '%POLICY_NAME%'
+      policy_template: '%POLICY_TEMPLATE%'
+      replace_policy: '%REPLACE_POLICY%'
+
+  - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%SOFTWARE_TITLE%-'
+      versions_to_keep: 2

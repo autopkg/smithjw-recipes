@@ -4,34 +4,37 @@ MinimumVersion: '2.9'
 
 Input:
   NAME: iTerm2
+  SOFTWARE_TITLE: '%NAME%'
   DOWNLOAD_URL: 'https://iterm2.com/downloads/stable/latest'
   DOWNLOAD_MISSING_FILE: null
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
-- Processor: URLDownloaderPython
-  Arguments:
-    download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-    prefetch_filename: true
-    url: '%DOWNLOAD_URL%'
+  - Processor: URLDownloaderPython
+    Arguments:
+      request_headers:
+        user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.zip'
+      url: '%DOWNLOAD_URL%'
 
-- Processor: EndOfCheckPhase
+  - Processor: EndOfCheckPhase
 
-- Processor: StopProcessingIf
-  Arguments:
-    predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
-- Processor: Unarchiver
-  Arguments:
-    destination_path: '%RECIPE_CACHE_DIR%/unpack'
-    purge_destination: true
+  - Processor: Unarchiver
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
 
-- Processor: CodeSignatureVerifier
-  Arguments:
-    input_path: '%RECIPE_CACHE_DIR%/unpack/iTerm.app'
-    requirement: 'anchor apple generic and identifier "com.googlecode.iterm2" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = H7V7XYVQ7D)'
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/unpack/iTerm.app'
+      requirement: 'anchor apple generic and identifier "com.googlecode.iterm2" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = H7V7XYVQ7D)'
 
-- Processor: Versioner
-  Arguments:
-    input_plist_path: '%RECIPE_CACHE_DIR%/unpack/iTerm.app/Contents/Info.plist'
-    plist_version_key: CFBundleShortVersionString
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/unpack/iTerm.app/Contents/Info.plist'
+      plist_version_key: CFBundleShortVersionString

@@ -6,7 +6,6 @@ MinimumVersion: '2.9'
 Input:
   NAME: Wireshark
   SOFTWARE_TITLE: '%NAME%'
-  ARCHITECTURE: x64
 
 Process:
   - Processor: PkgRootCreator
@@ -53,7 +52,7 @@ Process:
         id: '%bundleid%'
         options: purge_ds_store
         pkgdir: '%RECIPE_CACHE_DIR%'
-        pkgname: '%SOFTWARE_TITLE%-%ARCHITECTURE%-%version%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
         pkgroot: '%pkgroot%/payload'
         scripts: '%pkgroot%/scripts'
         version: '%version%'

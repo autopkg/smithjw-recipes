@@ -1,36 +1,26 @@
-Comment: |
-  Modify the ARCHITECTURE key and DOWNLOAD_TYPE to determine whether the Intel (x64) or Apple Silicon (arm64) version
-  of Wireshark is downloaded. Defaults to Intel if not overridden.
-  Wireshark uses Arm & Intel to distinguish downloads
-  eg "--key ARCHITECTURE=arm64 --key DOWNLOAD_TYPE=Arm"
 Description: Downloads the latest version of Wireshark.
 Identifier: com.github.smithjw.download.wireshark
 MinimumVersion: '2.9'
 
 Input:
   NAME: Wireshark
-  ARCHITECTURE: x64
-  DOWNLOAD_TYPE: Intel
   DOWNLOAD_MISSING_FILE: null
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
-  - Processor: DeprecationWarning
-    Arguments:
-      warning_message: Consider switching to one of the many other Wireshark recipes (https://github.com/search?q=org%3Aautopkg%20wireshark&type=code). This recipe is deprecated and will be removed in the future.
-
   - Processor: URLTextSearcher
     Arguments:
-      re_pattern: ((https:\/\/)([a-zA-Z0-9.\/])+(Wireshark[%]20([\d\.]+)[%]20%DOWNLOAD_TYPE%[%]2064.dmg))
+      re_pattern: Wireshark%20([\d\.]+)\.dmg
       request_headers:
         User-Agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
-      result_output_var_name: url
+      result_output_var_name: version
       url: https://www.wireshark.org/download.html
 
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      filename: '%NAME%-%ARCHITECTURE%.dmg'
+      filename: '%NAME%-%version%.dmg'
+      url: 'https://2.na.dl.wireshark.org/osx/Wireshark%20%version%.dmg'
       request_headers:
         user-agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
 

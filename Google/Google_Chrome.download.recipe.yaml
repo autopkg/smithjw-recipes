@@ -5,8 +5,7 @@ MinimumVersion: '2.9'
 Input:
   NAME: Google Chrome
   DOWNLOAD_URL: https://dl.google.com/dl/chrome/mac/universal/stable/gcem/GoogleChrome.pkg
-  SOFTWARETITLE: Google_Chrome
-  PKGPAYLOADNAME: GoogleChrome
+  SOFTWARE_TITLE: Google_Chrome
   DOWNLOAD_MISSING_FILE: null
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
@@ -14,7 +13,7 @@ Process:
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      filename: '%SOFTWARETITLE%.pkg'
+      filename: '%SOFTWARE_TITLE%.pkg'
       url: '%DOWNLOAD_URL%'
 
   - Processor: EndOfCheckPhase

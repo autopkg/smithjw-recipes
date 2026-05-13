@@ -13,12 +13,11 @@ MinimumVersion: '2.9'
 Input:
   NAME: Wireshark
   SOFTWARE_TITLE: '%NAME%'
-  ARCHITECTURE: x64
   CATEGORY: Apps
   REMOVE_OLD_PACKAGES: 'true'
   PACKAGE_INFO: autopkg
   PKG_TO_KEEP: '2'
-  PKG_NAME_MATCH: '%SOFTWARE_TITLE%-%ARCHITECTURE%-'
+  PKG_NAME_MATCH: '%SOFTWARE_TITLE%-'
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader

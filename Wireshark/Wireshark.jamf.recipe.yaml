@@ -1,4 +1,3 @@
-Comment: GROUP_CRITERIA should be either 'arm64' or 'x86_64'
 Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
 Identifier: com.github.smithjw.jamf.wireshark
 MinimumVersion: '2.3'
@@ -7,13 +6,12 @@ ParentRecipe: com.github.smithjw.sign.wireshark
 Input:
   NAME: Wireshark
   CATEGORY: Network
-  GROUP_CRITERIA: 'x84_64'
-  GROUP_NAME: 'Architecture - %ARCHITECTURE%'
-  GROUP_TEMPLATE: SmartGroup-architecture-smart.xml
+  GROUP_NAME: '%NAME%-update-smart'
+  GROUP_TEMPLATE: SmartGroup-update-smart.xml
   TESTING_GROUP_NAME: Testing
   POLICY_CATEGORY: Testing
   POLICY_TEMPLATE: Policy-install-latest.xml
-  POLICY_NAME: 'Install Latest %NAME% (%ARCHITECTURE%)'
+  POLICY_NAME: 'Install Latest %NAME%'
   POLICY_RUN_COMMAND: ' '
   SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
   SELF_SERVICE_DESCRIPTION: Wireshark is a network protocol analyzer.

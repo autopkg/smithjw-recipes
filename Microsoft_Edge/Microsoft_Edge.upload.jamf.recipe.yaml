@@ -1,24 +1,17 @@
 Description: |
-  Downloads the latest Microsoft Edge fwlink installer pkg, renames it, and
-  uploads to Jamf Pro. Old packages matching PKG_NAME_MATCH are pruned to keep
-  the most recent PKG_TO_KEEP versions.
-
-  This recipe stops at "upload + cleanup". Downstream override repos own their
-  own policy / scope. Run as part of the full download -> pkg -> upload chain
-  so URLDownloaderPython's HTTP cache can short-circuit unchanged builds.
-Identifier: com.github.smithjw.jamf.upload.Microsoft_Edge_alt
-ParentRecipe: com.github.smithjw.pkg.Microsoft_Edge_alt
+  Downloads the latest version and makes a pkg. Then, uploads the package to the
+  Jamf Pro Server and creates a Self Service Policy and Smart Group.
+Identifier: com.github.smithjw.jamf.upload.Microsoft_Edge
+ParentRecipe: com.github.smithjw.pkg.Microsoft_Edge
 MinimumVersion: '2.9'
 
 Input:
   NAME: Microsoft Edge
-  VENDOR: Microsoft
-  SOFTWARETITLE: Edge
+  SOFTWARE_TITLE: Microsoft_Edge
   CATEGORY: Browsers
   REMOVE_OLD_PACKAGES: 'true'
-  PACKAGE_INFO: autopkg
   PKG_TO_KEEP: '2'
-  PKG_NAME_MATCH: '%VENDOR%_%SOFTWARETITLE%_'
+  PKG_NAME_MATCH: '%SOFTWARE_TITLE%-'
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
