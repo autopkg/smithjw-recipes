@@ -1,13 +1,16 @@
-Description: Downloads the latest Microsoft Edge installer pkg using the URLDownloaderPython processor.
-Identifier: com.github.smithjw.download.Microsoft_Edge_alt
+Description: |
+  This is a generic parent download recipe for Microsoft Packages. Please pass in the following:
+    - NAME
+    - SOFTWARE_TITLE
+    - PRODUCT_ID
+Identifier: com.github.smithjw.download.Microsoft_Package
 MinimumVersion: '2.9'
 
 Input:
-  NAME: Microsoft Edge
-  VENDOR: Microsoft
-  SOFTWARETITLE: Edge
-  PRODUCTID: '2093504'
-  DOWNLOADURL: https://go.microsoft.com/fwlink/?linkid=%PRODUCTID%
+  NAME: Microsoft Package
+  SOFTWARE_TITLE: Microsoft_Package
+  PRODUCT_ID: '000000'
+  DOWNLOAD_URL: https://go.microsoft.com/fwlink/?linkid=%PRODUCT_ID%
   DOWNLOAD_MISSING_FILE: null
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
@@ -15,8 +18,8 @@ Process:
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      filename: '%VENDOR%_%SOFTWARETITLE%.pkg'
-      url: '%DOWNLOADURL%'
+      filename: '%SOFTWARE_TITLE%.pkg'
+      url: '%DOWNLOAD_URL%'
 
   - Processor: EndOfCheckPhase
 

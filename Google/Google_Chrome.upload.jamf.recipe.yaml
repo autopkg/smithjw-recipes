@@ -12,7 +12,7 @@ MinimumVersion: '2.9'
 
 Input:
   NAME: Google Chrome
-  SOFTWARETITLE: Google_Chrome
+  SOFTWARE_TITLE: Google_Chrome
   CATEGORY: Apps
   REMOVE_OLD_PACKAGES: 'true'
   PACKAGE_INFO: autopkg

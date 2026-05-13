@@ -7,38 +7,11 @@ Input:
   NAME: iTerm2
 
 Process:
-  - Processor: PkgRootCreator
+  - Processor: AppPkgCreator
     Arguments:
-      pkgdirs:
-        Applications: '0755'
-      pkgroot: '%RECIPE_CACHE_DIR%/payload'
-
-  - Processor: FileMover
-    Arguments:
-      source: '%RECIPE_CACHE_DIR%/unpack/iTerm.app'
-      target: '%RECIPE_CACHE_DIR%/payload/Applications/iTerm.app'
-
-  - Processor: PlistReader
-    Arguments:
-      info_path: '%RECIPE_CACHE_DIR%/payload/Applications/iTerm.app/Contents/Info.plist'
-      plist_keys:
-        CFBundleIdentifier: bundleid
-        CFBundleName: app_name
-        CFBundleShortVersionString: version
-
-  - Processor: PkgCreator
-    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/unpack/iTerm.app'
       force_pkg_build: true
-      pkg_request:
-        chown:
-          - group: wheel
-            path: Applications
-            user: root
-        id: '%bundleid%'
-        options: purge_ds_store
-        pkgname: '%NAME%-%version%'
-        pkgroot: '%RECIPE_CACHE_DIR%/payload'
-        version: '%version%'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
