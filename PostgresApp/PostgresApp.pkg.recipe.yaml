@@ -1,0 +1,20 @@
+Description: |
+  Downloads the selected PostgreSQL major-version build of Postgres.app and creates
+  a package named PostgresApp-<pg>-<version>.pkg.
+
+  Every per-PostgreSQL DMG shares the same Postgres.app version, so the PostgreSQL
+  major version is encoded in the package name to keep the 14/15/16/17/18 lines
+  distinct in Jamf.
+Identifier: com.github.smithjw.pkg.PostgresApp
+ParentRecipe: com.github.smithjw.download.PostgresApp
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Postgres.app
+  SOFTWARE_TITLE: PostgresApp
+  POSTGRES_VERSION: '18'
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%POSTGRES_VERSION%-%version%.pkg'

@@ -1,0 +1,49 @@
+Description: |
+  Downloads the selected PostgreSQL major-version build of Postgres.app from the
+  project's GitHub releases.
+
+  Run as part of the full download -> pkg -> upload chain. URLDownloaderPython
+  caches by ETag/Last-Modified and the StopProcessingIf download_changed predicate
+  short-circuits the chain on no-op re-runs.
+
+  Postgres.app publishes one DMG per PostgreSQL major version (e.g. 14-18) plus a
+  combined all-versions DMG. POSTGRES_VERSION selects which single-version DMG to
+  fetch (default 18). asset_regex is anchored so it matches only the single-version
+  asset and never the combined "-14-15-16-17-18" build. The app version is read
+  from the mounted app rather than the release tag.
+Identifier: com.github.smithjw.download.PostgresApp
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Postgres.app
+  SOFTWARE_TITLE: PostgresApp
+  POSTGRES_VERSION: '18'
+  INCLUDE_PRERELEASES: null
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: '^Postgres-[0-9.]+-%POSTGRES_VERSION%\.dmg$'
+      github_repo: PostgresApp/PostgresApp
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: '%pathname%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/Postgres.app'
+      requirement: identifier "com.postgresapp.Postgres2" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "ZF84SJ5A3G"
