@@ -1,0 +1,13 @@
+Description: Downloads the latest version of Ghostty and creates a package.
+Identifier: com.github.smithjw.pkg.Ghostty
+ParentRecipe: com.github.smithjw.download.Ghostty
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Ghostty
+  SOFTWARE_TITLE: Ghostty
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

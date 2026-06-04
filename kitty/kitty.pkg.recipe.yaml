@@ -1,0 +1,13 @@
+Description: Downloads the latest version of kitty and creates a package.
+Identifier: com.github.smithjw.pkg.kitty
+ParentRecipe: com.github.smithjw.download.kitty
+MinimumVersion: '2.9'
+
+Input:
+  NAME: kitty
+  SOFTWARE_TITLE: kitty
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

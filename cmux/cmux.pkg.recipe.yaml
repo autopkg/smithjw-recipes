@@ -1,0 +1,13 @@
+Description: Downloads the latest version of cmux and creates a package.
+Identifier: com.github.smithjw.pkg.cmux
+ParentRecipe: com.github.smithjw.download.cmux
+MinimumVersion: '2.9'
+
+Input:
+  NAME: cmux
+  SOFTWARE_TITLE: cmux
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

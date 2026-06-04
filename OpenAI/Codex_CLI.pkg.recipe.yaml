@@ -1,0 +1,187 @@
+Description: |
+  Packages the latest Codex CLI as a universal installer. INSTALL_TARGET controls
+  where the correct-architecture binary lands:
+    user     - the console user's ~/.local/bin/codex; if no console user is present,
+               defer (log + exit 0) so a later run installs it.
+    system   - always /usr/local/bin/codex, root-owned (all users; not
+               user-upgradeable).
+    fallback - if a console user is logged in, install to their ~/.local/bin; if
+               nobody is logged in (login window, or automated/headless
+               provisioning), install system-wide to /usr/local/bin. (default)
+  user/fallback match codex's own installer (CODEX_INSTALL_DIR defaults to
+  ~/.local/bin).
+
+  The version is read from the arm64 binary (codex --version emits "codex-cli X.Y.Z"),
+  because the GitHub release tag is prefixed (rust-vX.Y.Z) and unsuitable for a
+  package version.
+Identifier: com.github.smithjw.pkg.Codex_CLI
+ParentRecipe: com.github.smithjw.download.Codex_CLI
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Codex CLI
+  SOFTWARE_TITLE: Codex_CLI
+  INSTALL_TARGET: fallback
+
+Process:
+  # The parent download recipe Developer ID code-signature-verifies both codex
+  # binaries (strict) before this runs, so executing the arm64 binary here to read
+  # its version is verify-then-execute, not running an unverified download.
+  - Processor: com.github.smithjw.processors/CLIVersionExtractor
+    Arguments:
+      binary_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64/codex-aarch64-apple-darwin'
+      binary_parameter: '--version'
+      version_regex: '([0-9]+\.[0-9]+\.[0-9]+)'
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0775'
+        scripts: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64/codex-aarch64-apple-darwin'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/codex-arm64'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-x86_64/codex-x86_64-apple-darwin'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/codex-x86_64'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        # Installs codex for the console user, system-wide, or both-via-fallback,
+        # controlled by INSTALL_TARGET (baked in at build time from the recipe Input):
+        #   user     - console user's ~/.local/bin; if no console user, defer (exit 0).
+        #   system   - always root-owned /usr/local/bin (all users; not upgradeable).
+        #   fallback - user logged in -> their ~/.local/bin; nobody logged in -> /usr/local/bin.
+        #
+        # macOS Installer runs scripts as root, so anything we `mkdir -p` lands
+        # root-owned unless we fix it, and the fix must cover EVERY directory we
+        # created. ensure_user_owned_dir repairs ~/.local AND ~/.local/bin so
+        # downstream user-space tools (uv, pipx, npm user-prefix, ...) can still
+        # write under ~/.local/share.
+
+        set -u
+
+        INSTALL_TARGET="%INSTALL_TARGET%"
+        TOOL="codex"
+
+        logged_in_user=$( /usr/sbin/scutil <<< "show State:/Users/ConsoleUser" | /usr/bin/awk '/Name :/ && ! /loginwindow/ { print $3 }' )
+
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          echo "Setting arm64 version of $TOOL"
+          TOOL_BINARY="codex-arm64"
+        else
+          echo "Setting x86_64 version of $TOOL"
+          TOOL_BINARY="codex-x86_64"
+        fi
+
+        console_user_present() {
+          [[ -n "$logged_in_user" ]] && [[ ! "$logged_in_user" =~ (loginwindow|_mbsetupuser|root) ]]
+        }
+
+        # /usr/local/bin is canonically root:wheel so there's no XDG dance to do.
+        install_system() {
+          echo "Installing $TOOL system-wide at /usr/local/bin/$TOOL"
+          /bin/mkdir -p /usr/local/bin
+          /bin/cp "$TOOL_BINARY" "/usr/local/bin/$TOOL"
+          /usr/sbin/chown root:wheel "/usr/local/bin/$TOOL"
+          /bin/chmod +x "/usr/local/bin/$TOOL"
+        }
+
+        ensure_user_owned_dir() {
+          local dir="$1"
+          local owner_uid="$2"
+          if [[ ! -d "$dir" ]]; then
+            /bin/mkdir -p "$dir"
+            /usr/sbin/chown "$owner_uid":staff "$dir"
+            return
+          fi
+          local owner
+          owner=$(/usr/bin/stat -f '%Su' "$dir")
+          if [[ "$owner" == "root" ]]; then
+            echo "Repairing root-owned $dir -> uid $owner_uid:staff"
+            /usr/sbin/chown "$owner_uid":staff "$dir"
+          fi
+        }
+
+        install_user() {
+          local uid home install_dir
+          uid=$(/usr/bin/id -u "$logged_in_user")
+          home=$( /usr/bin/dscl . -read /users/"$logged_in_user" NFSHomeDirectory | /usr/bin/cut -d " " -f 2 )
+          if [[ ! "$home" =~ ^/Users/ ]]; then
+            echo "ERROR: Unexpected home directory path: $home"
+            exit 1
+          fi
+          echo "Installing $TOOL for user: $logged_in_user (UID: $uid)"
+
+          ensure_user_owned_dir "$home/.local" "$uid"
+          ensure_user_owned_dir "$home/.local/bin" "$uid"
+
+          install_dir="$home/.local/bin"
+          if [[ -e "$install_dir/$TOOL" ]] || [[ -L "$install_dir/$TOOL" ]]; then
+            echo "Removing existing file at $install_dir/$TOOL"
+            /bin/rm -f "$install_dir/$TOOL"
+          fi
+          /bin/cp "$TOOL_BINARY" "$install_dir/$TOOL"
+          /usr/sbin/chown "$uid":staff "$install_dir/$TOOL"
+          /bin/chmod +x "$install_dir/$TOOL"
+
+          for shell_rc in "$home/.zshrc" "$home/.bash_profile"; do
+            if /usr/bin/grep -qxF 'export PATH="$HOME/.local/bin:$PATH"' "$shell_rc" 2>/dev/null; then
+              echo "PATH already configured in $shell_rc"
+            else
+              echo "Adding PATH configuration to $shell_rc"
+              echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$shell_rc"
+              /usr/sbin/chown -h "$uid":staff "$shell_rc"
+            fi
+          done
+        }
+
+        case "$INSTALL_TARGET" in
+          system)
+            install_system
+            ;;
+          user)
+            if console_user_present; then
+              install_user
+            else
+              echo "INSTALL_TARGET=user but no console user detected; deferring install."
+              exit 0
+            fi
+            ;;
+          fallback|*)
+            if console_user_present; then
+              install_user
+            else
+              echo "No console user detected; falling back to system-wide install."
+              install_system
+            fi
+            ;;
+        esac
+
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: com.openai.codex-cli
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
