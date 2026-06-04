@@ -1,0 +1,48 @@
+Description: |
+  Downloads the latest stable release of Ghostty.
+
+  Ghostty's stable builds are not published as GitHub releases (only the "tip"
+  nightly is), so this recipe reads the vendor's Sparkle appcast to discover the
+  latest stable DMG URL. The app version is read from the mounted app rather than
+  the appcast (the feed's sparkle:version is a build number, not the marketing
+  version).
+
+  Run as part of the full download -> pkg -> upload chain. URLDownloaderPython caches
+  by ETag/Last-Modified and the StopProcessingIf download_changed predicate
+  short-circuits the chain on no-op re-runs.
+Identifier: com.github.smithjw.download.Ghostty
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Ghostty
+  SOFTWARE_TITLE: Ghostty
+  APPCAST_URL: 'https://release.files.ghostty.org/appcast.xml'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: SparkleUpdateInfoProvider
+    Arguments:
+      appcast_url: '%APPCAST_URL%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.dmg'
+      request_headers:
+        user-agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: '%pathname%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/Ghostty.app'
+      requirement: identifier "com.mitchellh.ghostty" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "24VZTF6M5V"

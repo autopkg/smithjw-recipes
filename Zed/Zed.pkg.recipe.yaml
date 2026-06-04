@@ -1,0 +1,22 @@
+Description: |
+  Downloads the selected architecture build of Zed and creates a package named
+  Zed-<arch>-<version>.pkg, where <arch> is the normalised label arm64 or x86_64.
+
+  Zed ships separate per-architecture DMGs (upstream-named aarch64 / x86_64), so the
+  normalised architecture is encoded in the package name to keep the arm64 and x86_64
+  lines distinct in Jamf. DOWNLOAD_TYPE (aarch64 / x86_64) selects the upstream asset
+  and must correspond to ARCHITECTURE (arm64 / x86_64).
+Identifier: com.github.smithjw.pkg.Zed
+ParentRecipe: com.github.smithjw.download.Zed
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Zed
+  SOFTWARE_TITLE: Zed
+  ARCHITECTURE: 'arm64'
+  DOWNLOAD_TYPE: 'aarch64'
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%ARCHITECTURE%-%version%.pkg'

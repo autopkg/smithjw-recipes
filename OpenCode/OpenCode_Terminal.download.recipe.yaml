@@ -1,0 +1,77 @@
+Description: |
+  Downloads the latest OpenCode Terminal (the opencode CLI, named "OpenCode Terminal"
+  on https://opencode.ai/download) for Apple Silicon and Intel from the
+  anomalyco/opencode GitHub releases.
+
+  This is the opencode command-line tool, distinct from the OpenCode desktop app
+  (see ../OpenCode). opencode publishes per-architecture zips
+  (opencode-darwin-arm64.zip and opencode-darwin-x64.zip), each containing a single
+  `opencode` binary. Both are downloaded and extracted so the pkg recipe can build a
+  universal installer. The version comes from the GitHub release tag (vX.Y.Z).
+
+  Run as part of the full download -> pkg -> upload chain. URLDownloaderPython caches
+  by ETag/Last-Modified and the StopProcessingIf download_changed predicate
+  short-circuits the chain on no-op re-runs.
+Identifier: com.github.smithjw.download.OpenCode_Terminal
+MinimumVersion: '2.9'
+
+Input:
+  NAME: OpenCode Terminal
+  SOFTWARE_TITLE: OpenCode_Terminal
+  INCLUDE_PRERELEASES: null
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: '^opencode-darwin-arm64\.zip$'
+      github_repo: anomalyco/opencode
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-arm64.zip'
+
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: '^opencode-darwin-x64\.zip$'
+      github_repo: anomalyco/opencode
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-x86_64.zip'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.zip'
+      destination_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64'
+      purge_destination: true
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.zip'
+      destination_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-x86_64'
+      purge_destination: true
+
+  # NOTE: there is intentionally no CodeSignatureVerifier step here. As of opencode
+  # v1.15.13 neither published darwin CLI binary passes `codesign --verify`:
+  #   * opencode-darwin-arm64.zip - the binary is ad-hoc / linker-signed
+  #     (Identifier "a.out", TeamIdentifier not set), so there is no Developer ID to
+  #     pin.
+  #   * opencode-darwin-x64.zip - the binary carries a Developer ID certificate
+  #     (Identifier "bun", Team 7FRXF46ZSN, hardened runtime) but the signature
+  #     itself is invalid ("code or signature have been modified"). This is a known
+  #     trait of Bun single-file executables: the JS payload is appended after the
+  #     binary is signed, which breaks the code signature seal.
+  # If/when upstream ships codesign-valid binaries, add a CodeSignatureVerifier on
+  # each extracted binary (e.g. leaf[subject.OU] = "7FRXF46ZSN").
