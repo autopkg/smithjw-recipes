@@ -1,0 +1,36 @@
+Description: Downloads the latest version of tart from Github. Specifiy an ARCH of "arm64" for Apple Silicon or "amd64" for Intel.
+Identifier: com.github.smithjw.download.tart
+MinimumVersion: 2.4.1
+
+Input:
+  NAME: tart
+  SOFTWARE_TITLE: '%NAME%'
+  ARCH: arm64
+  GITHUB_REPO: cirruslabs/tart
+  INCLUDE_PRERELEASES: 'True'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: ^tart-%ARCH%.*?tar.gz$
+      github_repo: '%GITHUB_REPO%'
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.tar.gz'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true

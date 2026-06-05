@@ -1,0 +1,66 @@
+Description: Downloads the latest version of MySQL Workbench for macOS and creates an installer package.
+Identifier: com.github.smithjw.pkg.MySQLWorkbench
+ParentRecipe: com.github.smithjw.download.MySQLWorkbench
+MinimumVersion: '2.9'
+
+Input:
+  NAME: MySQLWorkbench
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0775'
+        scripts: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/mysql-workbench-community-%version%-macos-arm64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/MySQLWorkbench-arm64.dmg'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/mysql-workbench-community-%version%-macos-x86_64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/MySQLWorkbench-x86_64.dmg'
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%RECIPE_CACHE_DIR%/downloads/mysql-workbench-community-%version%-macos-arm64.dmg/MySQLWorkbench.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleIdentifier: bundleid
+        CFBundleName: app_name
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          /usr/bin/hdiutil attach "MySQLWorkbench-arm64.dmg" -mountpoint "/Volumes/MySQLWorkbench" -nobrowse
+        else
+          /usr/bin/hdiutil attach "MySQLWorkbench-x86_64.dmg" -mountpoint "/Volumes/MySQLWorkbench" -nobrowse
+        fi
+
+        /bin/cp -R "/Volumes/MySQLWorkbench/MySQLWorkbench.app" "/Applications/MySQLWorkbench.app"
+        /usr/bin/hdiutil detach "/Volumes/MySQLWorkbench"
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'

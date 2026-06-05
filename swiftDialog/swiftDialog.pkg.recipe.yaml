@@ -1,0 +1,18 @@
+Description: |
+  Packaging step for swiftDialog. The upstream artefact is already a signed `.pkg`,
+  so we only rename it to `swiftDialog-<version>.pkg` for downstream discoverability.
+  Must run after the download recipe so `URLDownloaderPython` caching can
+  short-circuit unchanged builds.
+Identifier: com.github.smithjw.pkg.swiftDialog
+ParentRecipe: com.github.smithjw.download.swiftDialog
+MinimumVersion: '2.9'
+
+Input:
+  NAME: swiftDialog
+  SOFTWARE_TITLE: swiftDialog
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'

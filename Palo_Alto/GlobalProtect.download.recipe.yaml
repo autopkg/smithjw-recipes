@@ -1,0 +1,36 @@
+Description: ''
+Identifier: com.github.smithjw.download.GlobalProtect
+MinimumVersion: '2.9'
+
+Input:
+  NAME: GlobalProtect
+  SOFTWARE_TITLE: '%NAME%'
+  VERSION_SEARCH: null
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GlobalProtectVersionURLProvider
+    Arguments:
+      version_search: '%VERSION_SEARCH%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Palo Alto Networks (PXPZ95SK77)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'

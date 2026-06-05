@@ -1,0 +1,42 @@
+Description: |
+  Downloads the latest or specified version of Python 3. Stable builds are checked first, then pre-release builds.
+  Options:
+    - To download the latest version of Python 3, use (this is REGEX): \\d+
+    - To download a specific minor version, use: "3.10"
+    - You can download a pre-release build if the minor version does not yet have a stable release.
+  This recipe sets the env variable `version_major_minor` for use in child recipes.
+Identifier: com.github.smithjw.download.Python
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Python
+  SOFTWARE_TITLE: Python
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: (?P<url>https://.*/python-(?P<version>(\d.)?\d+\.[\d]+).*\.pkg)
+      url: https://www.python.org/downloads/macos/
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      fetch_filename: true
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Python Software Foundation (BMM5U3QVKW)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'

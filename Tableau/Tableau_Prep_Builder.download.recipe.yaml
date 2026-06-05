@@ -1,0 +1,31 @@
+Description: Downloads latest Tableau Prep disk image.
+Identifier: com.github.smithjw.download.Tableau_Prep_Builder
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Tableau Prep Builder
+  SOFTWARE_TITLE: Tableau_Prep_Builder
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.dmg'
+      url: https://www.tableau.com/downloads/prep/mac
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Tableau Software, LLC (QJ4XPRK37C)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%/Tableau Prep Builder.pkg'

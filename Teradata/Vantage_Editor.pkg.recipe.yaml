@@ -1,0 +1,82 @@
+Description: 'Packages Vantage Editor'
+Identifier: com.github.smithjw.pkg.Vantage_Editor
+ParentRecipe: com.github.smithjw.download.Vantage_Editor
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Teradata Vantage Editor
+  SOFTWARE_TITLE: Teradata_Vantage_Editor
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      flat_pkg_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      skip_payload: false
+      purge_destination: true
+
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/unpack/*.pkg'
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      pkg_payload_path: '%found_filename%/Payload'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack/payload'
+      purge_destination: true
+
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/unpack/payload/*.app'
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%found_filename%/Contents/Info.plist'
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0775'
+        scripts: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.pkg'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          /usr/sbin/installer -pkg %SOFTWARE_TITLE%-arm64.pkg -target /
+        else
+          /usr/sbin/installer -pkg %SOFTWARE_TITLE%-x86_64.pkg -target /
+        fi
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: com.teradata.vantage.editor
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
+        - '%RECIPE_CACHE_DIR%/unpack'

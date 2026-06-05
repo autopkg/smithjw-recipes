@@ -1,0 +1,39 @@
+Description: Downloads the latest version of Snowflake ODBC and creates an installer package.
+Identifier: com.github.smithjw.download.snowflakeODBC
+MinimumVersion: '2.9'
+
+Input:
+  NAME: snowflakeODBC
+  SOFTWARE_TITLE: '%NAME%'
+  BASE_URL: https://sfc-repo.snowflakecomputing.com/odbc/macuniversal/latest
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: snowflake_odbc_mac_64universal-([0-9]+\.[0-9]+\.[0-9]+).dmg
+      result_output_var_name: version
+      url: '%BASE_URL%/index.html'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      fetch_filename: true
+      url: '%BASE_URL%/snowflake_odbc_mac_64universal-%version%.dmg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%pathname%/*.pkg'
+      expected_authority_names:
+        - 'Developer ID Installer: Snowflake Computing INC. (W4NT6CRQ7U)'
+        - Developer ID Certification Authority
+        - Apple Root CA

@@ -1,0 +1,53 @@
+Description: |
+  Downloads swiftDialog from GitHub Releases and produces a verified artefact for
+  downstream packaging.
+
+  Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
+  processor caches by ETag/Last-Modified/Content-Length and the
+  `StopProcessingIf download_changed == False` predicate short-circuits the chain
+  on no-op re-runs. Pointing the upload recipe at a pre-built pkg would defeat
+  this cache and re-upload on every CI run.
+
+  Source: GitHub Releases at `swiftDialog/swiftDialog`. Asset is a signed `.pkg`
+  produced by CSIRO (the project's origin institution); we keep the CSIRO authority
+  chain in `expected_authority_names`. `INCLUDE_PRERELEASES` defaults to null
+  (release-only) since swiftDialog often sits on critical notification paths where
+  stability matters more than newness; set to any non-empty string to include
+  pre-releases.
+Identifier: com.github.smithjw.download.swiftDialog
+MinimumVersion: '2.9'
+
+Input:
+  NAME: swiftDialog
+  SOFTWARE_TITLE: swiftDialog
+  INCLUDE_PRERELEASES: null
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: 'dialog-[\d.]+-[\d]+\.pkg'
+      github_repo: swiftDialog/swiftDialog
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Commonwealth Scientific and Industrial Research Organisation (PWA5E9TQ59)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'

@@ -1,0 +1,66 @@
+Comment: Valid versions are 11, 17, 21, 25, & 26
+Description: Downloads the latest release version of Azul Zulu Java for given Java version
+Identifier: com.github.smithjw.download.Azul_Zulu_JDK
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Azul Zulu JDK
+  SOFTWARE_TITLE: Azul_Zulu_JDK
+  JDK_VERSION: '26'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: AzulZuluJavaInfoProvider
+    Arguments:
+      arch: arm
+      bundle_type: jdk
+      extension: dmg
+      java_major_version: '%JDK_VERSION%'
+      request_headers:
+        user-agent: 'curl/8.7.1'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-%JDK_VERSION%-macos-arm64.dmg'
+
+  - Processor: AzulZuluJavaInfoProvider
+    Arguments:
+      arch: x86
+      bundle_type: jdk
+      extension: dmg
+      java_major_version: '%JDK_VERSION%'
+      request_headers:
+        user-agent: 'curl/8.7.1'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-%JDK_VERSION%-macos-x86_64.dmg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Azul Systems, Inc. (TDTHCUPYFR)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%JDK_VERSION%-macos-arm64.dmg/*.pkg'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Azul Systems, Inc. (TDTHCUPYFR)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%JDK_VERSION%-macos-x86_64.dmg/*.pkg'

@@ -1,0 +1,33 @@
+Description: Downloads the latest version of Colour Contrast Analyser.
+Identifier: com.github.smithjw.download.Colour_Contrast_Analyser
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Colour Contrast Analyser
+  SOFTWARE_TITLE: Colour_Contrast_Analyser
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: .*.dmg
+      github_repo: ThePacielloGroup/CCAe
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      fetch_filename: true
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%pathname%/*.app'
+      requirement: identifier "com.electron.cca" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "34RS4UC3M6"

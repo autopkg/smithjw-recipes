@@ -1,0 +1,52 @@
+Comment: |
+  This recipe leverages Amazon's permanent links so that it can be overrided to fetch multiple versions
+  Valid options for JDK_VERSION are 8, 11, 17, 21, 23, & 24
+Description: Downloads the current release version of Amazon Corretto JDK for macOS.
+Identifier: com.github.smithjw.download.Amazon_Corretto_JDK
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Amazon Corretto JDK
+  SOFTWARE_TITLE: Amazon_Corretto_JDK
+  JDK_VERSION: '24'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-%JDK_VERSION%-arm64.pkg'
+      url: https://corretto.aws/downloads/latest/amazon-corretto-%JDK_VERSION%-aarch64-macos-jdk.pkg
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-%JDK_VERSION%-x86_64.pkg'
+      url: https://corretto.aws/downloads/latest/amazon-corretto-%JDK_VERSION%-x64-macos-jdk.pkg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: AMZN Mobile LLC (94KV3E626L)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%JDK_VERSION%-arm64.pkg'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: AMZN Mobile LLC (94KV3E626L)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%JDK_VERSION%-x86_64.pkg'

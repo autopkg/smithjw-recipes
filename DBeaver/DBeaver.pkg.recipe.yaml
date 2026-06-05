@@ -1,0 +1,62 @@
+Description: |
+  Builds separate arm64 and x86_64 component packages, then wraps them in a
+  top-level installer whose postinstall script installs only the package that
+  matches the device architecture.
+Identifier: com.github.smithjw.pkg.DBeaver
+ParentRecipe: com.github.smithjw.download.DBeaver
+MinimumVersion: '2.9'
+
+Input:
+  NAME: DBeaver
+  SOFTWARE_TITLE: DBeaver
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/wrapper'
+      pkgdirs:
+        pkgroot: '0755'
+        scripts: '0755'
+
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/DBeaver.app'
+      force_pkg_build: true
+      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-arm64.pkg'
+
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/DBeaver.app'
+      force_pkg_build: true
+      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        set -euo pipefail
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          /usr/sbin/installer -pkg "%SOFTWARE_TITLE%-arm64.pkg" -target "$3"
+        else
+          /usr/sbin/installer -pkg "%SOFTWARE_TITLE%-x86_64.pkg" -target "$3"
+        fi
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/wrapper/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/wrapper/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/wrapper'

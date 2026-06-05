@@ -1,0 +1,39 @@
+Identifier: com.github.smithjw.download.Neo4j_Desktop_2
+Description: Downloads the latest version of Neo4j Desktop for macOS.
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Neo4j Desktop 2
+  SOFTWARE_TITLE: Neo4j_Desktop_2
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      url: https://neo4j.com/deployment-center
+      re_pattern: 'data-url="/download/neo4j-desktop/\?edition=desktop&flavour=osx&release=(\d+\.\d+\.\d+)&offline=false"'
+      result_output_var_name: version
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.dmg'
+      url: https://neo4j.com/artifact.php?name=neo4j-desktop-2.%version%.dmg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%pathname%/Neo4j Desktop 2.app'
+      requirement: >-
+        identifier "com.neo4j.neo4j-desktop-2" and anchor apple generic and
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = "8Z9BGNE3AV"

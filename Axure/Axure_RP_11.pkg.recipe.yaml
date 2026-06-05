@@ -1,0 +1,67 @@
+Description: Downloads the latest version of Axure RP 11 and creates a package.
+Identifier: com.github.smithjw.pkg.Axure_RP_11
+ParentRecipe: com.github.smithjw.download.Axure_RP_11
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Axure RP 11
+  SOFTWARE_TITLE: Axure_RP_11
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0775'
+        scripts: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.dmg'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-x86_64.dmg'
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Axure RP 11.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleIdentifier: bundleid
+        CFBundleName: app_name
+        CFBundleVersion: version
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          /usr/bin/hdiutil attach "Axure_RP_11-arm64.dmg" -mountpoint "/Volumes/Axure_RP_11" -nobrowse
+        else
+          /usr/bin/hdiutil attach "Axure_RP_11-x86_64.dmg" -mountpoint "/Volumes/Axure_RP_11" -nobrowse
+        fi
+
+        /bin/cp -R "/Volumes/Axure_RP_11/Axure RP 11.app" "/Applications/Axure RP 11.app"
+        /usr/bin/hdiutil detach "/Volumes/Axure_RP_11"
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'

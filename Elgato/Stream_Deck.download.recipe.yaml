@@ -1,0 +1,32 @@
+Description: Downloads the latest version of Stream Deck.
+Identifier: com.github.smithjw.download.Stream_Deck
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Stream Deck
+  SOFTWARE_TITLE: Stream_Deck
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.pkg'
+      url: https://gc-updates.elgato.com/mac/sd-update/final/download-website.php
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Corsair Memory, Inc. (Y93VXCB8Q5)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'

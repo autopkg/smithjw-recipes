@@ -1,0 +1,20 @@
+Description: Downloads the latest version of Maccy and creates an installer package.
+Identifier: com.github.smithjw.pkg.Maccy
+ParentRecipe: com.github.smithjw.download.Maccy
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Maccy
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/unpack/Maccy.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'

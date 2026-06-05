@@ -1,0 +1,68 @@
+Description: |
+  Downloads OBS Studio and produces a verified artefact for downstream packaging.
+
+  Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
+  processor caches by ETag/Last-Modified/Content-Length and the
+  `StopProcessingIf download_changed == False` predicate short-circuits the chain
+  on no-op re-runs. Pointing the upload recipe at a pre-built pkg would defeat
+  this cache and re-upload on every CI run.
+
+  OBS publishes separate Apple-silicon (`macOS-Apple.dmg`) and Intel (`macOS-Intel.dmg`)
+  `.dmg` files; we pull both so the resulting pkg can install on either architecture
+  (see OBS_Studio.pkg.recipe.yaml).
+Identifier: com.github.smithjw.download.OBS_Studio
+MinimumVersion: '2.9'
+
+Input:
+  NAME: OBS Studio
+  SOFTWARE_TITLE: OBS_Studio
+  INCLUDE_PRERELEASES: null
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: 'OBS-Studio-[\d.]+-macOS-Apple\.dmg'
+      github_repo: obsproject/obs-studio
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-arm64.dmg'
+
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: 'OBS-Studio-[\d.]+-macOS-Intel\.dmg'
+      github_repo: obsproject/obs-studio
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-x86_64.dmg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  # OBS uses an OR clause in its designated requirement; we use a simpler form here
+  # (bundle-id + Team-ID match). deep + strict verification are both enabled and
+  # currently pass (unlike Brave, OBS's bundled frameworks carry no disallowed
+  # FinderInfo xattrs on the verified build).
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/OBS.app'
+      requirement: identifier "com.obsproject.obs-studio" and anchor apple generic and certificate leaf[subject.OU] = "2MMRE5MTB8"
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/OBS.app'
+      requirement: identifier "com.obsproject.obs-studio" and anchor apple generic and certificate leaf[subject.OU] = "2MMRE5MTB8"

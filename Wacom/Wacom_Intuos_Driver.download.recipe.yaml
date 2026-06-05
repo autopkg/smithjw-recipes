@@ -1,0 +1,43 @@
+Description: Downloads the latest version of Wacom Intuos tablet drivers.
+Identifier: com.github.smithjw.download.Wacom_Intuos_Driver
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Wacom Intuos Driver
+  SOFTWARE_TITLE: Wacom_Intuos_Driver
+  DOWNLOAD_URL: https://www.wacom.com/en-us/support/product-support/drivers
+  DOWNLOAD_PATTERN: https://cdn.wacom.com/u/productsupport/drivers/mac/professional/WacomTablet_+[0-9].+[0-9].+[0-9]*-*[0-9].dmg
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '%DOWNLOAD_PATTERN%'
+      request_headers:
+        user-agent: 'curl/8.7.1'
+      url: '%DOWNLOAD_URL%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      fetch_filename: true
+      url: '%match%'
+      request_headers:
+        user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Wacom Technology Corp. (EG27766DY7)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%/*.pkg'

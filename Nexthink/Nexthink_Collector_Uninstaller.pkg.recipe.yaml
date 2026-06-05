@@ -1,0 +1,76 @@
+Description: Downloads the latest NexThink Collector uninstaller and prepares it for deployment.
+Identifier: com.github.smithjw.pkg.Nexthink_Collector_Uninstaller
+ParentRecipe: com.github.smithjw.download.Nexthink_Collector
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Nexthink Collector Uninstaller
+  SOFTWARE_TITLE: Nexthink_Collector_Uninstaller
+
+Process:
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/csi.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleShortVersionString: version
+        CFBundleIdentifier: bundleid
+        CFBundleName: app_name
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0775'
+        scripts: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%.dmg'
+      purge_destination: true
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        # Description: Script to uninstall Nexthink Collector.
+        ERROR=0
+
+        # File Paths
+        if [[ -f "$(/usr/bin/find $(dirname $0) -maxdepth 1 \( -iname \*\.dmg \))" ]]; then
+          dmgFile="$(/usr/bin/find $(dirname $0) -maxdepth 1 \( -iname \*\.dmg \))"
+        fi
+
+        dmgMount="$(/usr/bin/mktemp -d /tmp/Nexthink_Collector_Uninstaller.XXXX)"
+
+        # Remove the trailing slash from the dmgMount variable if needed.
+        dmgMount=${dmgMount%%/}
+
+        # Mount the DMG
+        /usr/bin/hdiutil attach "$dmgFile" -mountpoint "$dmgMount" -nobrowse -noverify -noautoopen
+
+        # Uninstall the NexThink Collector software
+        "$dmgMount"/uninstaller
+
+        # Unmount the DMG
+        hdiutil detach "$dmgMount" -force
+
+        exit "$ERROR"
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: com.nexthink.collector.uninstaller
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'

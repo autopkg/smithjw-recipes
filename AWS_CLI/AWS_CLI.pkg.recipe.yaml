@@ -1,0 +1,32 @@
+Description: Creates an installer package for the latest version of the AWS Command Line Interface.
+Identifier: com.github.smithjw.pkg.AWS_CLI
+ParentRecipe: com.github.smithjw.download.AWS_CLI
+MinimumVersion: '2.9'
+
+Input:
+  NAME: AWS CLI
+  SOFTWARE_TITLE: AWS_CLI
+
+Process:
+  - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
+    Arguments:
+      archive_path: '%pathname%'
+      file_to_extract: Distribution
+
+  - Processor: com.github.mlbz521.SharedProcessors/XPathParser
+    Arguments:
+      attribute_one: version
+      return_variable_attribute_one: version
+      xml_file: '%extracted_file%'
+      xpath: .//pkg-ref[@id="com.amazon.aws.cli2"][@version]
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/extractedfile'

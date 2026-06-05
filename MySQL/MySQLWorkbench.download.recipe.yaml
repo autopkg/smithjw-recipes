@@ -1,0 +1,46 @@
+Description: Downloads the latest version of MySQL Workbench for macOS. Downloads both the ARM and Intel builds.
+Identifier: com.github.smithjw.download.MySQLWorkbench
+MinimumVersion: '2.9'
+
+Input:
+  NAME: MySQLWorkbench
+  SOFTWARE_TITLE: '%NAME%'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      url: https://dev.mysql.com/downloads/workbench
+      re_pattern: (?P<dmg>mysql-workbench-community-(?P<version>[\d\.]+))
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      prefetch_filename: true
+      url: https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community-%version%-macos-arm64.dmg
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      prefetch_filename: true
+      url: https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community-%version%-macos-x86_64.dmg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/mysql-workbench-community-%version%-macos-arm64.dmg/MySQLWorkbench.app'
+      requirement: identifier "com.oracle.workbench.MySQLWorkbench" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = VB5E2TV963
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/mysql-workbench-community-%version%-macos-x86_64.dmg/MySQLWorkbench.app'
+      requirement: identifier "com.oracle.workbench.MySQLWorkbench" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = VB5E2TV963

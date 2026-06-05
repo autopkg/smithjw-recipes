@@ -1,0 +1,14 @@
+Description: ''
+Identifier: com.github.smithjw.pkg.GlobalProtect
+ParentRecipe: com.github.smithjw.download.GlobalProtect
+MinimumVersion: '2.9'
+
+Input:
+  NAME: GlobalProtect
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'

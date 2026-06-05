@@ -29,6 +29,8 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
+      deep_verification: true
+      strict_verification: true
       expected_authority_names:
         - 'Developer ID Installer: Microsoft Corporation (UBF8T346G9)'
         - Developer ID Certification Authority

@@ -1,0 +1,18 @@
+Description: Downloads the latest version of Talon Voice and creates an installer package.
+Identifier: com.github.smithjw.pkg.Talon_Voice
+ParentRecipe: com.github.smithjw.download.Talon_Voice
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Talon Voice
+  SOFTWARE_TITLE: Talon_Voice
+
+Process:
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: '%pathname%'
+
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%pathname%/Talon.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

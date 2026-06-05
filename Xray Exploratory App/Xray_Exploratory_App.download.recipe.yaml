@@ -23,6 +23,8 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
+      deep_verification: true
+      strict_verification: true
       input_path: '%pathname%/Xray Exploratory App.app'
       requirement: identifier "com.xblend.xea" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "6DU9D8Q52R"
 

@@ -1,0 +1,52 @@
+Description: Processes the Xcode Command Line Tools package manually downloaded from the Apple Developer Portal
+Identifier: com.github.smithjw.pkg.Xcode_CLTools
+ParentRecipe: com.github.smithjw.download.Xcode_CLTools
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Command Line Tools for Xcode
+  SOFTWARE_TITLE: Xcode_CLTools
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      flat_pkg_path: '%PKG%/*.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/flatpkg'
+
+  - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
+    Arguments:
+      archive_path: '%PKG%/*.pkg'
+      file_to_extract: Distribution
+
+  - Processor: com.github.mlbz521.SharedProcessors/XPathParser
+    Arguments:
+      attribute_one: version
+      return_variable_attribute_one: version
+      xml_file: '%extracted_file%'
+      xpath: ./pkg-ref[@id="CLTools_Executables"]
+
+  - Processor: com.github.mlbz521.SharedProcessors/XPathParser
+    Arguments:
+      attribute_one: min
+      return_variable_attribute_one: min_os_version
+      attribute_two: before
+      return_variable_attribute_two: max_os_version
+      xml_file: '%extracted_file%'
+      xpath: .//allowed-os-versions/os-version
+
+  - Processor: com.github.jazzace.processors/TextSearcher
+    Arguments:
+      text_in: '%version%'
+      result_output_var_name: xcode_version
+      re_pattern: '(^\d+\.\d+)'
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%PKG%/*.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/extractedfile'

@@ -1,0 +1,73 @@
+Description: Downloads Microsoft .NET SDK
+Identifier: com.github.smithjw.download.dotnet
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Microsoft .NET
+  SOFTWARE_TITLE: microsoft_dotnet
+  SDK_VERSION: '9'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: href="(/en-us/download/dotnet/thank-you/sdk-%SDK_VERSION%\..*-macos-arm64-installer)"
+      result_output_var_name: arm_installer
+      url: https://dotnet.microsoft.com/en-us/download/dotnet/%SDK_VERSION%.0
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: id="directLink" href="(https://.*/dotnet-sdk-.*-osx-arm64\.pkg)" aria-label
+      result_output_var_name: arm_direct_download
+      url: 'https://dotnet.microsoft.com%arm_installer%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-%SDK_VERSION%-arm64.pkg'
+      url: '%arm_direct_download%'
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: href="(/en-us/download/dotnet/thank-you/sdk-%SDK_VERSION%\..*-macos-x64-installer)"
+      result_output_var_name: intel_installer
+      url: https://dotnet.microsoft.com/en-us/download/dotnet/%SDK_VERSION%.0
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: id="directLink" href="(https://.*/dotnet-sdk-.*-osx-x64\.pkg)" aria-label
+      result_output_var_name: intel_direct_download
+      url: 'https://dotnet.microsoft.com%intel_installer%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-%SDK_VERSION%-x86_64.pkg'
+      url: '%intel_direct_download%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Microsoft Corporation (UBF8T346G9)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%SDK_VERSION%-arm64.pkg'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Microsoft Corporation (UBF8T346G9)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%SDK_VERSION%-x86_64.pkg'

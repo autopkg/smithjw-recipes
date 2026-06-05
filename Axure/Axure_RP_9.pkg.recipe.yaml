@@ -1,0 +1,22 @@
+Description: Downloads the latest version of Axure RP 9 and creates a package.
+Identifier: com.github.smithjw.pkg.Axure_RP_9
+ParentRecipe: com.github.smithjw.download.Axure_RP_9
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Axure RP 9
+  SOFTWARE_TITLE: Axure_RP_9
+
+Process:
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Axure RP 9.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleIdentifier: bundleid
+        CFBundleName: app_name
+        CFBundleVersion: version
+
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%pathname%/Axure RP 9.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

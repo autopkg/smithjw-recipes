@@ -1,0 +1,23 @@
+Identifier: com.github.smithjw.pkg.Zeplin
+ParentRecipe: com.github.smithjw.download.Zeplin
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Zeplin
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/unpack/Zeplin.app/Contents/Info.plist'
+
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/unpack/Zeplin.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'

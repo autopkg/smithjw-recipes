@@ -1,0 +1,53 @@
+Description: Downloads the latest version of Teradata Tools and Utilities
+Identifier: com.github.smithjw.download.Teradata_Tools_Utilities
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Teradata Tools and Utilities
+  SOFTWARE_TITLE: Teradata_Tools_Utilities
+  PRODUCT: teradata_tools_utilities
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: TeradataProductURLFinder
+    Arguments:
+      app: '%PRODUCT%'
+      teradata_username: '%TERADATA_USERNAME%'
+      teradata_password: '%TERADATA_PASSWORD%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.tar.gz'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/extracted'
+      purge_destination: true
+
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/extracted/TeradataToolsAndUtilitiesBase/*.pkg'
+
+  - Processor: FileMover
+    Arguments:
+      source: '%found_filename%'
+      target: '%RECIPE_CACHE_DIR%/extracted/%SOFTWARE_TITLE%.pkg'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Teradata (Z6K9HW9JJ5)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/extracted/%SOFTWARE_TITLE%.pkg'

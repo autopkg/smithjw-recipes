@@ -1,0 +1,47 @@
+Description: Downloads the latest version of Principle.
+Identifier: com.github.smithjw.download.Principle
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Principle
+  SOFTWARE_TITLE: '$NAME%'
+  SPARKLE_FEED_URL: https://principleformac.com/update2.xml
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: SparkleUpdateInfoProvider
+    Arguments:
+      appcast_url: '%SPARKLE_FEED_URL%'
+
+  - Processor: FindAndReplace
+    Arguments:
+      input_string: '%url%'
+      find: 'http://'
+      replace: 'https://'
+      result_output_var_name: url
+      appcast_url: '%SPARKLE_FEED_URL%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      fetch_filename: true
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/unpack/*.app'
+      requirement: anchor apple generic and identifier "com.danielhooper.principle" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = JWLPBZ6FYH)

@@ -1,0 +1,59 @@
+Description: Downloads the latest Vault.
+Identifier: com.github.smithjw.pkg.HashiCorp_Vault
+ParentRecipe: com.github.smithjw.download.HashiCorp_Vault
+MinimumVersion: '2.9'
+
+Input:
+  NAME: HashiCorp Vault
+  SOFTWARE_TITLE: HashiCorp_Vault
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0775'
+        scripts: '0775'
+
+  - Processor: FileMover
+    Arguments:
+      source: '%RECIPE_CACHE_DIR%/unpack/arm64/vault'
+      target: '%RECIPE_CACHE_DIR%/payload/scripts/vault-arm64'
+
+  - Processor: FileMover
+    Arguments:
+      source: '%RECIPE_CACHE_DIR%/unpack/x86_64/vault'
+      target: '%RECIPE_CACHE_DIR%/payload/scripts/vault-x86_64'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          /bin/mv vault-arm64 /usr/local/bin/vault
+        else
+          /bin/mv vault-x86_64 /usr/local/bin/vault
+        fi
+        /bin/chmod 0755 /usr/local/bin/vault
+        /bin/chown root:wheel /usr/local/bin/vault
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: com.hashicorp.vault
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
+        - '%RECIPE_CACHE_DIR%/unpack'

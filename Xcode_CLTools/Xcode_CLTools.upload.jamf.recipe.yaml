@@ -1,0 +1,42 @@
+Description: Processes the Xcode Command Line Tools package manually downloaded from the Apple Developer Portal and uploads to Jamf
+Identifier: com.github.smithjw.jamf.upload.Xcode_CLTools
+ParentRecipe: com.github.smithjw.pkg.Xcode_CLTools
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Command Line Tools for Xcode
+  SOFTWARE_TITLE: Xcode_CLTools
+  CATEGORY: Apps
+  PACKAGE_INFO: autopkg
+  PKG_MAX_OS_VERSION: '15.99'
+  PKG_MIN_OS_VERSION: '13.0'
+  PKG_NAME_MATCH: '%SOFTWARE_TITLE%-%xcode_version%-'
+  PKG_TO_KEEP: '2'
+  REMOVE_OLD_PACKAGES: 'true'
+  SMART_GROUP_NAME_PREFIX: '%NAME%'
+  SMART_GROUP_NAME_SUFFIX: ' (%PACKAGE_INFO%)'
+  SMART_GROUP_TEMPLATE: Smart_Group-OS_Requirements-Xcode_CLTools.xml
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
+    Arguments:
+      computergroup_name: '%SMART_GROUP_NAME_PREFIX% %xcode_version% - macOS %PKG_MIN_OS_VERSION%-%PKG_MAX_OS_VERSION%%SMART_GROUP_NAME_SUFFIX%'
+      computergroup_template: '%SMART_GROUP_TEMPLATE%'
+      replace_group: 'true'
+      sleep: 2
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%PKG_NAME_MATCH%'
+      versions_to_keep: '%PKG_TO_KEEP%'

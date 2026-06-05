@@ -1,0 +1,32 @@
+Description: Downloads the latest release version of Fork.
+Identifier: com.github.smithjw.download.Fork
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Fork
+  SOFTWARE_TITLE: '%NAME%'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: (?P<url>https://.*?Fork-(?P<version>[0-9]+\.[0-9]+\.[0-9]+)\.dmg)
+      url: https://fork.dev
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%pathname%/Fork.app'
+      requirement: anchor apple generic and identifier "com.DanPristupov.Fork" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = Q6M7LEEA66)

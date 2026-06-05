@@ -1,0 +1,41 @@
+Description: Downloads the current release version of Suitcase Fusion
+Identifier: com.github.smithjw.download.Suitcase_Fusion
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Suitcase Fusion
+  SOFTWARE_TITLE: Suitcase_Fusion
+  SPARKLE_FEED_URL: https://sparkle.extensis.com/u/ST/EN/suitcase21en.xml
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: SparkleUpdateInfoProvider
+    Arguments:
+      appcast_url: '%SPARKLE_FEED_URL%'
+
+  - Processor: FindAndReplace
+    Arguments:
+      input_string: '%url%'
+      find: 'http://'
+      replace: 'https://'
+      result_output_var_name: url
+      appcast_url: '%SPARKLE_FEED_URL%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.dmg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%pathname%/*.app'
+      requirement: identifier "com.extensis.SuitcaseFusion" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = J6MMHGD9D6

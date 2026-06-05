@@ -1,0 +1,20 @@
+Description: Downloads the current version of FileZilla and creates a package.
+Identifier: com.github.smithjw.pkg.FileZilla
+ParentRecipe: com.github.smithjw.download.FileZilla
+MinimumVersion: '2.9'
+
+Input:
+  NAME: FileZilla
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/unpack/FileZilla.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'

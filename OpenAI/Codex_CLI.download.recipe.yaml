@@ -64,12 +64,14 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
+      deep_verification: true
       input_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64/codex-aarch64-apple-darwin'
       requirement: identifier "codex" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2DC432GLL2"
       strict_verification: true
 
   - Processor: CodeSignatureVerifier
     Arguments:
+      deep_verification: true
       input_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-x86_64/codex-x86_64-apple-darwin'
       requirement: identifier "codex" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2DC432GLL2"
       strict_verification: true

@@ -1,0 +1,14 @@
+Description: Downloads the most recent signed release pkg of Mac Admins Python from GitHub and renames the package.
+Identifier: com.github.smithjw.pkg.Mac_Admins_Python
+ParentRecipe: com.github.smithjw.download.Mac_Admins_Python
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Mac Admins Python
+  SOFTWARE_TITLE: Mac_Admins_Python
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'

@@ -1,0 +1,20 @@
+Description: Downloads the latest version of MacPass and creates an installer package.
+Identifier: com.github.smithjw.pkg.MacPass
+ParentRecipe: com.github.smithjw.download.MacPass
+MinimumVersion: '2.9'
+
+Input:
+  NAME: MacPass
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/unpack/MacPass.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'

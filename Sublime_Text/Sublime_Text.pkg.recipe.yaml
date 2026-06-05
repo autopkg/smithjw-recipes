@@ -1,0 +1,21 @@
+Description: |
+  Wraps the downloaded Sublime Text.app into an installer pkg.
+Identifier: com.github.smithjw.pkg.Sublime_Text
+ParentRecipe: com.github.smithjw.download.Sublime_Text
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Sublime Text
+  SOFTWARE_TITLE: Sublime_Text
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/unpack/Sublime Text.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'

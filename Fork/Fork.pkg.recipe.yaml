@@ -1,0 +1,19 @@
+Description: Downloads the latest release version of Fork and creates an installer package.
+Identifier: com.github.smithjw.pkg.Fork
+ParentRecipe: com.github.smithjw.download.Fork
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Fork
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'

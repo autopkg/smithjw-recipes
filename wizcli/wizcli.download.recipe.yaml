@@ -1,0 +1,51 @@
+Description: Downloads the latest versions of the Wiz CLI (Apple Silicon and
+  Intel) from the official source and verifies their code signatures.
+Identifier: com.github.smithjw.download.wizcli
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Wiz CLI
+  SOFTWARE_TITLE: wizcli
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      url: https://downloads.wiz.io/v1/wizcli/latest/wizcli-darwin-arm64
+      filename: '%SOFTWARE_TITLE%-arm64'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      url: https://downloads.wiz.io/v1/wizcli/latest/wizcli-darwin-amd64
+      filename: '%SOFTWARE_TITLE%-x86_64'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64'
+      requirement: >-
+        identifier "a.out" and anchor apple generic and certificate
+        1[field.1.2.840.113635.100.6.2.6] and certificate
+        leaf[field.1.2.840.113635.100.6.1.13] and certificate leaf[subject.OU] =
+        "7FAWH6LYL8"
+      strict_verification: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64'
+      requirement: >-
+        identifier "wizcli-darwin-amd64" and anchor apple generic and
+        certificate 1[field.1.2.840.113635.100.6.2.6] and certificate
+        leaf[field.1.2.840.113635.100.6.1.13] and certificate leaf[subject.OU] =
+        "7FAWH6LYL8"
+      strict_verification: true
