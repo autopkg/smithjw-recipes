@@ -1,0 +1,57 @@
+Description: |
+  Downloads Sourcetree and produces a verified artefact for downstream packaging.
+
+  Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
+  processor caches by ETag/Last-Modified/Content-Length and the
+  `StopProcessingIf download_changed == False` predicate short-circuits the chain
+  on no-op re-runs. Pointing the upload recipe at a pre-built pkg would defeat
+  this cache and re-upload on every CI run.
+
+  Atlassian retired the static `Sourcetree.dmg` redirector — it now returns 403. The
+  current pattern is to scrape the Sourcetree download page for the latest versioned
+  download URL of the form
+  `https://product-downloads.atlassian.com/software/sourcetree/ga/Sourcetree_<x.y.z>_<build>.zip`
+  and pull from there.
+
+  Sourcetree ships as a universal binary, so a single download is sufficient.
+Identifier: com.github.smithjw.download.Sourcetree
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Sourcetree
+  SOFTWARE_TITLE: Sourcetree
+  DOWNLOAD_PAGE: https://www.sourcetreeapp.com/
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      url: '%DOWNLOAD_PAGE%'
+      re_pattern: 'https://product-downloads\.atlassian\.com/software/sourcetree/ga/Sourcetree_(?P<version>\d+\.\d+\.\d+)_(?P<build>\d+)\.zip'
+      result_output_var_name: download_url
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.zip'
+      url: 'https://product-downloads.atlassian.com/software/sourcetree/ga/Sourcetree_%version%_%build%.zip'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/unpack/Sourcetree.app'
+      requirement: identifier "com.torusknot.SourceTreeNotMAS" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = UPXU4CQZ5P
+      strict_verification: true

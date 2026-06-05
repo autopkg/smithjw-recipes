@@ -1,0 +1,37 @@
+Description: Downloads the latest version of Node.js
+Identifier: com.github.smithjw.download.node
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Node.js
+  SOFTWARE_TITLE: node
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: node-v([0-9]+(\.[0-9]+)+)\.pkg
+      result_output_var_name: version
+      url: https://nodejs.org/dist/latest/
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      url: https://nodejs.org/dist/latest/node-v%version%.pkg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Node.js Foundation (HX7739G8FX)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'

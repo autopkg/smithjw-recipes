@@ -1,0 +1,73 @@
+Description: Downloads the latest version of Teradata Studio Express
+Identifier: com.github.smithjw.download.Teradata_Studio_Express
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Teradata Studio Express
+  SOFTWARE_TITLE: Teradata_Studio_Express
+  PRODUCT: teradata_studio_express
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: TeradataProductURLFinder
+    Arguments:
+      app: '%PRODUCT%'
+      architecture: 'aarch64'
+      teradata_username: '%TERADATA_USERNAME%'
+      teradata_password: '%TERADATA_PASSWORD%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-arm64.zip'
+
+  - Processor: TeradataProductURLFinder
+    Arguments:
+      app: '%PRODUCT%'
+      architecture: 'x86'
+      teradata_username: '%TERADATA_USERNAME%'
+      teradata_password: '%TERADATA_PASSWORD%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-x86_64.zip'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.zip'
+      destination_path: '%RECIPE_CACHE_DIR%/extracted/arm64'
+      purge_destination: true
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.zip'
+      destination_path: '%RECIPE_CACHE_DIR%/extracted/x86_64'
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Teradata (Z6K9HW9JJ5)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/extracted/arm64/TeradataStudioExpress.pkg'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Teradata (Z6K9HW9JJ5)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/extracted/x86_64/TeradataStudioExpress.pkg'

@@ -1,0 +1,18 @@
+Description: Downloads the latest version of Suitcase Fusion 21 and makes a pkg of it
+Identifier: com.github.smithjw.pkg.Suitcase_Fusion
+ParentRecipe: com.github.smithjw.download.Suitcase_Fusion
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Suitcase Fusion
+  SOFTWARE_TITLE: Suitcase_Fusion
+
+Process:
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: '%pathname%'
+
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%pathname%/*.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

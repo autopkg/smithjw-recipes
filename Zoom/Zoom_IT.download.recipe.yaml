@@ -23,6 +23,8 @@ Process:
 
 - Processor: CodeSignatureVerifier
   Arguments:
+    deep_verification: true
+    strict_verification: true
     expected_authority_names:
     - 'Developer ID Installer: Zoom Video Communications, Inc. (BJ4HAAB9B3)'
     - Developer ID Certification Authority

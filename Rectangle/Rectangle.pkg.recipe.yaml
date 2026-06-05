@@ -1,0 +1,15 @@
+Description: |
+  Wraps the downloaded Rectangle.app into an installer pkg.
+Identifier: com.github.smithjw.pkg.Rectangle
+ParentRecipe: com.github.smithjw.download.Rectangle
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Rectangle
+  SOFTWARE_TITLE: Rectangle
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Rectangle.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

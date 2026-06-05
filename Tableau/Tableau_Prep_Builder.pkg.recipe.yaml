@@ -1,0 +1,32 @@
+Description: Downloads latest Tableau Prep disk image and makes a pkg.
+Identifier: com.github.smithjw.pkg.Tableau_Prep_Builder
+ParentRecipe: com.github.smithjw.download.Tableau_Prep_Builder
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Tableau Prep Builder
+  SOFTWARE_TITLE: Tableau_Prep_Builder
+
+Process:
+  - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
+    Arguments:
+      archive_path: '%pathname%/Tableau Prep Builder.pkg'
+      file_to_extract: Distribution
+
+  - Processor: com.github.mlbz521.SharedProcessors/XPathParser
+    Arguments:
+      attribute_one: CFBundleShortVersionString
+      return_variable_attribute_one: version
+      xml_file: '%extracted_file%'
+      xpath: .//pkg-ref//bundle[@id='com.tableausoftware.tableauprep'][@CFBundleShortVersionString]
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%/Tableau Prep Builder.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/extractedfile'

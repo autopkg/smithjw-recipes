@@ -1,0 +1,21 @@
+Description: 'Downloads the latest version of Teradata Tools and Utilities for macOS and packages it'
+Identifier: com.github.smithjw.pkg.Teradata_Tools_Utilities
+ParentRecipe: com.github.smithjw.download.Teradata_Tools_Utilities
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Teradata Tools and Utilities
+  SOFTWARE_TITLE: Teradata_Tools_Utilities
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%RECIPE_CACHE_DIR%/extracted/%SOFTWARE_TITLE%.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
+        - '%RECIPE_CACHE_DIR%/extracted'

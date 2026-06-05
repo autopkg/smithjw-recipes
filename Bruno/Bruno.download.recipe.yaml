@@ -1,0 +1,40 @@
+Description: |
+  Downloads the most recent signed release pkg of Bruno from GitHub.
+
+  In order to get the latest pre-release, set the Input variable INCLUDE_PRERELEASES to a non-empty
+  string (such as 'True'; this is the default). If you just want the latest full release instead,
+  INCLUDE_PRERELEASES must be set to an empty string.
+Identifier: com.github.smithjw.download.Bruno
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Bruno
+  SOFTWARE_TITLE: '%NAME%'
+  INCLUDE_PRERELEASES: 'True'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: .*arm64_mac.dmg$
+      github_repo: usebruno/bruno
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.dmg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Bruno.app'
+      requirement: identifier "com.usebruno.app" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = W7LPPWA48L
+      strict_verification: true

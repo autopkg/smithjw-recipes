@@ -1,0 +1,17 @@
+Description: |
+  Packaging step for draw.io. Wraps the downloaded `draw.io.app` into an installer
+  pkg. Must run after the download recipe so `URLDownloaderPython` caching can
+  short-circuit unchanged builds.
+Identifier: com.github.smithjw.pkg.draw_io
+ParentRecipe: com.github.smithjw.download.draw_io
+MinimumVersion: '2.9'
+
+Input:
+  NAME: draw.io
+  SOFTWARE_TITLE: draw_io
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/draw.io.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

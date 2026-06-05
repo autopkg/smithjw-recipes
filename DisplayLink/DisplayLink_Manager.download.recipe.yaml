@@ -37,6 +37,8 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
+      deep_verification: true
+      strict_verification: true
       expected_authority_names:
         - 'Developer ID Installer: DisplayLink Corp (73YQY62QM3)'
         - Developer ID Certification Authority

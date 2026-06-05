@@ -1,0 +1,21 @@
+Description: |
+  Wraps the unpacked Ollama.app into an installer pkg.
+Identifier: com.github.smithjw.pkg.Ollama
+ParentRecipe: com.github.smithjw.download.Ollama
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Ollama
+  SOFTWARE_TITLE: Ollama
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/unpack/Ollama.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'

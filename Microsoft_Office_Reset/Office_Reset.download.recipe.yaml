@@ -39,6 +39,8 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
+      deep_verification: true
+      strict_verification: true
       expected_authority_names:
         - 'Developer ID Installer: Paul Bowden (QGS93ZLCU7)'
         - Developer ID Certification Authority

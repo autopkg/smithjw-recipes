@@ -1,0 +1,62 @@
+Description: Packages the latest Wiz CLI as a universal installer.
+Identifier: com.github.smithjw.pkg.wizcli
+ParentRecipe: com.github.smithjw.download.wizcli
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Wiz CLI
+  SOFTWARE_TITLE: wizcli
+
+Process:
+  - Processor: WizVersionExtractor
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64'
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0755'
+        scripts: '0755'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/wizcli-arm64'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/wizcli-x86_64'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          /bin/mv wizcli-arm64 /usr/local/bin/wizcli
+        else
+          /bin/mv wizcli-x86_64 /usr/local/bin/wizcli
+        fi
+        /bin/chmod 0755 /usr/local/bin/wizcli
+        /usr/sbin/chown root:wheel /usr/local/bin/wizcli
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: io.wiz.wizcli
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'

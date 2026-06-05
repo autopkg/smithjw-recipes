@@ -1,0 +1,63 @@
+Description: |
+  Downloads Brave Browser and produces a verified artefact for downstream packaging.
+
+  Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
+  processor caches by ETag/Last-Modified/Content-Length and the
+  `StopProcessingIf download_changed == False` predicate short-circuits the chain
+  on no-op re-runs. Pointing the upload recipe at a pre-built pkg would defeat
+  this cache and re-upload on every CI run.
+
+  Brave publishes separate `arm64` and `x86_64` `.dmg` files — `Brave-Browser-arm64.dmg`
+  and `Brave-Browser.dmg` (Intel) — at `referrals.brave.com`. We pull both via
+  `laptop-updates.brave.com/latest/<arch>` (which 302s to the latest versioned dmg) so
+  the resulting pkg can install on either architecture (see Brave_Browser.pkg.recipe.yaml).
+Identifier: com.github.smithjw.download.Brave_Browser
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Brave Browser
+  SOFTWARE_TITLE: Brave_Browser
+  DOWNLOAD_URL_ARM64: https://laptop-updates.brave.com/latest/osxarm64
+  DOWNLOAD_URL_X86_64: https://laptop-updates.brave.com/latest/osx
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-arm64.dmg'
+      url: '%DOWNLOAD_URL_ARM64%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-x86_64.dmg'
+      url: '%DOWNLOAD_URL_X86_64%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  # Brave bundles a Sparkle.framework whose headers carry `com.apple.FinderInfo` xattrs.
+  # `strict_verification: true` rejects those as "resource fork / detritus not allowed"
+  # on macOS 14+, so strict is left off here. `deep_verification` is kept on (it passes)
+  # so nested code is still verified against the requirement string below.
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Brave Browser.app'
+      requirement: identifier "com.brave.Browser" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "KL8N8XSYF4"
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/Brave Browser.app'
+      requirement: identifier "com.brave.Browser" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "KL8N8XSYF4"
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Brave Browser.app/Contents/Info.plist'
+      plist_version_key: CFBundleShortVersionString

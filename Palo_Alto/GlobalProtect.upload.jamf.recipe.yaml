@@ -1,0 +1,41 @@
+Description: ''
+Identifier: com.github.smithjw.jamf.upload.GlobalProtect
+ParentRecipe: com.github.smithjw.pkg.GlobalProtect
+MinimumVersion: '2.9'
+
+Input:
+  NAME: GlobalProtect
+  SOFTWARE_TITLE: '%NAME%'
+  CATEGORY: Apps
+  REMOVE_OLD_PACKAGES: 'true'
+  SCRIPT_PARAMETER_4_VALUE: OVERRIDE_THIS_VALUE
+  SCRIPT_PARAMETER_5_VALUE: null
+  SCRIPT_PARAMETER_6_VALUE: null
+  PACKAGE_INFO: autopkg
+  PKG_TO_KEEP: '2'
+  PKG_NAME_MATCH: '%SOFTWARE_TITLE%-'
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfScriptUploader
+    Arguments:
+      replace_script: true
+      script_parameter4: GlobalProtect Gateway
+      script_path: configure_globalprotect.sh
+      script_priority: Before
+      skip_script_key_substitution: true
+
+  - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%PKG_NAME_MATCH%'
+      versions_to_keep: '%PKG_TO_KEEP%'

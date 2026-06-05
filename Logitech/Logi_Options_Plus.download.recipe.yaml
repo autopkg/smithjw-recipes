@@ -1,0 +1,44 @@
+Description: |
+  Downloads the latest verison of Logitech Options Plus Offline installer
+  https://prosupport.logi.com/hc/en-gb/articles/6046882446359-Mass-installation-and-configuration-of-Logitech-Options-software#h.k97ihcogiap9
+Identifier: com.github.smithjw.download.logi_options_plus
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Logi Options+
+  SOFTWARE_TITLE: logi_options_plus
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.zip'
+      url: https://download01.logi.com/web/ftp/pub/techsupport/optionsplus/logioptionsplus_installer_offline.zip
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: Unarchiver
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
+
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/unpack/**.app'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%found_filename%'
+      requirement: >-
+        identifier "com.logi.optionsplus.installer" and anchor apple generic and
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = QED4VVPZWA

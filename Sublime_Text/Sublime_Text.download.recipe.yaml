@@ -1,0 +1,55 @@
+Description: |
+  Downloads Sublime Text and produces a verified artefact for downstream packaging.
+
+  Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
+  processor caches by ETag/Last-Modified/Content-Length and the
+  `StopProcessingIf download_changed == False` predicate short-circuits the chain
+  on no-op re-runs. Pointing the upload recipe at a pre-built pkg would defeat
+  this cache and re-upload on every CI run.
+
+  Sublime Text uses build numbers in its filename pattern
+  (`sublime_text_build_<build>_mac.zip`). We scrape the download page to find the
+  current build, then construct the URL.
+
+  Sublime Text 4 ships as a universal binary, so a single download is sufficient.
+Identifier: com.github.smithjw.download.Sublime_Text
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Sublime Text
+  SOFTWARE_TITLE: Sublime_Text
+  DOWNLOAD_PAGE: https://www.sublimetext.com/download
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      url: '%DOWNLOAD_PAGE%'
+      re_pattern: 'Build (?P<version>\d+)'
+      result_output_var_name: version
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-%version%.zip'
+      url: 'https://download.sublimetext.com/sublime_text_build_%version%_mac.zip'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/unpack/Sublime Text.app'
+      requirement: identifier "com.sublimetext.4" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "Z6D26JE4Y4"
+      strict_verification: true

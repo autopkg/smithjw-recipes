@@ -1,0 +1,33 @@
+Description: Downloads latest Ricoh CloudStream Client disk images and creates a universal pkg that installs the correct architecture.
+Identifier: com.github.smithjw.pkg.Ricoh_CloudStream_Client
+ParentRecipe: com.github.smithjw.download.Ricoh_CloudStream_Client
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Ricoh CloudStream Client
+  SOFTWARE_TITLE: Ricoh_CloudStream_Client
+
+Process:
+  - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
+    Arguments:
+      archive_path: '%pathname%'
+      file_to_extract: Distribution
+
+  - Processor: com.github.mlbz521.SharedProcessors/XPathParser
+    Arguments:
+      attribute_one: CFBundleShortVersionString
+      return_variable_attribute_one: version
+      xml_file: '%extracted_file%'
+      xpath: .//pkg-ref//bundle[@id='com.ricoh.cloudstreamclient'][@CFBundleShortVersionString]
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
+        - '%RECIPE_CACHE_DIR%/extractedfile'

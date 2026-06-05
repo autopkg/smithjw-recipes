@@ -1,0 +1,56 @@
+Description: Downloads latest Tableau Desktop disk images for both Intel and ARM architectures.
+Identifier: com.github.smithjw.download.Tableau_Desktop
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Tableau Desktop
+  SOFTWARE_TITLE: Tableau_Desktop
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  # Example URLs once you have a free Tableau account:
+  #   - https://downloads.tableau.com/esdalt/2025.2.3/TableauDesktop-2025-2-3.dmg
+  #   - https://downloads.tableau.com/esdalt/2025.2.3/TableauDesktop-2025-2-3-arm64.dmg
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: <a href="(\/.*?)+\/(?P<version>(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+))#.*class="cta">
+      url: https://www.tableau.com/support/releases
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-x86_64.dmg'
+      url: https://downloads.tableau.com/esdalt/%version%/TableauDesktop-%major%-%minor%-%patch%.dmg
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-arm64.dmg'
+      url: https://downloads.tableau.com/esdalt/%version%/TableauDesktop-%major%-%minor%-%patch%-arm64.dmg
+
+  - Processor: EndOfCheckPhase
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Tableau Software, LLC (QJ4XPRK37C)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/Tableau Desktop.pkg'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: Tableau Software, LLC (QJ4XPRK37C)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Tableau Desktop.pkg'

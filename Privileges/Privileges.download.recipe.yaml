@@ -1,0 +1,37 @@
+Description: ''
+Identifier: com.github.smithjw.download.Privileges
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Privileges
+  SOFTWARE_TITLE: Privileges
+  INCLUDE_PRERELEASES: null
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      github_repo: SAP/macOS-enterprise-privileges
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      expected_authority_names:
+        - 'Developer ID Installer: SAP SE (7R5ZEU67FQ)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'

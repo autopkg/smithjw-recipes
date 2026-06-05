@@ -42,6 +42,8 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
+      deep_verification: true
+      strict_verification: true
       input_path: '%RECIPE_CACHE_DIR%/downloads/claude-arm64-%version%'
       requirement: |
         identifier "com.anthropic.claude-code" and anchor apple generic and
@@ -51,6 +53,8 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
+      deep_verification: true
+      strict_verification: true
       input_path: '%RECIPE_CACHE_DIR%/downloads/claude-x86_64-%version%'
       requirement: |
         identifier "com.anthropic.claude-code" and anchor apple generic and

@@ -1,0 +1,33 @@
+Description: Downloads the latest Wacom Intuos driver disk image and builds a package.
+Identifier: com.github.smithjw.pkg.Wacom_Intuos_Driver
+ParentRecipe: com.github.smithjw.download.Wacom_Intuos_Driver
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Wacom Intuos Driver
+  SOFTWARE_TITLE: Wacom_Intuos_Driver
+
+Process:
+  - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
+    Arguments:
+      archive_path: '%pathname%/*.pkg'
+      file_to_extract: Distribution
+
+  - Processor: com.github.mlbz521.SharedProcessors/XPathParser
+    Arguments:
+      attribute_one: CFBundleShortVersionString
+      return_variable_attribute_one: version
+      xml_file: '%extracted_file%'
+      xpath: .//pkg-ref[@id="com.wacom.TabletInstaller"]/bundle-version/bundle[@id="com.wacom.WacomCenterPrefPane"]
+
+  - Processor: PkgCopier
+    Arguments:
+      source_pkg: '%pathname%/*.pkg'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/extractedfile'
+        - '%RECIPE_CACHE_DIR%/payload'

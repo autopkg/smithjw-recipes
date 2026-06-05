@@ -1,0 +1,63 @@
+Comment: |
+  This recipe leverages Amazon's permanent links so that it can be overrided to fetch multiple versions
+  Valid options for JDK_VERSION are 8, 11, 17, 21, 23, & 24
+Description: Downloads the current version of Amazon Corretto JDK and updates the package version
+Identifier: com.github.smithjw.pkg.Amazon_Corretto_JDK
+ParentRecipe: com.github.smithjw.download.Amazon_Corretto_JDK
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Amazon Corretto JDK
+  SOFTWARE_TITLE: Amazon_Corretto_JDK
+
+Process:
+  - Processor: com.github.dataJAR-recipes.Shared Processors/DistributionPkgInfo
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%JDK_VERSION%-arm64.pkg'
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0775'
+        scripts: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%JDK_VERSION%-arm64.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.pkg'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%JDK_VERSION%-x86_64.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          /usr/sbin/installer -pkg %SOFTWARE_TITLE%-arm64.pkg -target /
+        else
+          /usr/sbin/installer -pkg %SOFTWARE_TITLE%-x86_64.pkg -target /
+        fi
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%pkg_id%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'

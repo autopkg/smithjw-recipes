@@ -1,0 +1,61 @@
+---
+Identifier: com.github.smithjw.download.Vantage_Editor
+Description: Downloads the latest version of Vantage Editor using a custom processor
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Vantage Editor
+  SOFTWARE_TITLE: Vantage_Editor
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: TeradataProductURLFinder
+    Arguments:
+      app: teradata_vantage_editor
+      architecture: 'aarch64'
+      teradata_username: '%TERADATA_USERNAME%'
+      teradata_password: '%TERADATA_PASSWORD%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%-arm64.pkg'
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+
+  - Processor: TeradataProductURLFinder
+    Arguments:
+      app: teradata_vantage_editor
+      architecture: 'x86'
+      teradata_username: '%TERADATA_USERNAME%'
+      teradata_password: '%TERADATA_PASSWORD%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%-x86_64.pkg'
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.pkg'
+      expected_authority_names:
+        - 'Developer ID Installer: Teradata (Z6K9HW9JJ5)'
+        - 'Developer ID Certification Authority'
+        - 'Apple Root CA'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.pkg'
+      expected_authority_names:
+        - 'Developer ID Installer: Teradata (Z6K9HW9JJ5)'
+        - 'Developer ID Certification Authority'
+        - 'Apple Root CA'

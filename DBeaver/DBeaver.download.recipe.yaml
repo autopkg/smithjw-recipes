@@ -1,0 +1,59 @@
+Description: |
+  Downloads DBeaver and produces a verified artefact for downstream packaging.
+
+  Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
+  processor caches by ETag/Last-Modified/Content-Length and the
+  `StopProcessingIf download_changed == False` predicate short-circuits the chain
+  on no-op re-runs. Pointing the upload recipe at a pre-built pkg would defeat
+  this cache and re-upload on every CI run.
+
+  DBeaver publishes separate arm64 (`aarch64`) and Intel (`x86_64`) `.dmg` files. We pull
+  both so the resulting pkg can install on either architecture (see DBeaver.pkg.recipe.yaml).
+Identifier: com.github.smithjw.download.DBeaver
+MinimumVersion: '2.9'
+
+Input:
+  NAME: DBeaver
+  SOFTWARE_TITLE: DBeaver
+  DOWNLOAD_URL_ARM64: https://dbeaver.io/files/dbeaver-ce-latest-macos-aarch64.dmg
+  DOWNLOAD_URL_X86_64: https://dbeaver.io/files/dbeaver-ce-latest-macos-x86_64.dmg
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-arm64.dmg'
+      url: '%DOWNLOAD_URL_ARM64%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-x86_64.dmg'
+      url: '%DOWNLOAD_URL_X86_64%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/DBeaver.app'
+      requirement: identifier "org.jkiss.dbeaver.core.product" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "42B6MDKMW8"
+      strict_verification: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/DBeaver.app'
+      requirement: identifier "org.jkiss.dbeaver.core.product" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "42B6MDKMW8"
+      strict_verification: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/DBeaver.app/Contents/Info.plist'
+      plist_version_key: CFBundleShortVersionString

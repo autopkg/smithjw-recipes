@@ -1,0 +1,46 @@
+Description: Packages Nexthink Collector into /private/var/tmp/Nexthink/csi.app on managed devices
+Identifier: com.github.smithjw.pkg.Nexthink_Collector
+ParentRecipe: com.github.smithjw.download.Nexthink_Collector
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Nexthink Collector
+  SOFTWARE_TITLE: Nexthink_Collector
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot/private/var/tmp/Nexthink: '0775'
+        scripts: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%pathname%/csi.app'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/pkgroot/private/var/tmp/Nexthink/csi.app'
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%RECIPE_CACHE_DIR%/payload/pkgroot/private/var/tmp/Nexthink/csi.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleShortVersionString: version
+        CFBundleIdentifier: bundleid
+        CFBundleName: app_name
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'

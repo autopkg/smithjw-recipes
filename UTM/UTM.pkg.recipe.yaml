@@ -1,0 +1,48 @@
+Description: ''
+Identifier: com.github.smithjw.pkg.UTM
+ParentRecipe: com.github.smithjw.download.UTM
+MinimumVersion: '2.9'
+
+Input:
+  NAME: UTM
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        Applications: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+
+  - Processor: Copier
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/payload/Applications/UTM.app'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/UTM.app'
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%RECIPE_CACHE_DIR%/payload/Applications/UTM.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleIdentifier: bundleid
+        CFBundleName: app_name
+        CFBundleShortVersionString: version
+
+  - Processor: PkgCreator
+    Arguments:
+      force_pkg_build: true
+      pkg_request:
+        chown:
+          - group: wheel
+            path: Applications
+            user: root
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgname: '%NAME%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'

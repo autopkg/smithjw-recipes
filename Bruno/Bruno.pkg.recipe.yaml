@@ -1,0 +1,19 @@
+Description: |
+  Downloads the most recent signed release pkg of Bruno from GitHub.
+
+  In order to get the latest pre-release, set the Input variable INCLUDE_PRERELEASES to a non-empty
+  string (such as 'True'; this is the default). If you just want the latest full release instead,
+  INCLUDE_PRERELEASES must be set to an empty string.
+Identifier: com.github.smithjw.pkg.Bruno
+ParentRecipe: com.github.smithjw.download.Bruno
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Bruno
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Bruno.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

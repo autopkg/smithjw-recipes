@@ -1,0 +1,15 @@
+Description: |
+  Wraps the downloaded Obsidian.app into an installer pkg.
+Identifier: com.github.smithjw.pkg.Obsidian
+ParentRecipe: com.github.smithjw.download.Obsidian
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Obsidian
+  SOFTWARE_TITLE: Obsidian
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Obsidian.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

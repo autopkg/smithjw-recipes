@@ -1,0 +1,52 @@
+Description: Download recipe of Axure RP 10
+Identifier: com.github.smithjw.download.Axure_RP_10
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Axure RP 10
+  SOFTWARE_TITLE: Axure_RP_10
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      re_pattern: https://axure.cachefly.net/versions/10-0/AxureRP-Setup-arm64-[\d+]+\.dmg
+      url: https://www.axure.com/release-history/rp10
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-arm64.dmg'
+      url: '%match%'
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: https://axure.cachefly.net/versions/10-0/AxureRP-Setup-[\d+]+\.dmg
+      url: https://www.axure.com/release-history/rp10
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%-x86_64.dmg'
+      url: '%match%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Axure RP 10.app'
+      requirement: identifier "com.axure.AxureRP10" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = HUMW6UU796
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      strict_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/Axure RP 10.app'
+      requirement: identifier "com.axure.AxureRP10" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = HUMW6UU796

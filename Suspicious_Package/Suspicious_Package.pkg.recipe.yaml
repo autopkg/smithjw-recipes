@@ -1,0 +1,15 @@
+Description: |
+  Wraps the downloaded Suspicious Package.app into an installer pkg.
+Identifier: com.github.smithjw.pkg.Suspicious_Package
+ParentRecipe: com.github.smithjw.download.Suspicious_Package
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Suspicious Package
+  SOFTWARE_TITLE: Suspicious_Package
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Suspicious Package.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

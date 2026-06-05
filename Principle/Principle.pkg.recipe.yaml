@@ -1,0 +1,20 @@
+Description: Downloads Principle and makes a pkg of it.
+Identifier: com.github.smithjw.pkg.Principle
+ParentRecipe: com.github.smithjw.download.Principle
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Principle
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/unpack/*.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'

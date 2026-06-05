@@ -1,0 +1,21 @@
+Description: |
+  Wraps the unpacked Sourcetree.app into an installer pkg.
+Identifier: com.github.smithjw.pkg.Sourcetree
+ParentRecipe: com.github.smithjw.download.Sourcetree
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Sourcetree
+  SOFTWARE_TITLE: Sourcetree
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/unpack/Sourcetree.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'

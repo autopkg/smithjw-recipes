@@ -1,0 +1,32 @@
+Description: Downloads the latest version of Stream Deck and creates a package.
+Identifier: com.github.smithjw.pkg.Stream_Deck
+ParentRecipe: com.github.smithjw.download.Stream_Deck
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Stream Deck
+  SOFTWARE_TITLE: Stream_Deck
+
+Process:
+  - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
+    Arguments:
+      archive_path: '%pathname%'
+      file_to_extract: Distribution
+
+  - Processor: com.github.mlbz521.SharedProcessors/XPathParser
+    Arguments:
+      attribute_one: version
+      return_variable_attribute_one: version
+      xml_file: '%extracted_file%'
+      xpath: .//pkg-ref[@id="com.elgato.StreamDeck"][@version]
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/extractedfile'
