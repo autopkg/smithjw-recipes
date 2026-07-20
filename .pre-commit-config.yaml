@@ -11,7 +11,7 @@ repos:
         args: ['--maxkb=1024']
 
   - repo: https://github.com/homebysix/pre-commit-macadmin
-    rev: v1.24.1
+    rev: v1.25.1
     hooks:
       - id: check-autopkg-recipes
         args: ['--recipe-prefix=com.github.smithjw.', '--strict', '--']
