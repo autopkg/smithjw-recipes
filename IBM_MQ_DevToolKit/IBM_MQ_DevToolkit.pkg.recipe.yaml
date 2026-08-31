@@ -1,0 +1,61 @@
+Description: Downloads the latest version of IBM MQ Toolkit for macOS, creates a package, then uploads to Jamf
+Identifier: com.github.smithjw.pkg.IBMMQDevToolkit
+ParentRecipe: com.github.smithjw.download.IBMMQDevToolkit
+MinimumVersion: '2.9'
+
+Input:
+  NAME: IBMMQDevToolkit
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/pkgroot'
+      pkgdirs:
+        payload: '0775'
+        scripts: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/pkgroot/scripts/%SOFTWARE_TITLE%.pkg'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/pkgroot/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+
+        set -e
+
+        # Install IBM's original IBM MQ Dev Toolkit package
+        /usr/sbin/installer -pkg "$(dirname "$0")/%SOFTWARE_TITLE%.pkg" -target "$3"
+
+        # Add IBM MQ bin directories to the PATH
+        for MQ_BIN_DIR in /opt/mqm/bin /opt/mqm/samp/bin; do
+          if ! grep -qxF "$MQ_BIN_DIR" /etc/paths; then
+            echo "$MQ_BIN_DIR" >> /etc/paths
+          fi
+        done
+
+        # Set DYLD_LIBRARY_PATH
+        export DYLD_LIBRARY_PATH=/opt/mqm/lib64
+
+  - Processor: PkgCreator
+    Arguments:
+      force_pkg_build: true
+      pkg_request:
+        id: com.ibm.cloud.mqclient.wrapper
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/pkgroot/payload'
+        scripts: '%RECIPE_CACHE_DIR%/pkgroot/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/pkgroot'
