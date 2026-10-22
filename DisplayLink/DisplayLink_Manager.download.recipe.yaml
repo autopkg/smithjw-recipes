@@ -23,7 +23,7 @@ Process:
       re_pattern: '%RE_PATTERN_2%'
       url: '%BASE_URL%%match%'
 
-  - Processor: URLDownloaderPython
+  - Processor: URLDownloader
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.pkg'
